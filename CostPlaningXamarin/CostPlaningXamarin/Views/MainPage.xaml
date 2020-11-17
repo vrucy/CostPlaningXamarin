@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sf="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
+             x:Class="CostPlaningXamarin.Views.MainPage">
+    <ContentPage.Content>
+        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="180"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="180"/>
+                <RowDefinition Height="180"/>
+            </Grid.RowDefinitions>
+
+            <button:SfButton Text="Add New Order" Command="{Binding NavigateToAddOrderCommand }"
+                             TextColor="White"
+                             BackgroundColor="Teal"
+                             FontSize="30" Grid.Column="0"/>
+
+
+            <button:SfButton Text="Table" Command="{Binding NavigateToTableOrders}"
+                             TextColor="White"
+                             BackgroundColor="Teal"
+                             FontSize="30" Grid.Column="1"/>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

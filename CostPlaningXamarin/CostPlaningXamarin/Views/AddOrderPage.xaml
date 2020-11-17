@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             xmlns:sf="clr-namespace:Syncfusion.XForms.Pickers;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
+             x:Class="CostPlaningXamarin.Views.AddItemPage">
+    <ContentPage.BindingContext>
+        <local:AddNewOrderViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout >
+            <Label Text="Enter order price:" />
+            <Entry Placeholder="Price:" ClearButtonVisibility="WhileEditing" Text="{Binding Order.Cost}"/>
+            <Picker ItemDisplayBinding="{Binding Name}" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
+            <inputLayout:SfTextInputLayout Hint="Description" >
+                <Entry Text="{Binding Order.Description}"/>
+            </inputLayout:SfTextInputLayout>
+            <sf:SfDatePicker PickerMode="Dialog" x:Name="DatePicer" HeaderText="Select date" Date="{Binding PreviusDate}"/>
+            <Button Clicked="OpenPicer" Text="Previus order date"/>
+            <Button Text="Submit" VerticalOptions="EndAndExpand"
+            Command="{Binding SubmitCommand}"
+            TextColor="White"
+            BackgroundColor="Teal"
+            FontSize="40"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

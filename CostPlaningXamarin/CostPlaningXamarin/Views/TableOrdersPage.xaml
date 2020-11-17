@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:navigationdrawer="clr-namespace:Syncfusion.SfNavigationDrawer.XForms;assembly=Syncfusion.SfNavigationDrawer.XForms"
+             xmlns:sf="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
+             xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
+             x:Class="CostPlaningXamarin.Views.TableOrdersPage"
+             >
+    <ContentPage.BindingContext>
+        <local:TableOrdersViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="hamburgerButton_Clicked" IconImageSource="MenuIcon.ong" ></ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <navigationdrawer:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300"  Position="Right" >
+
+        <navigationdrawer:SfNavigationDrawer.ContentView>
+            <Grid>
+                <sf:SfDataGrid ItemsSource="{Binding Orders}" AutoGenerateColumns="False"
+                               ColumnSizer="Star" AllowSorting="True"
+                                 GridTapped="DataGrid_ItemSelected">
+                    <sf:SfDataGrid.Columns>
+                        <sf:GridTextColumn HeaderText="User" MappingName="User.FirstName"/>
+                        <sf:GridDateTimeColumn HeaderText="Date"
+                                   MappingName="Date" Format="dd/MM/yyyy"/>
+                        <sf:GridTextColumn HeaderText="Category"
+                                   MappingName="Category.Name" />
+                        <sf:GridTextColumn HeaderText="Cost"
+                                   MappingName="Cost" />
+                    </sf:SfDataGrid.Columns>
+                    <sf:SfDataGrid.TableSummaryRows>
+                        <sf:GridTableSummaryRow Title="Total sent :{TotalCost}" ShowSummaryInRow="True" >
+                            <sf:GridTableSummaryRow.SummaryColumns>
+                                <sf:GridSummaryColumn Name="TotalCost" MappingName="Cost" Format="{}{Sum}" SummaryType="DoubleAggregate" />
+                            </sf:GridTableSummaryRow.SummaryColumns>
+                        </sf:GridTableSummaryRow>
+                    </sf:SfDataGrid.TableSummaryRows>
+                </sf:SfDataGrid>
+            </Grid>
+        </navigationdrawer:SfNavigationDrawer.ContentView>
+        <navigationdrawer:SfNavigationDrawer.DrawerHeaderView>
+            <Grid BackgroundColor="#1aa1d6" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <StackLayout HeightRequest="50">
+                <Label Text="Filter"  
+                       HorizontalTextAlignment="Center" 
+                       HorizontalOptions="Center" 
+                       FontSize="20" 
+                       TextColor="White" Grid.Row="2"/>
+                </StackLayout>
+            </Grid>
+        </navigationdrawer:SfNavigationDrawer.DrawerHeaderView>
+        
+        <navigationdrawer:SfNavigationDrawer.DrawerContentView >
+
+            <StackLayout BackgroundColor="White">
+                <Picker x:Name="NamePicer"  ItemDisplayBinding="{Binding FirstName}" Title="Users" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
+                <Picker ItemDisplayBinding="{Binding Name}" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
+                <Label Text="Date" HorizontalOptions="Center" FontSize="Body"/>
+                <FlexLayout Direction="Row" JustifyContent="SpaceEvenly" WidthRequest="70">
+                    <Picker ItemsSource="{Binding DateFrom}" Title="Date From" SelectedItem="{Binding DateFromSelected}" WidthRequest="100" />
+                    <Picker ItemsSource="{Binding DateTo}" Title="Date To" SelectedItem="{Binding DateToSelected}" WidthRequest="100"/>
+                </FlexLayout>
+                <!--<Button Command="Submit" Text="Submit" VerticalOptions="End"/>-->
+
+                <!--Button to end page-->
+            </StackLayout>
+
+        </navigationdrawer:SfNavigationDrawer.DrawerContentView>
+        <navigationdrawer:SfNavigationDrawer.DrawerFooterView>
+
+            <FlexLayout Direction="Row" JustifyContent="SpaceEvenly" AlignContent="Center" AlignItems="Center" HeightRequest="50" BackgroundColor="White">
+                <Button Command="{Binding ClearFilterCommand}" BackgroundColor="YellowGreen" Text="Clear" />
+                <Button Text="Apply" BackgroundColor="Teal" Command="{Binding ApplyFiltersCommand}"/>
+            </FlexLayout>
+        </navigationdrawer:SfNavigationDrawer.DrawerFooterView>
+        
+    </navigationdrawer:SfNavigationDrawer>
+
+</ContentPage>
