@@ -1,19 +1,18 @@
-﻿using Android.App.Backup;
-using CostPlaningXamarin.Command;
+﻿using CostPlaningXamarin.Command;
+using CostPlaningXamarin.Helper;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using CostPlaningXamarin.Helper;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System.Threading.Tasks;
 
 namespace CostPlaningXamarin.ViewModels
 {
-    public class TableOrdersViewModel : BaseViewModel
+    public class SortTableViewModel: BaseViewModel
     {
         private List<Order> _orders;
         private List<Order> _allOrders;
@@ -24,8 +23,7 @@ namespace CostPlaningXamarin.ViewModels
         private List<string> _DateTo;
         ISQLiteService _sqliteService = DependencyService.Get<ISQLiteService>();
 
-
-        public TableOrdersViewModel()
+        public SortTableViewModel()
         {
             Task.Run(() =>
             {
@@ -34,17 +32,17 @@ namespace CostPlaningXamarin.ViewModels
                 _users = _sqliteService.GetUsers().Result;
                 _categories = _sqliteService.GetAllCategories().Result;
 
-            Date = new List<string>();
-            PopulateDateCollection();
+                Date = new List<string>();
+                PopulateDateCollection();
             });
-        }
 
+        }
         public List<Order> Orders
         {
             get
             {
-                return _orders/*.Select(i => { i.Date.ToShortDateString(); return i; }).ToList()*/;
-                 
+                return _orders.Select(i => { i.Date.ToShortDateString(); return i; }).ToList();
+
             }
             set
             {
@@ -85,12 +83,6 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _selectedUser = value;
-                //if (_selectedUser != null)
-                //{
-                //    _orders = _allOrders.Where(o => o.UserId == _selectedUser.Id).ToList();
-                //}
-                
-                //OnPropertyChanged(nameof(Orders));
 
                 OnPropertyChanged(nameof(SelectedUser));
 
@@ -114,11 +106,6 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _selectedCategory = value;
-                //if (_selectedCategory != null)
-                //{
-                //    _orders = _allOrders.Where(o => o.CategoryId == _selectedCategory.Id).ToList();
-                //}
-                //OnPropertyChanged(nameof(Orders));
                 OnPropertyChanged(nameof(SelectedCategory));
 
             }
@@ -156,25 +143,32 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _DateFromSelected = value;
-                if (_DateToSelected != null)
-                { 
-                    var dateFromIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateFromSelected));
-                    var dateToIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateToSelected));
-                    if (dateToIndex < dateFromIndex)
-                    {
-                    DateToSelected = DateFromSelected;
-                    OnPropertyChanged(nameof(DateToSelected));
-                    }
+                if (_DateFromSelected == null)
+                {
+                    OnPropertyChanged(nameof(DateFromSelected));
+
+                    return;
                 }
-                
+                ChekerValueDateFromTo();
                 OnPropertyChanged(nameof(DateFromSelected));
                 
-
 
                 OnPropertyChanged(nameof(Orders));
             }
         }
-
+        private void ChekerValueDateFromTo()
+        {
+            if (_DateToSelected != null)
+            {
+                var dateFromIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateFromSelected));
+                var dateToIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateToSelected));
+                if (dateToIndex < dateFromIndex)
+                {
+                    DateToSelected = DateFromSelected;
+                    OnPropertyChanged(nameof(DateToSelected));
+                }
+            }
+        }
         public List<string> DateTo
         {
             get
@@ -196,28 +190,39 @@ namespace CostPlaningXamarin.ViewModels
             }
         }
         private string _DateToSelected;
-        
+
         public string DateToSelected
         {
             get { return _DateToSelected; }
             set
             {
                 _DateToSelected = value;
-                var dateFromIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateFromSelected));
-                var dateToIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateToSelected));
-
-                if (dateFromIndex > dateToIndex)
+                if (_DateToSelected == null)
                 {
-                    DateFromSelected = DateToSelected;
-
-                    OnPropertyChanged(nameof(DateFromSelected));
+                    OnPropertyChanged(nameof(DateToSelected));
+                    return;
                 }
-             
-
+                ChekerValueDateToFrom();
                 OnPropertyChanged(nameof(DateToSelected));
             }
         }
-        
+        private void ChekerValueDateToFrom()
+        {
+            int dateFromIndex = 0;
+            if (!String.IsNullOrEmpty(_DateFromSelected))
+            {
+                dateFromIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateFromSelected));
+            }
+            var dateToIndex = PopulateDateCollection().FindIndex(y => y.Contains(_DateToSelected));
+
+            if (dateFromIndex > dateToIndex)
+            {
+                DateFromSelected = DateToSelected;
+
+                OnPropertyChanged(nameof(DateFromSelected));
+            }
+        }
+
         private List<string> Date { get; set; }
 
         public List<string> PopulateDateCollection()
@@ -228,7 +233,7 @@ namespace CostPlaningXamarin.ViewModels
                 Date.Add(string.Format("{0}/{1}", item.Date.ToString("MMM"), item.Date.ToString("yyyy")));
             }
             SortedSet<string> month = new SortedSet<string>(Date);
-            
+
             return month.OrderBy(x => x.StringToDateTime().Month).ToList();
         }
         public ICommand ClearFilterCommand
@@ -247,19 +252,21 @@ namespace CostPlaningXamarin.ViewModels
         {
             //TODO clear every piceer per one and refresh list
 
-            //_orders = _allOrders;
+            _orders = _allOrders;
             //OnPropertyChanged(nameof(Orders));
             _selectedUser = null;
             _selectedCategory = null;
+            //_DateTo = null;
+            //_DateFrom = null;
             _DateFromSelected = null;
             _DateToSelected = null;
             OnPropertyChanged(nameof(SelectedUser));
             OnPropertyChanged(nameof(DateToSelected));
             OnPropertyChanged(nameof(DateFromSelected));
             OnPropertyChanged(nameof(SelectedCategory));
-            _orders = _allOrders;
+            //_orders = _allOrders;
             OnPropertyChanged(nameof(Orders));
-            
+
         }
         private ICommand _ApplyFilters;
 
@@ -286,18 +293,18 @@ namespace CostPlaningXamarin.ViewModels
             {
                 _copy = _copy.Where(o => o.UserId == _selectedUser.Id).ToList();
             }
-            if (DateFromSelected != null && DateToSelected!= null)
+            if (DateFromSelected != null && DateToSelected != null)
             {
-                _copy.AddRange(_copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month &&
-                                            o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList());
+                _copy = _copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month &&
+                                            o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
             }
             else if (DateFromSelected != null)
             {
-                _copy.AddRange(_copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month).ToList());
+                _copy = _copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month).ToList();
             }
             else if (DateToSelected != null)
             {
-                _copy.AddRange(_allOrders.Where(o => o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList());
+                _copy = _copy.Where(o => o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
             }
             _orders = _copy;
             OnPropertyChanged(nameof(Orders));

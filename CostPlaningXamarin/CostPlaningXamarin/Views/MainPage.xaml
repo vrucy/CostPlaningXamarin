@@ -3,29 +3,56 @@
 xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sf="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
+             xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
+             xmlns:navigationdrawer="clr-namespace:Syncfusion.SfNavigationDrawer.XForms;assembly=Syncfusion.SfNavigationDrawer.XForms"
              x:Class="CostPlaningXamarin.Views.MainPage">
-    <ContentPage.Content>
-        <Grid VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="180"/>
-                <ColumnDefinition Width="180"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="180"/>
-                <RowDefinition Height="180"/>
-            </Grid.RowDefinitions>
+    <ContentPage.BindingContext>
+        <local:UserViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+        <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="settingButton_Clicked" IconImageSource="MenuIcon.ong" ></ToolbarItem>
+        </ContentPage.ToolbarItems>
+    <!--<ContentPage.Content>-->
+    <navigationdrawer:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300"  Position="Right" >
+        <navigationdrawer:SfNavigationDrawer.ContentView >
 
-            <button:SfButton Text="Add New Order" Command="{Binding NavigateToAddOrderCommand }"
-                             TextColor="White"
-                             BackgroundColor="Teal"
+            <FlexLayout AlignItems="Center" JustifyContent="SpaceAround" >
+                <button:SfButton Text="New Order" Command="{Binding NavigateToAddOrderCommand }"
+                             TextColor="White" WidthRequest="170" HeightRequest="170"
+                             BackgroundColor="Teal" 
                              FontSize="30" Grid.Column="0"/>
 
 
-            <button:SfButton Text="Table" Command="{Binding NavigateToTableOrders}"
-                             TextColor="White"
+                <button:SfButton Text="Table" Command="{Binding NavigateToTableOrders}"
+                             TextColor="White" WidthRequest="170" HeightRequest="170"
                              BackgroundColor="Teal"
                              FontSize="30" Grid.Column="1"/>
-            
-        </Grid>
-    </ContentPage.Content>
+            </FlexLayout>
+
+        </navigationdrawer:SfNavigationDrawer.ContentView>
+        <navigationdrawer:SfNavigationDrawer.DrawerHeaderView>
+            <Grid BackgroundColor="#1aa1d6" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <StackLayout HeightRequest="50">
+                    <Label Text="Setting"  
+                       HorizontalTextAlignment="Center" 
+                       HorizontalOptions="Center" 
+                       FontSize="20" 
+                       TextColor="White"/>
+                </StackLayout>
+            </Grid>
+        </navigationdrawer:SfNavigationDrawer.DrawerHeaderView>
+        <navigationdrawer:SfNavigationDrawer.DrawerContentView >
+
+            <StackLayout BackgroundColor="White">
+                <Button  Text="Add category" />
+
+                <!--Button to end page-->
+            </StackLayout>
+
+        </navigationdrawer:SfNavigationDrawer.DrawerContentView>
+    </navigationdrawer:SfNavigationDrawer>
+    <!--</ContentPage.Content>-->
 </ContentPage>

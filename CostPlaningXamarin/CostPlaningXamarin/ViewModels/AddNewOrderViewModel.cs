@@ -29,15 +29,17 @@ namespace CostPlaningXamarin.ViewModels
            
             _categories = SQLService.GetAllCategories().Result;
         }
-        private DateTime _previusDate;
 
-        public DateTime PreviusDate
+        private DateTime? _previusDate;
+
+        public DateTime? PreviusDate
         {
             get { return _previusDate; }
-            set {
+            set
+            {
                 _previusDate = value;
-                _order.Date = _previusDate;
-                OnPropertyChanged(nameof(PreviusDate)); 
+                _order.Date = (DateTime)_previusDate;
+                OnPropertyChanged(nameof(PreviusDate));
             }
         }
 
@@ -50,8 +52,7 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _order = value;
-                OnPropertyChanged();
-                //PropertyValidation();
+                OnPropertyChanged(nameof(Order));
             }
         }
 
@@ -102,10 +103,9 @@ namespace CostPlaningXamarin.ViewModels
                     _order.Date = DateTime.Now;
                 }
                     
-                //SQLService.SaveOrderAsync(_order);
-                //reset all fields to null
+                 SQLService.SaveOrderAsync(_order);
                 _selectedCategory = null;
-                
+                _order = new Order();
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
             }
             catch (Exception e)

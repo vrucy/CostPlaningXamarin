@@ -39,7 +39,6 @@ namespace CostPlaningXamarin.Services
         {
             var res = await _httpClient.GetAsync(url + "Order/GetAllOrders");
             string responseBody = res.Content.ReadAsStringAsync().Result;
-
             return JsonConvert.DeserializeObject<List<Order>>(responseBody);
         }
     }

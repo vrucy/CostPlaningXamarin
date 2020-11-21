@@ -13,12 +13,12 @@ namespace CostPlaningXamarin.Services
         public async void NavigateToAddItem()
         {
             var currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushAsync(new AddItemPage());           
+            await currentPage.Navigation.PushAsync(new AddItemPage());
         }
         public async void NavigateToTableOrders()
         {
             var currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushAsync(new TableOrdersPage());
+            await currentPage.Navigation.PushAsync(new SortTable());
             //await currentPage.Navigation.PushAsync(new TableOrdersMasterPage());
         }
         public async void NavigateBack()

@@ -13,13 +13,11 @@ namespace CostPlaningXamarin.Views
         public AddItemPage()
         {
             InitializeComponent();
-            //BindingContext = new AddNewOrderViewModel();
         }
 
         private void OpenPicer(object sender, System.EventArgs e)
         {
             this.DatePicer.IsOpen = true;
-            //this.DatePicer.MinimumDate = DateTime.MinValue;
             this.DatePicer.MaximumDate = DateTime.Now;
             
         }
