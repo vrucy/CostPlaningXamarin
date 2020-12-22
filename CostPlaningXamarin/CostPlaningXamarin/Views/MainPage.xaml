@@ -14,9 +14,9 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
         </ContentPage.ToolbarItems>
     <!--<ContentPage.Content>-->
     <navigationdrawer:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300"  Position="Right" >
-        <navigationdrawer:SfNavigationDrawer.ContentView >
+        <navigationdrawer:SfNavigationDrawer.ContentView>
 
-            <FlexLayout AlignItems="Center" JustifyContent="SpaceAround" >
+            <FlexLayout AlignItems="Center" JustifyContent="SpaceAround" BackgroundColor="White">
                 <button:SfButton Text="New Order" Command="{Binding NavigateToAddOrderCommand }"
                              TextColor="White" WidthRequest="170" HeightRequest="170"
                              BackgroundColor="Teal" 

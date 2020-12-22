@@ -31,7 +31,9 @@ namespace CostPlaningXamarin.ViewModels
             {
                 _allOrders = _sqliteService.GetOrdersAsync().Result;
                 _orders = _allOrders;
-                _users = _sqliteService.GetUsers().Result;
+
+                //TODO: Check
+                _users = _sqliteService.GetOrdersAsync().Result.Select(u=>u.User).Distinct().ToList();
                 _categories = _sqliteService.GetAllCategories().Result;
 
             Date = new List<string>();
@@ -114,13 +116,7 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _selectedCategory = value;
-                //if (_selectedCategory != null)
-                //{
-                //    _orders = _allOrders.Where(o => o.CategoryId == _selectedCategory.Id).ToList();
-                //}
-                //OnPropertyChanged(nameof(Orders));
                 OnPropertyChanged(nameof(SelectedCategory));
-
             }
         }
 

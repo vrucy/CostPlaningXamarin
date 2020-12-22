@@ -17,8 +17,7 @@
             <Grid>
                 <sf:SfDataGrid ItemsSource="{Binding Orders}" AutoGenerateColumns="False"
                                ColumnSizer="Star" AllowSorting="True" AllowTriStateSorting="True" AutoExpandGroups="True"
-                        AllowGroupExpandCollapse="True">
-                    <!--GridTapped="DataGrid_ItemSelected"-->
+                        AllowGroupExpandCollapse="True" GridTapped="DataGrid_ItemSelected">
                     <sf:SfDataGrid.Columns>
                         <sf:GridTextColumn HeaderText="User" MappingName="User.FirstName"/>
                         <sf:GridDateTimeColumn HeaderText="Date"
@@ -55,13 +54,13 @@
 
         <navigationdrawer:SfNavigationDrawer.DrawerContentView >
 
-            <StackLayout BackgroundColor="White">
-                <Picker x:Name="NamePicer"  ItemDisplayBinding="{Binding FirstName}" Title="Users" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
-                <Picker ItemDisplayBinding="{Binding Name}" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
+            <StackLayout BackgroundColor="White" >
+                <Picker x:Name="NamePicer"  TitleColor="Black" ItemDisplayBinding="{Binding FirstName}" Title="Users" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
+                <Picker ItemDisplayBinding="{Binding Name}" TextColor="Black" TitleColor="Black" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
                 <Label Text="Date" HorizontalOptions="Center" FontSize="Body"/>
-                <FlexLayout Direction="Row" JustifyContent="SpaceEvenly" WidthRequest="70">
-                    <Picker ItemsSource="{Binding DateFrom}" Title="Date From" SelectedItem="{Binding DateFromSelected}" WidthRequest="100" />
-                    <Picker ItemsSource="{Binding DateTo}" Title="Date To" SelectedItem="{Binding DateToSelected}" WidthRequest="100"/>
+                <FlexLayout Direction="Row" JustifyContent="SpaceEvenly" WidthRequest="70" >
+                    <Picker ItemsSource="{Binding DateFrom}" Title="Date From" SelectedItem="{Binding DateFromSelected}" WidthRequest="100" TextColor="Black" TitleColor="Black"/>
+                    <Picker ItemsSource="{Binding DateTo}" Title="Date To" SelectedItem="{Binding DateToSelected}" WidthRequest="100" TextColor="Black" TitleColor="Black"/>
                 </FlexLayout>
                 <!--<Button Command="Submit" Text="Submit" VerticalOptions="End"/>-->
 

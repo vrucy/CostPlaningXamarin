@@ -11,8 +11,12 @@ namespace CostPlaningXamarin.ViewModels
         private ICommand _NavigateToAddItemCommand;
         private ICommand _NavigateToTableOrders;
         INavigationServices _navigationService = DependencyService.Get<INavigationServices>();
-               
-        
+        ISQLiteService _SQLiteService = DependencyService.Get<ISQLiteService>();
+
+        public UserViewModel()
+        {
+            
+        }
         public ICommand NavigateToAddOrderCommand
         {
             get

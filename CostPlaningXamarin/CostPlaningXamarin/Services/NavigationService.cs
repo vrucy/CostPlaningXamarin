@@ -9,7 +9,7 @@ namespace CostPlaningXamarin.Services
 {
     public class NavigationService : INavigationServices
     {
-        //make mathod to recive parameter and push page what write in these par. 
+        //TODO: make mathod to recive parameter and push page what write in these par. 
         public async void NavigateToAddItem()
         {
             var currentPage = GetCurrentPage();
@@ -33,6 +33,17 @@ namespace CostPlaningXamarin.Services
             var currentPage = Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
 
             return currentPage;
+        }
+
+        public void NavigateToAddUser()
+        {
+            var currentPage = GetCurrentPage();
+            currentPage.Navigation.PushAsync(new AuthPage());
+        }
+
+        public async void NavigateToMainPage()
+        {
+            await GetCurrentPage().Navigation.PushAsync(new MainPage());
         }
     }
 }

@@ -12,7 +12,7 @@ using Xamarin.Forms;
 
 namespace CostPlaningXamarin.ViewModels
 {
-    public class SortTableViewModel: BaseViewModel
+    public class SortTableViewModel : BaseViewModel
     {
         private List<Order> _orders;
         private List<Order> _allOrders;
@@ -25,16 +25,15 @@ namespace CostPlaningXamarin.ViewModels
 
         public SortTableViewModel()
         {
-            Task.Run(() =>
-            {
-                _allOrders = _sqliteService.GetOrdersAsync().Result;
-                _orders = _allOrders;
-                _users = _sqliteService.GetUsers().Result;
-                _categories = _sqliteService.GetAllCategories().Result;
 
-                Date = new List<string>();
-                PopulateDateCollection();
-            });
+            _allOrders = _sqliteService.GetOrdersAsync().GetAwaiter().GetResult();
+            _orders = _allOrders;
+            _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
+
+            _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
+
+            Date = new List<string>();
+            PopulateDateCollection();
 
         }
         public List<Order> Orders
@@ -151,7 +150,7 @@ namespace CostPlaningXamarin.ViewModels
                 }
                 ChekerValueDateFromTo();
                 OnPropertyChanged(nameof(DateFromSelected));
-                
+
 
                 OnPropertyChanged(nameof(Orders));
             }
@@ -304,6 +303,7 @@ namespace CostPlaningXamarin.ViewModels
             }
             else if (DateToSelected != null)
             {
+                var i = DateToSelected.StringToDateTime().Month;
                 _copy = _copy.Where(o => o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
             }
             _orders = _copy;

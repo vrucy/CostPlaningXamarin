@@ -21,12 +21,12 @@ namespace CostPlaningXamarin.ViewModels
         private ICommand _SubmitCommand;
         IOrderService orderService = DependencyService.Get<IOrderService>();
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
+        IUserService userService = DependencyService.Get<IUserService>();
         IWiFiManager wiFiManager = DependencyService.Get<IWiFiManager>();
 
         public AddNewOrderViewModel()
         {
             _order = new Order();
-           
             _categories = SQLService.GetAllCategories().Result;
         }
 
@@ -94,7 +94,6 @@ namespace CostPlaningXamarin.ViewModels
         }
         private void Submit(object x)
         {
-            wiFiManager.IsHomeWifiConnected();
             //TODO: how know who is user? when use fingerprint
             try
             {
@@ -102,7 +101,8 @@ namespace CostPlaningXamarin.ViewModels
                 {
                     _order.Date = DateTime.Now;
                 }
-                    
+                _order.UserId = SQLService.GetAppUser().Id;
+                _order.User = SQLService.GetAppUser();
                  SQLService.SaveOrderAsync(_order);
                 _selectedCategory = null;
                 _order = new Order();
