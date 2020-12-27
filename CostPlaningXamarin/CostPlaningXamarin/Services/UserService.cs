@@ -18,12 +18,9 @@ namespace CostPlaningXamarin.Services
         private static readonly HttpClient _httpClient = new HttpClient();
 
         private const string urlLocalHost = "http://192.168.1.88:54481/";
+        //private const string urlLocalHost = "http://10.0.2.2:54481/";
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
 
-        public void SyncUsers()
-        {
-            ResponseResult("Order/GetAllUsers");
-        }
         private HttpContent MediaTypeHeaderValue(object o)
         {
             var data = JsonConvert.SerializeObject(o);
@@ -44,21 +41,6 @@ namespace CostPlaningXamarin.Services
 
             return JsonConvert.DeserializeObject<List<User>>(ResponseResult("User/GetAllUsers"));
         }
-
-        public async Task<bool> CheckNewUsers()
-        {
-
-            //var res = _httpClient.GetAsync(urlLocalHost + "Order/GetNumberOfUsers").GetAwaiter().GetResult();
-            //var responseBody = res.Content.ReadAsStringAsync().Result;
-
-            //TODO: Not good codition
-            return SQLiteService.CountUserInMobile().GetAwaiter().GetResult() != Int32.Parse(ResponseResult("User/GetNumberOfUsers"));
-        }
-        public async Task<IList<User>> GetAllUsersWithoutAppUser(int appUserId)
-        {
-            var res = _httpClient.PostAsync(urlLocalHost + "User/GetAllUsersWithoutAppUser", MediaTypeHeaderValue(appUserId))/*.GetAwaiter().GetResult()*/;
-            return JsonConvert.DeserializeObject<List<User>>(await res.Result.Content.ReadAsStringAsync());
-        }
         private string ResponseResult(string route)
         {
             var res = _httpClient.GetAsync(urlLocalHost + route).GetAwaiter().GetResult();
@@ -67,7 +49,18 @@ namespace CostPlaningXamarin.Services
 
         public int GetLastUserServerId()
         {
-            return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetLastUserServerId"));
+            return JsonConvert.DeserializeObject<int>(ResponseResult("User/GetLastUserServerId"));
+        }
+
+        public async Task<List<User>> GetUnsyncUsers(int lastUserId)
+        {
+            var res = _httpClient.PostAsync(urlLocalHost + "User/GetAllUsersWithoutAppUser", MediaTypeHeaderValue(lastUserId));
+            return JsonConvert.DeserializeObject<List<User>>(await res.Result.Content.ReadAsStringAsync());
+        }
+
+        public Task PostUsers(List<User> users)
+        {
+            throw new NotImplementedException();
         }
     }
 }

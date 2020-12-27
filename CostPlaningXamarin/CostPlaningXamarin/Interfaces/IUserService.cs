@@ -8,9 +8,8 @@ namespace CostPlaningXamarin.Interfaces
     interface IUserService
     {
         Task<User> PostAppUser();
-        Task<bool> CheckNewUsers();
         Task<IList<User>> GetAllUsers();
-        Task<IList<User>> GetAllUsersWithoutAppUser(int appUserId);
         int GetLastUserServerId();
+        Task<List<User>> GetUnsyncUsers(int lastUserId);
     }
 }

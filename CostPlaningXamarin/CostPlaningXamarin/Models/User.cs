@@ -10,12 +10,13 @@ namespace CostPlaningXamarin.Models
         [Preserve(AllMembers = true)]
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+        public int ServerId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [NotMapped]
         public bool DeviceUser { get; set; }
-        [NotMapped]
-        public bool WriteInDb { get; set; }
+        //[NotMapped]
+        //public bool WriteInDb { get; set; }
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<Order> Orders { get; set; }
     }

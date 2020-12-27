@@ -37,33 +37,35 @@ namespace CostPlaningXamarin.Services
             return true;
         }
         public async void SyncData()
-        {
+         {
             var appUser = SQLiteService.GetAppUser();
-            if (appUser.WriteInDb == false)
+            if (appUser.ServerId == 0)
             {
                 FirstSyncUserOwner(appUser);
             }
             if (SQLiteService.GetLastUserServerId() != userService.GetLastUserServerId())
             {
-                SyncUser();
+                SyncUsers(SQLiteService.GetLastUserServerId());
             }
             if (SQLiteService.GetLastOrderServerId() != orderService.GetLastOrderServerId() || SQLiteService.CheckIfHaveOrderForSync())
             {
                 SyncOrders(SQLiteService.OrderForSync().Result);
-
             }
-            //potreban je jos jedan ya proveru dali postoje novi ord na serveru
+
+            //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
         }
         private async void FirstSyncUserOwner(User appUser)
         {
             var serverUser = userService.PostAppUser().GetAwaiter().GetResult();
+            SQLiteService.DropTable<User>();
+            SQLiteService.CreateTable<User>();
 
             SyncNewUsers(serverUser.Id);
 
             var orders = await SQLiteService.GetAllOrdersForUserById(appUser.Id);
             if (orders.Count > 0)
             {
-                //potreban neki rollback ukiloko pukne veza
+                //TODO: potreban neki rollback ukiloko pukne veza
                 PostOrders(orders);
             }
         }
@@ -73,9 +75,11 @@ namespace CostPlaningXamarin.Services
             SQLiteService.PostNewUsers(allUsers);
             SQLiteService.UpdateDeviceUser(userId);
         }
-        private void SyncUser()
+        private void SyncUsers(int lastUserId)
         {
-
+            //TODO: nije dobro treba kao i orderi da salje Id-eve i da uporedi i da vrati novog jer se moze izbrisati
+            var users = userService.GetUnsyncUsers(lastUserId);
+            SQLiteService.PostNewUsers(users.Result);
         }
         private void PostOrders(List<Order> orders)
         {
@@ -88,14 +92,15 @@ namespace CostPlaningXamarin.Services
                 var ids = orderService.UpdateOrder(orders);
                 SQLiteService.SyncOrders(ids);
             }
-            if (SQLiteService.CheckIfHaveOrderForSync())
+            var ordersSync = SQLiteService.GetAllSyncOrdersIds().ToList();
+
+            if (ordersSync.Count != orderService.GetOrdersCountFromServer())
             {
-                var ordersFromServer = orderService.GetOrdersByIds(SQLiteService.GetAllSyncOrdersIds().ToList());
+                var ordersFromServer = orderService.GetOrdersByIds(ordersSync);
 
                 if (ordersFromServer.Count != 0)
                 {
-                    SQLiteService.SyncOrders(ordersFromServer);
-                    SQLiteService.SaveAllOrders(ordersFromServer);
+                    SQLiteService.SaveOrders(ordersFromServer);
                 }
 
             }

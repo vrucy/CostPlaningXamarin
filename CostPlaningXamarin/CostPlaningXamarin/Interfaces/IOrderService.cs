@@ -7,11 +7,9 @@ namespace CostPlaningXamarin.Interfaces
 {
     interface IOrderService
     {
-        Task<HttpResponseMessage> PostOrders();
-        Task<IList<Order>> GetAllOrders();
-        //Task<IList<User>> GetAllUsers();
-        //Task<bool> CheckNewUsers();
-        Task<bool> CheckCategories();
+        //Task<HttpResponseMessage> PostOrders();
+        //Task<IList<Order>> GetAllOrders();
+        //Task<bool> CheckCategories();
         Task PostOrdersSync(List<Order> orders);
         /// <summary>
         /// Orders post on server
@@ -21,6 +19,7 @@ namespace CostPlaningXamarin.Interfaces
         Dictionary<int, int> UpdateOrder(List<Order> orders);
         List<Order> GetOrdersByIds(List<int> ids);
         int GetLastOrderServerId();
+        int GetOrdersCountFromServer();
         //Task<User> PostUser();
     }
 }
