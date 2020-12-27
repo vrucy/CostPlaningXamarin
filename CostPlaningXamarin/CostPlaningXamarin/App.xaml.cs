@@ -20,7 +20,7 @@ namespace CostPlaningXamarin
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTEzQDMxMzgyZTMzMmUzME1kUlJ4QVpjZUNjODFDRDhqcG5QbVFlV1V2L3R6M2thTzh6aVR0KytCODg9");
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
             Device.SetFlags(new string[] { "Expander_Experimental" });
-            InitializeComponent(); 
+            InitializeComponent();
             SQLiteService.CreateDBAsync(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XamarinSQLite.db3")).Wait();
             // SQLiteService.DeleteAllUsers();
             if (SQLiteService.CheckIfExistUser())
@@ -43,7 +43,6 @@ namespace CostPlaningXamarin
         protected override void OnStart()
         {
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
-
             if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser())
             {
                 wiFiManager.SyncData();
@@ -56,7 +55,9 @@ namespace CostPlaningXamarin
         }
         protected override void OnResume()
         {
-            if (wiFiManager.IsHomeWifiConnected())
+            ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
+
+            if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser())
             {
                 wiFiManager.SyncData();
             }

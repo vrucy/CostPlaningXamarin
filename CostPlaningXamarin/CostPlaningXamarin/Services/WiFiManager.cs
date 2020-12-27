@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using CostPlaningXamarin.Models;
+using System;
 
 [assembly: Xamarin.Forms.Dependency(typeof(WiFiManager))]
 namespace CostPlaningXamarin.Services
@@ -78,6 +79,7 @@ namespace CostPlaningXamarin.Services
         private void SyncUsers(int lastUserId)
         {
             //TODO: nije dobro treba kao i orderi da salje Id-eve i da uporedi i da vrati novog jer se moze izbrisati
+            //uraditi proveru zadnjeg id jer ako se izbrise iz baze dolazi novi +1
             var users = userService.GetUnsyncUsers(lastUserId);
             SQLiteService.PostNewUsers(users.Result);
         }
@@ -93,7 +95,7 @@ namespace CostPlaningXamarin.Services
                 SQLiteService.SyncOrders(ids);
             }
             var ordersSync = SQLiteService.GetAllSyncOrdersIds().ToList();
-
+            //nije dobar uslov kad se bude brisalo mogu biti isti brojevi potrebnno proveriti zadnji id!
             if (ordersSync.Count != orderService.GetOrdersCountFromServer())
             {
                 var ordersFromServer = orderService.GetOrdersByIds(ordersSync);

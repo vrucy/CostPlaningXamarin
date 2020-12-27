@@ -55,7 +55,39 @@ namespace CostPlaningXamarin.ViewModels
                 OnPropertyChanged(nameof(Order));
             }
         }
+        private bool hasError;
 
+        public bool HasError
+        {
+            get { return hasError; }
+            set
+            {
+                hasError = value;
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
+        private bool isPriceEmpty;
+
+        public bool IsPriceEmpty
+        {
+            get { return isPriceEmpty; }
+            set
+            {
+                isPriceEmpty = value;
+                OnPropertyChanged(nameof(IsPriceEmpty));
+            }
+        }
+        private bool isSelectedCategory;
+
+        public bool IsSelectedCategory
+        {
+            get { return isSelectedCategory; }
+            set
+            {
+                isSelectedCategory = value;
+                OnPropertyChanged(nameof(IsSelectedCategory));
+            }
+        }
         public List<Category> Categories
         {
             get { return _categories; }
@@ -103,6 +135,7 @@ namespace CostPlaningXamarin.ViewModels
                 }
                 _order.UserId = SQLService.GetAppUser().Id;
                 _order.User = SQLService.GetAppUser();
+                
                  SQLService.SaveOrderAsync(_order);
                 _selectedCategory = null;
                 _order = new Order();

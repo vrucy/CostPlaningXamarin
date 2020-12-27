@@ -11,7 +11,11 @@ xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Sync
     <ContentPage.Content>
         <StackLayout >
             <Label Text="Enter order price:" />
-            <Entry Placeholder="Price:" ClearButtonVisibility="WhileEditing" Text="{Binding Order.Cost}"/>
+            <inputLayout:SfTextInputLayout 
+                   HasError="{Binding IsNameEmpty}"
+					ErrorText="Place enter price">
+                <Entry Placeholder="Price:" ClearButtonVisibility="WhileEditing" Text="{Binding Order.Cost}"/>
+            </inputLayout:SfTextInputLayout>
             <Picker ItemDisplayBinding="{Binding Name}" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
             <inputLayout:SfTextInputLayout Hint="Description" >
                 <Entry Text="{Binding Order.Description}"/>
