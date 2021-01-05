@@ -4,8 +4,6 @@ using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -17,12 +15,8 @@ namespace CostPlaningXamarin.ViewModels
         public ICommand NavigateBackCommand { get; private set; }
         private Order _order;
         private List<Category> _categories;
-        private Category _selectedCategory;
-        private ICommand _SubmitCommand;
-        IOrderService orderService = DependencyService.Get<IOrderService>();
+        private RelayCommand _SubmitCommand;
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
-        IUserService userService = DependencyService.Get<IUserService>();
-        IWiFiManager wiFiManager = DependencyService.Get<IWiFiManager>();
 
         public AddNewOrderViewModel()
         {
@@ -42,7 +36,6 @@ namespace CostPlaningXamarin.ViewModels
                 OnPropertyChanged(nameof(PreviusDate));
             }
         }
-
         public Order Order
         {
             get
@@ -51,41 +44,13 @@ namespace CostPlaningXamarin.ViewModels
             }
             set
             {
-                _order = value;
                 OnPropertyChanged(nameof(Order));
-            }
-        }
-        private bool hasError;
-
-        public bool HasError
-        {
-            get { return hasError; }
-            set
-            {
-                hasError = value;
-                OnPropertyChanged(nameof(HasError));
-            }
-        }
-        private bool isPriceEmpty;
-
-        public bool IsPriceEmpty
-        {
-            get { return isPriceEmpty; }
-            set
-            {
-                isPriceEmpty = value;
-                OnPropertyChanged(nameof(IsPriceEmpty));
-            }
-        }
-        private bool isSelectedCategory;
-
-        public bool IsSelectedCategory
-        {
-            get { return isSelectedCategory; }
-            set
-            {
-                isSelectedCategory = value;
-                OnPropertyChanged(nameof(IsSelectedCategory));
+                if (_order.Cost > 0.00)
+                {
+                    SubmitCommand.RaiseCanExecuteChanged();
+                }
+                _order = value;
+               
             }
         }
         public List<Category> Categories
@@ -93,7 +58,7 @@ namespace CostPlaningXamarin.ViewModels
             get { return _categories; }
             set { _categories = value; }
         }
-        [Required(ErrorMessage = "Category should not be empty")]
+        private Category _selectedCategory;
         public Category SelectedCategory
         {
             get { return _selectedCategory; }
@@ -102,43 +67,89 @@ namespace CostPlaningXamarin.ViewModels
                 _selectedCategory = value;
                 _order.CategoryId = _selectedCategory.Id;
                 _order.Category = _selectedCategory;
+                if (Validate())
+                {
+                    SubmitCommand.RaiseCanExecuteChanged();
+                }
                 OnPropertyChanged(nameof(SelectedCategory));
             }
         }
-        private string _description;
+        private double _cost;
 
-        public string Description
+        public double Cost
         {
-            get { return _description; }
-            set { _description = value; }
+            get { return _cost; }
+            set
+            {
+                _cost = value;
+                _order.Cost = value;
+                if (Validate())
+                {
+                    SubmitCommand.RaiseCanExecuteChanged();
+                }
+                OnPropertyChanged("Cost");
+            }
         }
+        private bool Validate()
+        {
+            bool isCostField = ValidateCostField();
+            bool isCategoryField = ValidateCategoryField();
 
-        public ICommand SubmitCommand
+            return isCostField && isCategoryField;
+        }
+        private bool ValidateCostField()
+        {
+           return CheckValue(_cost);
+       }
+        private bool ValidateCategoryField()
+        {
+            return CheckValue(_selectedCategory);
+        }
+        private bool CheckValue<T>(T value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            if (typeof(T) == typeof(double))
+            {
+                double d = Convert.ToDouble(value);
+                return d > 0;
+            }
+            if (typeof(T) == typeof(int))
+            {
+                int i = Convert.ToInt32(value);
+                return i > 0;
+            }
+            return true;
+        }
+        
+        public RelayCommand SubmitCommand
         {
             get
             {
                 if (_SubmitCommand == null)
                 {
-                    _SubmitCommand = new RelayCommand(Submit);
+                    
+                    _SubmitCommand = new RelayCommand(
+                        Submit, CanSend);
                 }
+
                 return _SubmitCommand;
             }
         }
+        private bool CanSend(object x)
+        {
+            return Validate();
+        }
         private void Submit(object x)
         {
-            //TODO: how know who is user? when use fingerprint
             try
             {
-                if (_order.Date == default(DateTime))
-                {
-                    _order.Date = DateTime.Now;
-                }
-                _order.UserId = SQLService.GetAppUser().Id;
-                _order.User = SQLService.GetAppUser();
-                
-                 SQLService.SaveOrderAsync(_order);
-                _selectedCategory = null;
-                _order = new Order();
+                 SQLService.SaveOrderAsync(CreateOrder());
+                ResetField();
+
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
             }
             catch (Exception e)
@@ -147,6 +158,25 @@ namespace CostPlaningXamarin.ViewModels
                 throw;
             }
         }
-
+        private void ResetField()
+        {
+            _selectedCategory = null;
+            _order = new Order();
+            _cost = 0;
+            OnPropertyChanged(nameof(SelectedCategory));
+            OnPropertyChanged(nameof(Order));
+            OnPropertyChanged(nameof(Cost));
+        }
+        private Order CreateOrder()
+        {
+            if (_order.Date == default(DateTime))
+            {
+                _order.Date = DateTime.Now;
+            }
+            _order.UserId = SQLService.GetAppUser().Id;
+            _order.User = SQLService.GetAppUser();
+            return _order;
+        }
     }
 }
+;

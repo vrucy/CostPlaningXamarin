@@ -14,7 +14,7 @@ namespace CostPlaningXamarin.Command
         }
 
         public event EventHandler CanExecuteChanged;
-
+        
         public void RaiseCanExecuteChanged()
         {
             var handler = CanExecuteChanged;
@@ -23,7 +23,6 @@ namespace CostPlaningXamarin.Command
                 handler(this, new EventArgs());
             }
         }
-
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             if (execute == null)
