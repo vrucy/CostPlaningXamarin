@@ -27,15 +27,15 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            //{
-            //    if (GetCurrentSSID().Equals(BSSID))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //return false;
-            return true;
+            if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            {
+                if (GetCurrentSSID().Equals(BSSID))
+                {
+                    return true;
+                }
+            }
+            return false;
+            //return true;
         }
         public async void SyncData()
             {
