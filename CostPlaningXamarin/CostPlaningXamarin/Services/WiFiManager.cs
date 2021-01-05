@@ -55,6 +55,10 @@ namespace CostPlaningXamarin.Services
 
             //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
         }
+        public bool IsServerAvailable()
+        {
+            return orderService.IsServerAvailable();
+        }
         private async void FirstSyncUserOwner(User appUser)
         {
             var serverUser = userService.PostAppUser().GetAwaiter().GetResult();

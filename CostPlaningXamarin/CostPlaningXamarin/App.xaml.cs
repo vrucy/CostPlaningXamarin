@@ -43,7 +43,7 @@ namespace CostPlaningXamarin
         protected override void OnStart()
         {
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
-            if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser())
+            if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser() && wiFiManager.IsServerAvailable())
             {
                 wiFiManager.SyncData();
             }
@@ -57,7 +57,7 @@ namespace CostPlaningXamarin
         {
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
 
-            if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser())
+            if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser() && wiFiManager.IsServerAvailable())
             {
                 wiFiManager.SyncData();
             }

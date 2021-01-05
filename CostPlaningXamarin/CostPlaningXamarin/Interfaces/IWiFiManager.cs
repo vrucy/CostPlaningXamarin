@@ -7,6 +7,7 @@ namespace CostPlaningXamarin.Interfaces
     public interface IWiFiManager
     {
         bool IsHomeWifiConnected();
+        bool IsServerAvailable();
         void SyncData();
     }
 }

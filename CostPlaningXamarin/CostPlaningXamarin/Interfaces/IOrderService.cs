@@ -20,6 +20,6 @@ namespace CostPlaningXamarin.Interfaces
         List<Order> GetOrdersByIds(List<int> ids);
         int GetLastOrderServerId();
         int GetOrdersCountFromServer();
-        //Task<User> PostUser();
+        bool IsServerAvailable();
     }
 }

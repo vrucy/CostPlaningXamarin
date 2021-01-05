@@ -74,5 +74,14 @@ namespace CostPlaningXamarin.Services
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetOrdersCountFromServer"));
         }
+        public bool IsServerAvailable()
+        {
+            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable");
+            if (res.Result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
