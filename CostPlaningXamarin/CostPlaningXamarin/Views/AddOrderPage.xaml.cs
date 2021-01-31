@@ -19,7 +19,6 @@ namespace CostPlaningXamarin.Views
         {
             this.DatePicer.IsOpen = true;
             this.DatePicer.MaximumDate = DateTime.Now;
-            
         }
     }
 }

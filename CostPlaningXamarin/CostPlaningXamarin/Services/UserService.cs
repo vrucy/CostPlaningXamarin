@@ -35,6 +35,10 @@ namespace CostPlaningXamarin.Services
             var res = _httpClient.PostAsync(urlLocalHost + "User/PostAppUser", MediaTypeHeaderValue(appUser)).GetAwaiter().GetResult();
             return JsonConvert.DeserializeObject<User>(res.Content.ReadAsStringAsync().Result);
         }
+        public Task PostCategory(Category category)
+        {
+            return _httpClient.PostAsync(urlLocalHost + "User/PostCategory", MediaTypeHeaderValue(category));
+        }
         public async Task<IList<User>> GetAllUsers()
         {
             //var res = await _httpClient.GetAsync(urlLocalHost + "Order/GetAllUsers");

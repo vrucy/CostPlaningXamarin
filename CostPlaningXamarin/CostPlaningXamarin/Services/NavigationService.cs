@@ -1,5 +1,6 @@
 ﻿
 using CostPlaningXamarin.Interfaces;
+using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using CostPlaningXamarin.Views;
 using System.Linq;
@@ -12,20 +13,16 @@ namespace CostPlaningXamarin.Services
         //TODO: make mathod to recive parameter and push page what write in these par. 
         public async void NavigateToAddItem()
         {
-            var currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushAsync(new AddItemPage());
+            await GetCurrentPage().Navigation.PushAsync(new AddItemPage());
         }
         public async void NavigateToTableOrders()
         {
-            var currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushAsync(new SortTable());
+            await GetCurrentPage().Navigation.PushAsync(new SortTable());
             //await currentPage.Navigation.PushAsync(new TableOrdersMasterPage());
         }
         public async void NavigateBack()
         {
-            var currentPage = GetCurrentPage();
-
-            await currentPage.Navigation.PopAsync();
+            await GetCurrentPage().Navigation.PopAsync();
         }
 
         private Page GetCurrentPage()
@@ -37,13 +34,32 @@ namespace CostPlaningXamarin.Services
 
         public void NavigateToAddUser()
         {
-            var currentPage = GetCurrentPage();
-            currentPage.Navigation.PushAsync(new AuthPage());
+            GetCurrentPage().Navigation.PushAsync(new AuthPage());
         }
 
         public async void NavigateToMainPage()
         {
             await GetCurrentPage().Navigation.PushAsync(new MainPage());
+        }
+
+        public async void NavigateToEditCategory()
+        {
+            await GetCurrentPage().Navigation.PushAsync(new EditPage(new Category()));
+        }
+
+        public async void NavigateToOrdersOptions()
+        {
+            await GetCurrentPage().Navigation.PushAsync(new OrdersPage());
+        }
+
+        public async void NavigateToEditOrderAsync(Order order)
+        {
+            await GetCurrentPage().Navigation.PushAsync(new EditPage(order));
+        }
+
+        public async void NavigateToAddCategoryAsync()
+        {
+            await GetCurrentPage().Navigation.PushAsync(new AddCategory());
         }
     }
 }

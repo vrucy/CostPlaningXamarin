@@ -8,8 +8,10 @@ namespace CostPlaningXamarin.Models
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+        public int ServerId { get; set; }
         public string Name { get; set; }
+        public bool IsDisable { get; set; }
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public ICollection<Order> Orders { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }

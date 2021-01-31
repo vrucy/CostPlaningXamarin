@@ -9,25 +9,26 @@ namespace CostPlaningXamarin.Interfaces
         Task CreateDBAsync(string path);
         void CreateAppUser(User user);
         void SaveOrderAsync(Order order);
+        void SaveAsync<T>(T item);
         void DeleteAll<T>() where T : class;
         void CreateTable<T>() where T : new();
         void DropTable<T>() where T : new();
         Task<List<Order>> GetOrdersAsync();
-        bool CheckIfHaveOrderForSync();
+        bool IsSyncData<T>();
         Task<List<Order>> GetAllOrdersForUserById(int userId);
         Task<List<User>> GetUsers();
-        //Task<User> GetUser();
         bool CheckIfExistUser();
         Task<List<Category>> GetAllCategories();
         void PostNewUsers(IList<User> newUsers);
         void UpdateDeviceUser(int newId);
         User GetAppUser();
         Task<List<Order>> OrderForSync();
+        Task<List<Category>> CategoriesForSync();
         void SyncOrders(Dictionary<int, int> ids);
-        void SaveOrders(IList<Order> orders);
-        IList<int> GetAllSyncOrdersIds();
-        int GetLastOrderServerId();
-        int GetLastUserServerId();
+        void SyncCategories(Dictionary<int, int> ids);
+        void SaveItems<T>(IList<T> collection);
+        IList<int> GetAllSyncIds<T>();
+        int GetLastServerId<T>() ;
         
     }
 }

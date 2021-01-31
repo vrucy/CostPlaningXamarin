@@ -2,16 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
 xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sf="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
              xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
              xmlns:navigationdrawer="clr-namespace:Syncfusion.SfNavigationDrawer.XForms;assembly=Syncfusion.SfNavigationDrawer.XForms"
+             xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms"
              x:Class="CostPlaningXamarin.Views.MainPage">
     <ContentPage.BindingContext>
         <local:UserViewModel x:Name="viewModel"/>
     </ContentPage.BindingContext>
-        <ContentPage.ToolbarItems>
+    <ContentPage.ToolbarItems>
         <ToolbarItem Clicked="settingButton_Clicked" IconImageSource="MenuIcon.ong" ></ToolbarItem>
-        </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>
     <!--<ContentPage.Content>-->
     <navigationdrawer:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300"  Position="Right" >
         <navigationdrawer:SfNavigationDrawer.ContentView>
@@ -21,7 +21,6 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
                              TextColor="White" WidthRequest="170" HeightRequest="170"
                              BackgroundColor="Teal" 
                              FontSize="30" Grid.Column="0"/>
-
 
                 <button:SfButton Text="Table" Command="{Binding NavigateToTableOrders}"
                              TextColor="White" WidthRequest="170" HeightRequest="170"
@@ -47,8 +46,35 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
         <navigationdrawer:SfNavigationDrawer.DrawerContentView >
 
             <StackLayout BackgroundColor="White">
-                <Button  Text="Add category" />
+                <sfPopup:SfPopupLayout x:Name="popupLayout">
+                    <sfPopup:SfPopupLayout.PopupView>
+                        <sfPopup:PopupView ShowFooter="False" HeaderTitle="Choose option">
+                            <sfPopup:PopupView.ContentTemplate>
+                                <DataTemplate>
+                                    <!--TODO: Must be prettier-->
+                                    <FlexLayout AlignItems="Center" JustifyContent="SpaceEvenly" BackgroundColor="White">
+                                        <button:SfButton Text="Add" Command="{Binding NavigateToAddCategoryCommand }"
+                                            TextColor="White" WidthRequest="80" HeightRequest="80"
+                                            BackgroundColor="Teal" />
 
+                                        <button:SfButton Text="Edit" Command="{Binding NavigateToEditCategoryCommand}"
+                                            TextColor="White" WidthRequest="80" HeightRequest="80"
+                                            BackgroundColor="Teal" />
+                                    </FlexLayout>
+                                    <!--<StackLayout>
+                                        <Button Text="Add" />
+                                        <Button Text="Edit" Command="{Binding NavigateToCategoriesOptionsCommand }"/>
+                                    </StackLayout>-->
+                                </DataTemplate>
+                            </sfPopup:PopupView.ContentTemplate>
+                        </sfPopup:PopupView>
+                        <!--<StackLayout x:Name="mainLayout">
+                            <Button x:Name="clickToShowPopup" Text="Category options" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                        </StackLayout>-->
+                    </sfPopup:SfPopupLayout.PopupView>
+                </sfPopup:SfPopupLayout>
+                <Button  Text="Category options" Clicked="ClickToShowPopUp"/>
+                <Button  Text="Orders options" Command="{Binding NavigateToOrdersOptionsCommand }"/>
                 <!--Button to end page-->
             </StackLayout>
 

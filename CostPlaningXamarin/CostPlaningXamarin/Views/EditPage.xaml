@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
+             xmlns:sf="clr-namespace:Syncfusion.SfNumericTextBox.XForms;assembly=Syncfusion.SfNumericTextBox.XForms"
+             xmlns:converter="clr-namespace:CostPlaningXamarin.Converters"
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             x:Class="CostPlaningXamarin.Views.EditPage">
+    <ContentPage.BindingContext>
+        <local:EditPageViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <converter:CategoryToBool x:Key="CategoryConverter"/>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid>
+            
+            <StackLayout IsVisible="{Binding IsCategory}">
+                <inputLayout:SfTextInputLayout Hint="Select category" ContainerType="Filled" Margin="10,0,10,0">
+                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" DisplayMemberPath="Name">
+                    </combobox:SfComboBox>
+                </inputLayout:SfTextInputLayout>
+                <inputLayout:SfTextInputLayout Hint="Category name" ContainerType="Filled" Margin="10,0,10,0">
+                    <Entry Text="{Binding Category.Name}"/> 
+                </inputLayout:SfTextInputLayout>
+                <Label Text="Disable category" HorizontalOptions="CenterAndExpand"/>
+                <!--TODO: Change color when checkbox is disable-->
+                <CheckBox IsChecked="{Binding IsDisable,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="CheckBox" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="False">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="CheckBox" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
+                </CheckBox>
+                <Button Command="{Binding EditCommand}" Text="Submit" VerticalOptions="EndAndExpand" Margin="10" >
+                    <Button.Style>
+                        <Style TargetType="Button">
+                        <Style.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="False">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                         </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                         </DataTrigger>
+                         
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackLayout>
+            
+            
+            <StackLayout IsVisible="{Binding IsOrder}" >
+                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="15">
+                    <Label Text="{Binding Order.User.FirstName, StringFormat='Ordered: {0}' }"/>
+                    <Label Text="{Binding Order.User.LastName }"/>
+                </StackLayout>
+                <inputLayout:SfTextInputLayout Hint="Order cost" ContainerType="Filled" Margin="10,0,10,0">
+                    <sf:SfNumericTextBox Value="{Binding Order.Cost}"/>
+                </inputLayout:SfTextInputLayout>
+                <inputLayout:SfTextInputLayout Hint="Date of ordering" ContainerType="Filled" Margin="10,0,10,0">
+                    <DatePicker Date="{Binding Order.Date}"/>
+                </inputLayout:SfTextInputLayout>
+                <inputLayout:SfTextInputLayout Hint="Description of ordering" ContainerType="Filled " Margin="10,0,10,0">
+                    <Editor AutoSize="TextChanges" Text="{Binding Order.Descriotion}"/>
+                </inputLayout:SfTextInputLayout>
+                <Button Command="{Binding EditCommand}" Text="Edit" VerticalOptions="EndAndExpand" Margin="10"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

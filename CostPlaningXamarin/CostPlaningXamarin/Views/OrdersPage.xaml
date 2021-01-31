@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
+             xmlns:converter="clr-namespace:CostPlaningXamarin.Converters"
+             xmlns:navigationdrawer="clr-namespace:Syncfusion.SfNavigationDrawer.XForms;assembly=Syncfusion.SfNavigationDrawer.XForms"
+             xmlns:sfListView="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             x:Class="CostPlaningXamarin.Views.OrdersPage">
+    <ContentPage.BindingContext>
+        <local:OrdersViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <converter:EmptyStringConverter x:Key="StringEmptyConverter"/>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="hamburgerButton_Clicked" IconImageSource="MenuIcon.ong" ></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <navigationdrawer:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300"  Position="Right" >
+            <navigationdrawer:SfNavigationDrawer.ContentView>
+                <sfListView:SfListView ItemsSource="{Binding Orders}" SelectedItem="{Binding Order}" ItemSize="100">
+                        <sfListView:SfListView.LayoutManager>
+                            <sfListView:LinearLayout />
+                        </sfListView:SfListView.LayoutManager>
+                        <sfListView:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="1" />
+                                </Grid.RowDefinitions>
+                                <Grid Padding="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="0.4*"/>
+                                        <RowDefinition Height="0.6*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="0.8*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Cost , StringFormat='Item cost = {0:N}'}"  Grid.Row="0" Grid.Column="0" HorizontalOptions="Start" />
+                                    <Label Text="{Binding Category.Name, StringFormat='Category item = {0:N}'}"  Grid.Row="0" Grid.Column="1" HorizontalOptions="Start"/>
+                                    <Label Text="{Binding Description,StringFormat='Description = {0:N}',Converter={StaticResource StringEmptyConverter},ConverterParameter='Description is empty'}" Grid.Row="1" Grid.Column="0" HorizontalOptions="StartAndExpand"/>
+                                </Grid>
+                                <Frame Grid.Row="1" OutlineColor="#E5E4E5" HasShadow="True" HeightRequest="3"/>
+                            </Grid>
+                        </DataTemplate>
+                        </sfListView:SfListView.ItemTemplate>
+                    </sfListView:SfListView> 
+            </navigationdrawer:SfNavigationDrawer.ContentView>
+            <navigationdrawer:SfNavigationDrawer.DrawerHeaderView>
+                <Grid BackgroundColor="#1aa1d6" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <StackLayout HeightRequest="50">
+                        <Label Text="Filter"  
+                       HorizontalTextAlignment="Center" 
+                       HorizontalOptions="Center" 
+                       FontSize="20" 
+                       TextColor="White" Grid.Row="2"/>
+                    </StackLayout>
+                </Grid>
+            </navigationdrawer:SfNavigationDrawer.DrawerHeaderView>
+
+            <navigationdrawer:SfNavigationDrawer.DrawerContentView >
+
+                <StackLayout BackgroundColor="White" >
+                    <Picker x:Name="NamePicer"  TitleColor="Black" ItemDisplayBinding="{Binding FirstName}" Title="Users" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}"/>
+                    <Picker ItemDisplayBinding="{Binding Name}" TextColor="Black" TitleColor="Black" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
+                    <Label Text="Date" HorizontalOptions="Center" FontSize="Body"/>
+                    <FlexLayout Direction="Row" JustifyContent="SpaceEvenly" WidthRequest="70" >
+                        <Picker ItemsSource="{Binding DateFrom}" Title="Date From" SelectedItem="{Binding DateFromSelected}" WidthRequest="100" TextColor="Black" TitleColor="Black"/>
+                        <Picker ItemsSource="{Binding DateTo}" Title="Date To" SelectedItem="{Binding DateToSelected}" WidthRequest="100" TextColor="Black" TitleColor="Black"/>
+                    </FlexLayout>
+                    
+                </StackLayout>
+
+            </navigationdrawer:SfNavigationDrawer.DrawerContentView>
+            <navigationdrawer:SfNavigationDrawer.DrawerFooterView>
+
+                <FlexLayout Direction="Row" JustifyContent="SpaceEvenly" AlignContent="Center" AlignItems="Center" HeightRequest="50" BackgroundColor="White">
+                    <Button Command="{Binding ClearFilterCommand}" BackgroundColor="YellowGreen" Text="Clear" />
+                    <Button Text="Apply" BackgroundColor="Teal" Command="{Binding ApplyFiltersCommand}"/>
+                </FlexLayout>
+            </navigationdrawer:SfNavigationDrawer.DrawerFooterView>
+
+        </navigationdrawer:SfNavigationDrawer>
+    </ContentPage.Content>
+</ContentPage>

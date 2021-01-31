@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using SQLiteNetExtensionsAsync.Extensions;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 [assembly: Xamarin.Forms.Dependency(typeof(SQLiteService))]
 namespace CostPlaningXamarin.Services
@@ -27,7 +28,6 @@ namespace CostPlaningXamarin.Services
             db.CreateTableAsync<Order>().Wait();
             db.CreateTableAsync<Category>().Wait();
             db.CreateTableAsync<User>().Wait();
-            Seed(db);
         }
         private User AppUser()
         {
@@ -38,16 +38,7 @@ namespace CostPlaningXamarin.Services
         {
             db.InsertAsync(order);
         }
-        public async void Seed(SQLiteAsyncConnection db)
-        {
-            if (db.Table<Category>().ToListAsync().Result.Count == 0)
-            {
 
-                db.InsertAsync(new Category() { Name = "Hrana" });
-                db.InsertAsync(new Category() { Name = "Razno" });
-                db.InsertAsync(new Category() { Name = "Putovanja" });
-            }
-        }
         public void DeleteAll<T>() where T : class
         {
             db.DeleteAllAsync<T>();
@@ -64,10 +55,9 @@ namespace CostPlaningXamarin.Services
         {
             return db.GetAllWithChildrenAsync<Order>(x => x.UserId == id && x.ServerId == 0);
         }
-        //Read All Items
         public Task<List<Order>> GetOrdersAsync()
         {
-            return db.GetAllWithChildrenAsync<Order>();
+            return db.GetAllWithChildrenAsync<Order>()/*.Result.Select(x=>x.UserId )*/;
         }
         public Task<List<Order>> GetOrdersUnsyncAsync()
         {
@@ -84,8 +74,9 @@ namespace CostPlaningXamarin.Services
         }
         public void CreateAppUser(User user)
         {
-            var x = db.Table<User>().CountAsync().Result;
             user.DeviceUser = true;
+
+            user.Id = 1;
             db.InsertAsync(user);
         }
         public bool CheckIfExistUser()
@@ -104,16 +95,12 @@ namespace CostPlaningXamarin.Services
         {
             foreach (var item in users)
             {
-                item.ServerId = item.Id;
-                item.Id = 0;
+                db.InsertAsync(item).Wait();
             }
-
-            db.InsertAllAsync(users).Wait();
-
         }
         public void UpdateDeviceUser(int newId)
         {
-            var appUser = db.GetAllWithChildrenAsync<User>().Result.FirstOrDefault(x => x.ServerId == newId);
+            var appUser = db.GetAllWithChildrenAsync<User>().Result.FirstOrDefault(x => x.Id == newId);
 
             appUser.DeviceUser = true;
             db.UpdateWithChildrenAsync(appUser).Wait();
@@ -121,6 +108,10 @@ namespace CostPlaningXamarin.Services
         public Task<List<Order>> OrderForSync()
         {
             return db.GetAllWithChildrenAsync<Order>(x => x.ServerId == 0);
+        }
+        public Task<List<Category>> CategoriesForSync()
+        {
+            return db.GetAllWithChildrenAsync<Category>(x => x.ServerId == 0);
         }
         public void SyncOrders(Dictionary<int, int> ids)
         {
@@ -132,19 +123,67 @@ namespace CostPlaningXamarin.Services
 
             }
         }
-        public void SaveOrders(IList<Order> orders)
+        public void SyncCategories(Dictionary<int, int> ids)
         {
-            foreach (var item in orders)
+            foreach (var item in ids)
             {
-                item.ServerId = item.Id;
-                db.InsertAsync(item).GetAwaiter().GetResult();
+                var currentItem = db.GetWithChildrenAsync<Category>(item.Key).Result;
+                currentItem.ServerId = item.Value;
+                db.UpdateWithChildrenAsync(currentItem).GetAwaiter().GetResult();
+
             }
+        }
+        public void SaveItems<T>(IList<T> collection)
+        {
+            if (typeof(T) == typeof(Order))
+            {
+                var x = collection as List<Order>;
+                foreach (var item in x)
+                {
+                    item.ServerId = item.Id;
+                    db.InsertAsync(item).GetAwaiter().GetResult();
+                }
+            }
+            else if (typeof(T) == typeof(Category))
+            {
+                var x = collection as List<Category>;
+                foreach (var item in x)
+                {
+                    item.ServerId = item.Id;
+                    db.InsertAsync(item).GetAwaiter().GetResult();
+                }
+            }
+            else if (typeof(T) == typeof(User))
+            {
+                var x = collection as List<Category>;
+                db.InsertAllAsync(x);
+            }
+        }
+        public void SaveAsync<T>(T item)
+        {
+            db.InsertAsync(item);
         }
         public IList<int> GetAllSyncOrdersIds()
         {
             return db.GetAllWithChildrenAsync<Order>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
         }
+        public IList<int> GetAllSyncIds<T>()
+        {
+            if (typeof(T) == typeof(Order))
+            {
+                return db.GetAllWithChildrenAsync<Order>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
+            }
+            else if (typeof(T) == typeof(Category))
+            {
+                return db.GetAllWithChildrenAsync<Category>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
+            }
+            else if (typeof(T) == typeof(User))
+            {
+                return db.GetAllWithChildrenAsync<User>(x => x.Id != 0).Result.Select(o => o.Id).ToList();
+            }
 
+            return null;
+        }
         public int GetLastOrderServerId()
         {
             var orders = db.GetAllWithChildrenAsync<Order>().Result;
@@ -156,16 +195,62 @@ namespace CostPlaningXamarin.Services
             return orders.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
         }
 
-        public bool CheckIfHaveOrderForSync()
+        public bool IsSyncData<T>()
         {
-            return db.GetAllWithChildrenAsync<Order>(x => x.ServerId == 0).Result.Any();
+            if (typeof(T) == typeof(Order))
+            {
+                return db.GetAllWithChildrenAsync<Order>(x => x.ServerId == 0).Result.Any();
+            }
+            else if (typeof(T) == typeof(Category))
+            {
+                return db.GetAllWithChildrenAsync<Category>(x => x.ServerId == 0).Result.Any();
+            }
+            return false;
         }
 
-        public int GetLastUserServerId()
+        //public int GetLastUserServerId()
+        //{
+        //    return db.GetAllWithChildrenAsync<User>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+        //}
+        //public int GetLastServerId()
+        //{
+        //    //return db.GetAllWithChildrenAsync< typeof(T).Name > ().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+
+        //    return 0;
+        //}
+
+        //TODO: getting model through reflection its be only 2 line of code if posible
+        public int GetLastServerId<T>()
         {
-            return db.GetAllWithChildrenAsync<User>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+            if (typeof(T) == typeof(User))
+            {
+                return db.GetAllWithChildrenAsync<User>().Result.OrderByDescending(x => x.Id).FirstOrDefault().Id;
+            }
+            else if (typeof(T) == typeof(Order))
+            {
+                if (IsOrderEmpty())
+                {
+                    return 0;
+                }
+                return db.GetAllWithChildrenAsync<Order>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+            }
+            else if (typeof(T) == typeof(Category) && !IsCategoryEmpty())
+            {
+                if (IsCategoryEmpty())
+                {
+                    return 0;
+                }
+                return db.GetAllWithChildrenAsync<Category>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+            }
+            return -1;
         }
-
-
+        private bool IsOrderEmpty()
+        {
+            return !db.GetAllWithChildrenAsync<Order>().Result.Any();
+        }
+        private bool IsCategoryEmpty()
+        {
+            return !db.GetAllWithChildrenAsync<Category>().Result.Any();
+        }
     }
 }

@@ -61,7 +61,7 @@ namespace CostPlaningXamarin
             {
                 wiFiManager.SyncData();
             }
-        }
+       }
 
     }
 }

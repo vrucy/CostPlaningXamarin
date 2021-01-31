@@ -15,6 +15,7 @@ namespace CostPlaningXamarin.Services
     {
         private const string BSSID = "f8:5b:3b:5e:e1:bb";
         IOrderService orderService = DependencyService.Get<IOrderService>();
+        ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IUserService userService = DependencyService.Get<IUserService>();
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
 
@@ -38,19 +39,26 @@ namespace CostPlaningXamarin.Services
             return true;
         }
         public async void SyncData()
-            {
+        {
             var appUser = SQLiteService.GetAppUser();
-            if (appUser.ServerId == 0)
+
+            if (appUser.Id == 1)
+            
             {
                 FirstSyncUserOwner(appUser);
+                SQLiteService.SaveItems(categoryService.GetCategories());
             }
-            if (SQLiteService.GetLastUserServerId() != userService.GetLastUserServerId())
+            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
             {
-                SyncUsers(SQLiteService.GetLastUserServerId());
+                SyncUsers(SQLiteService.GetLastServerId<User>());
             }
-            if (SQLiteService.GetLastOrderServerId() != orderService.GetLastOrderServerId() || SQLiteService.CheckIfHaveOrderForSync())
+            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
                 SyncOrders(SQLiteService.OrderForSync().Result);
+            }
+            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
+            {
+                SyncCategoies(SQLiteService.CategoriesForSync().Result);
             }
 
             //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
@@ -64,13 +72,11 @@ namespace CostPlaningXamarin.Services
             var serverUser = userService.PostAppUser().GetAwaiter().GetResult();
             SQLiteService.DropTable<User>();
             SQLiteService.CreateTable<User>();
-
-            SyncNewUsers(serverUser.Id);
-
+            SyncNewUsers(serverUser.Id);   
             var orders = await SQLiteService.GetAllOrdersForUserById(appUser.Id);
             if (orders.Count > 0)
             {
-                //TODO: potreban neki rollback ukiloko pukne veza
+                //TODO: need some rollback if crash conn?
                 PostOrders(orders);
             }
         }
@@ -82,8 +88,6 @@ namespace CostPlaningXamarin.Services
         }
         private void SyncUsers(int lastUserId)
         {
-            //TODO: nije dobro treba kao i orderi da salje Id-eve i da uporedi i da vrati novog jer se moze izbrisati
-            //uraditi proveru zadnjeg id jer ako se izbrise iz baze dolazi novi +1
             var users = userService.GetUnsyncUsers(lastUserId);
             SQLiteService.PostNewUsers(users.Result);
         }
@@ -91,6 +95,7 @@ namespace CostPlaningXamarin.Services
         {
             orderService.PostOrdersSync(orders);
         }
+        //TODO: refactor
         private void SyncOrders(List<Order> orders)
         {
             if (orders.Count != 0)
@@ -98,17 +103,28 @@ namespace CostPlaningXamarin.Services
                 var ids = orderService.UpdateOrder(orders);
                 SQLiteService.SyncOrders(ids);
             }
-            var ordersSync = SQLiteService.GetAllSyncOrdersIds().ToList();
-            //nije dobar uslov kad se bude brisalo mogu biti isti brojevi potrebnno proveriti zadnji id!
-            if (ordersSync.Count != orderService.GetOrdersCountFromServer())
+            var ordersSync = SQLiteService.GetAllSyncIds<Order>().ToList();
+
+            var ordersFromServer = orderService.GetOrdersByIds(ordersSync);
+
+            if (ordersFromServer.Count != 0)
             {
-                var ordersFromServer = orderService.GetOrdersByIds(ordersSync);
+                SQLiteService.SaveItems(ordersFromServer);
+            }
+        }
+        private void SyncCategoies(List<Category> categories)
+        {
+            if (categories.Count != 0)
+            {
+                var ids = categoryService.UpdateCategories(categories);
+                SQLiteService.SyncCategories(ids);
+            }
+            var categoriesSync = SQLiteService.GetAllSyncIds<Category>().ToList();
+            var categoriesFromServer = categoryService.GetAllCategoriesByIds(categoriesSync);
 
-                if (ordersFromServer.Count != 0)
-                {
-                    SQLiteService.SaveOrders(ordersFromServer);
-                }
-
+            if (categoriesFromServer.Count != 0)
+            {
+                SQLiteService.SaveItems(categoriesFromServer);
             }
         }
 

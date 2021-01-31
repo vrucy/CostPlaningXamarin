@@ -5,8 +5,6 @@ using CostPlaningXamarin.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -25,10 +23,9 @@ namespace CostPlaningXamarin.ViewModels
 
         public SortTableViewModel()
         {
-
+            _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
             _allOrders = _sqliteService.GetOrdersAsync().GetAwaiter().GetResult();
             _orders = _allOrders;
-            _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
 
             _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
 
@@ -290,6 +287,7 @@ namespace CostPlaningXamarin.ViewModels
             }
             if (SelectedUser != null)
             {
+                //promena
                 _copy = _copy.Where(o => o.UserId == _selectedUser.Id).ToList();
             }
             if (DateFromSelected != null && DateToSelected != null)

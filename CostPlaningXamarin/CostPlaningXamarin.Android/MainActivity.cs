@@ -1,5 +1,4 @@
 ﻿using System;
-using Plugin.Fingerprint;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
@@ -14,7 +13,6 @@ namespace CostPlaningXamarin.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            CrossFingerprint.SetCurrentActivityResolver(() => this);
             
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
