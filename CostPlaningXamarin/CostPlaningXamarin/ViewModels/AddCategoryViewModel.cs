@@ -51,7 +51,7 @@ namespace CostPlaningXamarin.ViewModels
 
                 _navigationService.NavigateToMainPage();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 throw;

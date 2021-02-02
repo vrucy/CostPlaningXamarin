@@ -17,7 +17,7 @@ namespace CostPlaningXamarin
         public App()
         {
 
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTEzQDMxMzgyZTMzMmUzME1kUlJ4QVpjZUNjODFDRDhqcG5QbVFlV1V2L3R6M2thTzh6aVR0KytCODg9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzkyOTk2QDMxMzgyZTM0MmUzMEpkeHU4SVVVRHdwWkZYSnp2blRwcVBZWUZIa0pLRWpHdGU4d3BES3pCQ3c9");
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
             Device.SetFlags(new string[] { "Expander_Experimental" });
             InitializeComponent();

@@ -17,8 +17,9 @@
             <inputLayout:SfTextInputLayout Hint="Description" ContainerType="Filled">
                 <Entry Text="{Binding Order.Description}"/>
             </inputLayout:SfTextInputLayout>
-            <sf:SfDatePicker PickerMode="Dialog" x:Name="DatePicer" HeaderText="Select date" Date="{Binding PreviusDate}"/>
-            <Button Clicked="OpenPicer" Text="Previus order date"/>
+            <inputLayout:SfTextInputLayout Hint="Previus order date" ContainerType="Filled" Margin="10,0,10,0">
+                <DatePicker Date="{Binding PreviusDate}"/>
+            </inputLayout:SfTextInputLayout>
             <Button Text="Submit" VerticalOptions="EndAndExpand" 
             Command="{Binding SubmitCommand}" 
             TextColor="White"

@@ -69,9 +69,12 @@
                 <inputLayout:SfTextInputLayout Hint="Date of ordering" ContainerType="Filled" Margin="10,0,10,0">
                     <DatePicker Date="{Binding Order.Date}"/>
                 </inputLayout:SfTextInputLayout>
-                <inputLayout:SfTextInputLayout Hint="Description of ordering" ContainerType="Filled " Margin="10,0,10,0">
-                    <Editor AutoSize="TextChanges" Text="{Binding Order.Descriotion}"/>
+                <inputLayout:SfTextInputLayout Hint="Description" ContainerType="Filled " Margin="10,0,10,0">
+                    <Editor AutoSize="TextChanges" Text="{Binding Order.Description}"/>
                 </inputLayout:SfTextInputLayout>
+                <CheckBox IsChecked="{Binding Order.IsDisable,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
+                    
+                </CheckBox>
                 <Button Command="{Binding EditCommand}" Text="Edit" VerticalOptions="EndAndExpand" Margin="10"/>
             </StackLayout>
         </Grid>

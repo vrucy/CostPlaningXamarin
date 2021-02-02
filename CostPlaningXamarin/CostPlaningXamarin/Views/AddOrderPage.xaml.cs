@@ -14,11 +14,5 @@ namespace CostPlaningXamarin.Views
         {
             InitializeComponent();
         }
-
-        private void OpenPicer(object sender, System.EventArgs e)
-        {
-            this.DatePicer.IsOpen = true;
-            this.DatePicer.MaximumDate = DateTime.Now;
-        }
     }
 }

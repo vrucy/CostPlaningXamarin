@@ -155,7 +155,7 @@ namespace CostPlaningXamarin.ViewModels
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 throw;

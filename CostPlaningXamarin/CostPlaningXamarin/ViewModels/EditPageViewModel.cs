@@ -118,6 +118,7 @@ namespace CostPlaningXamarin.ViewModels
         private void Edit(object x)
         {
             var r = _category;
+            var o = _order;
         }
     }
 }

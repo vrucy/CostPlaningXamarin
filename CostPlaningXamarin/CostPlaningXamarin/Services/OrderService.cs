@@ -43,18 +43,12 @@ namespace CostPlaningXamarin.Services
 
         public Dictionary<int, int> UpdateOrder(List<Order> orders)
         {
-            try
-            {
-                var res = _httpClient.PostAsync(urlLocalHost + "Order/UpdateOrders", MediaTypeHeaderValue(orders)).GetAwaiter().GetResult();
 
-                var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
-            }
-            catch (Exception r)
-            {
+            var res = _httpClient.PostAsync(urlLocalHost + "Order/UpdateOrders", MediaTypeHeaderValue(orders)).GetAwaiter().GetResult();
 
-                throw;
-            }
+            var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
+
         }
         //TODO: need to be GetAsync!!
         public List<Order> GetOrdersByIds(List<int> ids)

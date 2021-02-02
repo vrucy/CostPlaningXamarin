@@ -18,22 +18,16 @@ namespace CostPlaningXamarin.Services
         private const string urlLocalHost = "http://192.168.1.88:54481/";
         private HttpContent MediaTypeHeaderValue(object o)
         {
-            try
-            {
-                var data = JsonConvert.SerializeObject(o,Formatting.None,
-                    new JsonSerializerSettings()
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
-                var content = new StringContent(data);
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                return content;
-            }
-            catch (System.Exception e)
-            {
 
-                throw;
-            }
+            var data = JsonConvert.SerializeObject(o, Formatting.None,
+                new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+            var content = new StringContent(data);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            return content;
+
         }
         private string ResponseResult(string route)
         {
@@ -42,20 +36,10 @@ namespace CostPlaningXamarin.Services
         }
         public Dictionary<int, int> UpdateCategories(List<Category> categories)
         {
-            try
-            {
             var res = _httpClient.PostAsync(urlLocalHost + "Category/UpdateCategories", MediaTypeHeaderValue(categories)).GetAwaiter().GetResult();
 
             var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
-            }
-            catch (System.Exception e)
-            {
-
-                throw;
-            }
-
-
         }
 
         public List<Category> GetAllCategoriesByIds(List<int> ids)
