@@ -13,8 +13,10 @@ namespace CostPlaningXamarin.Models
         public bool IsDisable { get; set; }
         public DateTime Date { get; set; }
         public double Cost { get; set; }
+        public bool IsWriteToDB { get; set; }
+
         public string Description { get; set; }
-        [ForeignKey(typeof(User)),]
+        [ForeignKey(typeof(User))]
         public int UserId { get; set; }
         [ManyToOne(CascadeOperations = CascadeOperation.All)]
         public User User { get; set; }

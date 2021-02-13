@@ -70,7 +70,7 @@ namespace CostPlaningXamarin.Services
         }
         public Task<List<Category>> GetAllCategories()
         {
-            return db.Table<Category>().ToListAsync();
+            return db.Table<Category>().Where(x => x.IsDisable == false).ToListAsync();
         }
         public void CreateAppUser(User user)
         {
@@ -208,17 +208,6 @@ namespace CostPlaningXamarin.Services
             return false;
         }
 
-        //public int GetLastUserServerId()
-        //{
-        //    return db.GetAllWithChildrenAsync<User>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
-        //}
-        //public int GetLastServerId()
-        //{
-        //    //return db.GetAllWithChildrenAsync< typeof(T).Name > ().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
-
-        //    return 0;
-        //}
-
         //TODO: getting model through reflection its be only 2 line of code if posible
         public int GetLastServerId<T>()
         {
@@ -230,7 +219,7 @@ namespace CostPlaningXamarin.Services
             {
                 if (IsOrderEmpty())
                 {
-                    return 0;
+                    return -1;
                 }
                 return db.GetAllWithChildrenAsync<Order>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
             }
@@ -251,6 +240,37 @@ namespace CostPlaningXamarin.Services
         private bool IsCategoryEmpty()
         {
             return !db.GetAllWithChildrenAsync<Category>().Result.Any();
+        }
+
+        public List<int> AllDisable<T>()
+        {
+            if (typeof(T) == typeof(Category))
+            {
+                return db.GetAllWithChildrenAsync<Category>(c => c.IsDisable == true).Result.Select(x => x.ServerId).ToList();
+            }
+            return null;
+        }
+        public List<int> AllEnable<T>()
+        {
+            if (typeof(T) == typeof(Category))
+            {
+                return db.GetAllWithChildrenAsync<Category>(c => c.IsDisable == false).Result.Select(x => x.ServerId).ToList();
+            }
+            return null;
+        }
+        public void SyncVisbility<T>(Dictionary<int, bool> collection,bool isWriteToDb)
+        {
+            if (typeof(T) == typeof(Category))
+            {
+                foreach (var item in collection)
+                {
+                    var category = db.FindAsync<Category>(x => x.ServerId == item.Key).Result;
+                    category.IsDisable = item.Value;
+                    category.IsWriteToDB = isWriteToDb;
+
+                    db.UpdateWithChildrenAsync(category).Wait();
+                }
+            }
         }
     }
 }

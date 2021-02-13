@@ -31,12 +31,13 @@ namespace CostPlaningXamarin.Services
         }
         private string ResponseResult(string route)
         {
+
             var res = _httpClient.GetAsync(urlLocalHost + route).GetAwaiter().GetResult();
             return res.Content.ReadAsStringAsync().Result;
         }
-        public Dictionary<int, int> UpdateCategories(List<Category> categories)
+        public Dictionary<int, int> PostCategories(List<Category> categories,int userId)
         {
-            var res = _httpClient.PostAsync(urlLocalHost + "Category/UpdateCategories", MediaTypeHeaderValue(categories)).GetAwaiter().GetResult();
+            var res = _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategories/{0}", userId), MediaTypeHeaderValue(categories)).GetAwaiter().GetResult();
 
             var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
@@ -58,6 +59,27 @@ namespace CostPlaningXamarin.Services
         public int GetLastCategoryServerId()
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Category/GetLastCategoryServerId"));
+        }
+
+        public bool EditCategory(Category category,int userId)
+        {
+            var res = _httpClient.PutAsync(urlLocalHost + string.Format("Category/EditCategory/{0}",userId), MediaTypeHeaderValue(category)).GetAwaiter().GetResult();
+
+            if (res.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public Dictionary<int, bool> GetAllCategoresVisibility(int appUserId)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncDisable/{0}",appUserId)));
+        }
+
+        public void SyncDisable(List<int> ids)
+        {
+            _httpClient.PutAsync(urlLocalHost + "Category/SyncDisableOnServer", MediaTypeHeaderValue(ids)).Wait();
         }
     }
 }

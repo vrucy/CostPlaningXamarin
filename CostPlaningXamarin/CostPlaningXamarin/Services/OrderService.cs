@@ -77,5 +77,11 @@ namespace CostPlaningXamarin.Services
             }
             return false;
         }
+
+        public List<int> AllDisableOrders()
+        {
+            return JsonConvert.DeserializeObject<List<int>>(ResponseResult("Order/SyncDisable"));
+
+        }
     }
 }

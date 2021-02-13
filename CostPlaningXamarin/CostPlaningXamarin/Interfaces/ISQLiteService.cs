@@ -29,6 +29,8 @@ namespace CostPlaningXamarin.Interfaces
         void SaveItems<T>(IList<T> collection);
         IList<int> GetAllSyncIds<T>();
         int GetLastServerId<T>() ;
-        
+        List<int> AllDisable<T>();
+        List<int> AllEnable<T>();
+        void SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
     }
 }

@@ -26,7 +26,7 @@
                 </inputLayout:SfTextInputLayout>
                 <Label Text="Disable category" HorizontalOptions="CenterAndExpand"/>
                 <!--TODO: Change color when checkbox is disable-->
-                <CheckBox IsChecked="{Binding IsDisable,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
+                <CheckBox IsChecked="{Binding Category.IsDisable,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox">
                             <Style.Triggers>

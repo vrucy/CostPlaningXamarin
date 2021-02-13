@@ -17,6 +17,7 @@ namespace CostPlaningXamarin.Interfaces
         /// <returns>Returns Dictionary(int oldKey, int newKey)</returns>
         Dictionary<int, int> UpdateOrder(List<Order> orders);
         List<Order> GetOrdersByIds(List<int> ids);
+        List<int> AllDisableOrders();
         int GetLastOrderServerId();
         int GetOrdersCountFromServer();
         bool IsServerAvailable();

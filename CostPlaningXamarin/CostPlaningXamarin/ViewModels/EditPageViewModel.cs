@@ -17,6 +17,7 @@ namespace CostPlaningXamarin.ViewModels
         private bool _isDisable;
         private RelayCommand _EditCommand;
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
+        ICategoryService categoryService = DependencyService.Get<ICategoryService>();
 
         //TODO: Generic make editpage.xaml.cs recive T
         public EditPageViewModel()
@@ -74,16 +75,6 @@ namespace CostPlaningXamarin.ViewModels
             }
         }
 
-        public bool IsDisable
-        {
-            get { return _isDisable; }
-            set 
-            {
-                _isDisable = value;
-                OnPropertyChanged("IsDisable");
-            }
-        }
-
         private bool IsLoaded()
         {
             if (Order != null)
@@ -118,6 +109,11 @@ namespace CostPlaningXamarin.ViewModels
         private void Edit(object x)
         {
             var r = _category;
+            var user = SQLService.GetAppUser();
+            if (_category != null)
+            {
+                categoryService.EditCategory(_category, user.Id);
+            }
             var o = _order;
         }
     }

@@ -54,6 +54,7 @@ namespace CostPlaningXamarin.Services
 
         public int GetLastUserServerId()
         {
+           
             return JsonConvert.DeserializeObject<int>(ResponseResult("User/GetLastUserServerId"));
         }
 
