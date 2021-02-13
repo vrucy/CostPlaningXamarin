@@ -15,8 +15,10 @@ namespace CostPlaningXamarin.Services
     {
         private const string BSSID = "f8:5b:3b:5e:e1:bb";
         IOrderService orderService = DependencyService.Get<IOrderService>();
+        ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IUserService userService = DependencyService.Get<IUserService>();
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
+        ISynchronizationService synchronizationService = DependencyService.Get<ISynchronizationService>();
 
         public string GetCurrentSSID()
         {
@@ -38,75 +40,34 @@ namespace CostPlaningXamarin.Services
             //return true;
         }
         public async void SyncData()
-            {
+         {
             var appUser = SQLiteService.GetAppUser();
-            if (appUser.ServerId == 0)
+            //TODO: bilo je jedan alli sam stavio sad nula provari sta treba!
+            if (appUser.Id == 0)
             {
-                FirstSyncUserOwner(appUser);
+                synchronizationService.FirstSyncUserOwner(appUser);
+                SQLiteService.SaveItems(categoryService.GetCategories());
             }
-            if (SQLiteService.GetLastUserServerId() != userService.GetLastUserServerId())
+            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
             {
-                SyncUsers(SQLiteService.GetLastUserServerId());
+                synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
             }
-            if (SQLiteService.GetLastOrderServerId() != orderService.GetLastOrderServerId() || SQLiteService.CheckIfHaveOrderForSync())
+            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
-                SyncOrders(SQLiteService.OrderForSync().Result);
+                synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
             }
+            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
+            {
+                synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+            }
+            synchronizationService.SyncVisible<Category>(appUser.Id);
 
             //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
         }
-        private async void FirstSyncUserOwner(User appUser)
+        public bool IsServerAvailable()
         {
-            var serverUser = userService.PostAppUser().GetAwaiter().GetResult();
-            SQLiteService.DropTable<User>();
-            SQLiteService.CreateTable<User>();
-
-            SyncNewUsers(serverUser.Id);
-
-            var orders = await SQLiteService.GetAllOrdersForUserById(appUser.Id);
-            if (orders.Count > 0)
-            {
-                //TODO: potreban neki rollback ukiloko pukne veza
-                PostOrders(orders);
-            }
+            return orderService.IsServerAvailable();
         }
-        private void SyncNewUsers(int userId)
-        {
-            var allUsers = userService.GetAllUsers().Result;
-            SQLiteService.PostNewUsers(allUsers);
-            SQLiteService.UpdateDeviceUser(userId);
-        }
-        private void SyncUsers(int lastUserId)
-        {
-            //TODO: nije dobro treba kao i orderi da salje Id-eve i da uporedi i da vrati novog jer se moze izbrisati
-            //uraditi proveru zadnjeg id jer ako se izbrise iz baze dolazi novi +1
-            var users = userService.GetUnsyncUsers(lastUserId);
-            SQLiteService.PostNewUsers(users.Result);
-        }
-        private void PostOrders(List<Order> orders)
-        {
-            orderService.PostOrdersSync(orders);
-        }
-        private void SyncOrders(List<Order> orders)
-        {
-            if (orders.Count != 0)
-            {
-                var ids = orderService.UpdateOrder(orders);
-                SQLiteService.SyncOrders(ids);
-            }
-            var ordersSync = SQLiteService.GetAllSyncOrdersIds().ToList();
-            //nije dobar uslov kad se bude brisalo mogu biti isti brojevi potrebnno proveriti zadnji id!
-            if (ordersSync.Count != orderService.GetOrdersCountFromServer())
-            {
-                var ordersFromServer = orderService.GetOrdersByIds(ordersSync);
-
-                if (ordersFromServer.Count != 0)
-                {
-                    SQLiteService.SaveOrders(ordersFromServer);
-                }
-
-            }
-        }
-
+        
     }
 }

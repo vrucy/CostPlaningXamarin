@@ -1,57 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
              xmlns:sf="clr-namespace:Syncfusion.XForms.Pickers;assembly=Syncfusion.SfPicker.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
-             xmlns:behaviors="clr-namespace:CostPlaningXamarin.Behaviors;assembly=CostPlaningXamarin"
-             xmlns:dataForm ="clr-namespace:Syncfusion.XForms.DataForm;assembly=Syncfusion.SfDataForm.XForms"
-             xmlns:converters="clr-namespace:CostPlaningXamarin.Converters;assembly=CostPlaningXamarin"
              x:Class="CostPlaningXamarin.Views.AddItemPage">
     <ContentPage.BindingContext>
         <local:AddNewOrderViewModel x:Name="viewModel"/>
     </ContentPage.BindingContext>
-    <!--<ContentPage.Resources>
-        <converters:FirstValidationErrorConverter x:Key="FirstValidationErrorConverter" />
-    </ContentPage.Resources>-->
     <ContentPage.Content>
         <StackLayout >
-            <!--<Entry Text="{Binding Cost.Value, Mode=TwoWay}">
-                <Entry.Style>
-                    <OnPlatform x:TypeArguments="Style" Android="{StaticResource EntryStyle}" >
-                        
-                    </OnPlatform>
-                </Entry.Style>
-                <Entry.Behaviors>
-                    <behaviors:EventToCommandBehavior
-							EventName="TextChanged"
-							Command="{Binding ValidateCostCommand}" />
-                </Entry.Behaviors>
-                <Entry.Triggers>
-                    <DataTrigger 
-							TargetType="Entry"
-							Binding="{Binding Cost.IsValid}"
-							Value="False">
-                        <Setter Property="behaviors:LineColorBehavior.LineColor" Value="{StaticResource ErrorColor}" />
-                    </DataTrigger>
-                </Entry.Triggers>
-            </Entry>
-            <Label 
-					Text="{Binding Cost.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-					Style="{StaticResource ValidationErrorLabelStyle}" />-->
-            <Label Text="enter order price:" />
-            <inputLayout:SfTextInputLayout >
+            <inputLayout:SfTextInputLayout Hint="Enter order price" ContainerType="Filled" Margin="10,0,10,0">
                 <Entry Placeholder="Price:" ClearButtonVisibility="WhileEditing" Text ="{Binding Cost}" Keyboard="Numeric"/>
             </inputLayout:SfTextInputLayout>
-            <Picker ItemDisplayBinding="{Binding Name}" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
-            <inputLayout:SfTextInputLayout Hint="Description" >
+            <Picker ItemDisplayBinding="{Binding Name}" Title="Category" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory,Mode=TwoWay}"/>
+            <inputLayout:SfTextInputLayout Hint="Description" ContainerType="Filled">
                 <Entry Text="{Binding Order.Description}"/>
             </inputLayout:SfTextInputLayout>
-            <sf:SfDatePicker PickerMode="Dialog" x:Name="DatePicer" HeaderText="Select date" Date="{Binding PreviusDate}"/>
-            <Button Clicked="OpenPicer" Text="Previus order date"/>
+            <inputLayout:SfTextInputLayout Hint="Previus order date" ContainerType="Filled" Margin="10,0,10,0">
+                <DatePicker Date="{Binding PreviusDate}"/>
+            </inputLayout:SfTextInputLayout>
             <Button Text="Submit" VerticalOptions="EndAndExpand" 
             Command="{Binding SubmitCommand}" 
-                    
             TextColor="White"
             BackgroundColor="Teal"
             FontSize="40"/>

@@ -17,5 +17,9 @@ namespace CostPlaningXamarin.Views
         {
             navigationDrawer.ToggleDrawer();
         }
+        private void ClickToShowPopUp(object sender, EventArgs e)
+        {
+            popupLayout.Show();
+        }
     }
 }

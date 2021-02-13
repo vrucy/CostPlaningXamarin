@@ -1,15 +1,19 @@
-﻿using SQLite;
-using SQLiteNetExtensions.Attributes;
+﻿using SQLiteNetExtensions.Attributes;
 using System.Collections.Generic;
+//using SQLite;
 
 namespace CostPlaningXamarin.Models
 {
     public class Category
     {
-        [PrimaryKey, AutoIncrement]
+        //[Preserve(AllMembers = true)]
+        [SQLite.PrimaryKey, SQLite.AutoIncrement]
         public int Id { get; set; }
+        public int ServerId { get; set; }
         public string Name { get; set; }
+        public bool IsDisable { get; set; }
+        public bool IsWriteToDB { get; set; }
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public ICollection<Order> Orders { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }

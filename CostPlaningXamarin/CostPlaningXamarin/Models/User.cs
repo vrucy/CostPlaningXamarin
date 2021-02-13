@@ -7,10 +7,11 @@ namespace CostPlaningXamarin.Models
 {
     public class User
     {
-        [Preserve(AllMembers = true)]
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey,Unique]
         public int Id { get; set; }
-        public int ServerId { get; set; }
+        //[Preserve(AllMembers = true)]
+        //[PrimaryKey, AutoIncrement]
+        //public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [NotMapped]

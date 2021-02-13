@@ -10,13 +10,11 @@ namespace CostPlaningXamarin.ViewModels
         
         private ICommand _NavigateToAddItemCommand;
         private ICommand _NavigateToTableOrders;
+        private ICommand _NavigateToAddCategory;
+        private ICommand _NavigateToEditCategory;
+        private ICommand _NavigateToOrdersOptions;
         INavigationServices _navigationService = DependencyService.Get<INavigationServices>();
-        ISQLiteService _SQLiteService = DependencyService.Get<ISQLiteService>();
-
-        public UserViewModel()
-        {
-            
-        }
+     
         public ICommand NavigateToAddOrderCommand
         {
             get
@@ -28,11 +26,6 @@ namespace CostPlaningXamarin.ViewModels
                 return _NavigateToAddItemCommand;
             }
         }
-        public void NavigateToAddItemCommand(object x)
-        {
-            _navigationService.NavigateToAddItem();
-        }
-
         public ICommand NavigateToTableOrders
         {
             get
@@ -44,9 +37,59 @@ namespace CostPlaningXamarin.ViewModels
                 return _NavigateToTableOrders;
             }
         }
+        public ICommand NavigateToEditCategoryCommand
+        {
+            get
+            {
+                if (_NavigateToEditCategory == null)
+                {
+                    _NavigateToEditCategory = new RelayCommand(NavigateToEditCategory);
+                }
+                return _NavigateToEditCategory;
+            }
+        }
+        public ICommand NavigateToOrdersOptionsCommand
+        {
+            get
+            {
+                if (_NavigateToOrdersOptions == null)
+                {
+                    _NavigateToOrdersOptions = new RelayCommand(NavigateToOrdersOptions);
+                }
+                return _NavigateToOrdersOptions;
+            }
+        }
+
+        public ICommand NavigateToAddCategoryCommand
+        {
+            get
+            {
+                if (_NavigateToAddCategory == null)
+                {
+                    _NavigateToAddCategory = new RelayCommand(NavigateToAddCategory);
+                }
+                return _NavigateToAddCategory;
+            }
+        }
+        public void NavigateToAddCategory(object x)
+        {
+            _navigationService.NavigateToAddCategoryAsync();
+        }
+        public void NavigateToAddItemCommand(object x)
+        {
+            _navigationService.NavigateToAddItem();
+        }
         public void NavigateToTableOrder(object x)
         {
             _navigationService.NavigateToTableOrders();
+        }
+        public void NavigateToEditCategory(object x)
+        {
+            _navigationService.NavigateToEditCategory();
+        }
+        public void NavigateToOrdersOptions(object x)
+        {
+            _navigationService.NavigateToOrdersOptions();
         }
     }
 }

@@ -61,7 +61,10 @@ namespace CostPlaningXamarin.ViewModels
         private Category _selectedCategory;
         public Category SelectedCategory
         {
-            get { return _selectedCategory; }
+            get 
+            {
+                return _selectedCategory; 
+            }
             set 
             {
                 _selectedCategory = value;
@@ -152,20 +155,21 @@ namespace CostPlaningXamarin.ViewModels
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 throw;
             }
         }
+        //TODO: need reset selected category problem with nullable object in picer
         private void ResetField()
         {
-            _selectedCategory = null;
+            //_selectedCategory = null;
             _order = new Order();
             _cost = 0;
-            OnPropertyChanged(nameof(SelectedCategory));
-            OnPropertyChanged(nameof(Order));
-            OnPropertyChanged(nameof(Cost));
+            //OnPropertyChanged("SelectedCategory");
+            OnPropertyChanged("Order");
+            OnPropertyChanged("Cost");
         }
         private Order CreateOrder()
         {

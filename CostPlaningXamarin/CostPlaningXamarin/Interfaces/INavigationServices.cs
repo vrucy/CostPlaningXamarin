@@ -1,4 +1,6 @@
-﻿namespace CostPlaningXamarin.Interfaces
+﻿using CostPlaningXamarin.Models;
+
+namespace CostPlaningXamarin.Interfaces
 {
     public interface INavigationServices
     {
@@ -6,6 +8,10 @@
         void NavigateToAddItem();
         void NavigateBack();
         void NavigateToTableOrders();
+        void NavigateToEditCategory();
+        void NavigateToOrdersOptions();
         void NavigateToAddUser();
+        void NavigateToEditOrderAsync(Order order);
+        void NavigateToAddCategoryAsync();
     }
 }

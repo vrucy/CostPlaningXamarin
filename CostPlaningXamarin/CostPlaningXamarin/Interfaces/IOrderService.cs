@@ -1,6 +1,5 @@
 ﻿using CostPlaningXamarin.Models;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CostPlaningXamarin.Interfaces
@@ -18,8 +17,9 @@ namespace CostPlaningXamarin.Interfaces
         /// <returns>Returns Dictionary(int oldKey, int newKey)</returns>
         Dictionary<int, int> UpdateOrder(List<Order> orders);
         List<Order> GetOrdersByIds(List<int> ids);
+        List<int> AllDisableOrders();
         int GetLastOrderServerId();
         int GetOrdersCountFromServer();
-        //Task<User> PostUser();
+        bool IsServerAvailable();
     }
 }

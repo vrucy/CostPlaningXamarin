@@ -43,18 +43,12 @@ namespace CostPlaningXamarin.Services
 
         public Dictionary<int, int> UpdateOrder(List<Order> orders)
         {
-            try
-            {
-                var res = _httpClient.PostAsync(urlLocalHost + "Order/UpdateOrders", MediaTypeHeaderValue(orders)).GetAwaiter().GetResult();
 
-                var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
-            }
-            catch (Exception r)
-            {
+            var res = _httpClient.PostAsync(urlLocalHost + "Order/UpdateOrders", MediaTypeHeaderValue(orders)).GetAwaiter().GetResult();
 
-                throw;
-            }
+            var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
+
         }
         //TODO: need to be GetAsync!!
         public List<Order> GetOrdersByIds(List<int> ids)
@@ -73,6 +67,21 @@ namespace CostPlaningXamarin.Services
         public int GetOrdersCountFromServer()
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetOrdersCountFromServer"));
+        }
+        public bool IsServerAvailable()
+        {
+            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable");
+            if (res.Result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public List<int> AllDisableOrders()
+        {
+            return JsonConvert.DeserializeObject<List<int>>(ResponseResult("Order/SyncDisable"));
+
         }
     }
 }
