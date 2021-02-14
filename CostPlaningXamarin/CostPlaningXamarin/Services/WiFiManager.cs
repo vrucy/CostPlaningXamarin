@@ -2,8 +2,6 @@
 using Android.Net.Wifi;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Services;
-using System.Linq;
-using System.Collections.Generic;
 using Xamarin.Forms;
 using CostPlaningXamarin.Models;
 using System;
@@ -29,21 +27,46 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            //{
-            //    if (GetCurrentSSID().Equals(BSSID))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //return false;
-            return true;
+            if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            {
+                if (GetCurrentSSID().Equals(BSSID))
+                {
+                    return true;
+                }
+            }
+            return false;
+            //return true;
+
+            if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            {
+                if (GetCurrentSSID().Equals(BSSID))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool CheckFirstAppUser(User appUser)
+        {
+            if ((appUser.Id == 1) && (userService.GetLastUserServerId() == 1))
+            {
+                return false;
+            }
+            if (appUser.Id == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public async void SyncData()
          {
             var appUser = SQLiteService.GetAppUser();
             //TODO: bilo je jedan alli sam stavio sad nula provari sta treba!
-            if (appUser.Id == 0)
+            //ne valja jer kad se prvi user instalira on svakako bude 1 na serveru treba drugi uslov
+            if (appUser.Id == 1 )
             {
                 synchronizationService.FirstSyncUserOwner(appUser);
                 SQLiteService.SaveItems(categoryService.GetCategories());

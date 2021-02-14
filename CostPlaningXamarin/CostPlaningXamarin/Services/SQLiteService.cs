@@ -22,7 +22,7 @@ namespace CostPlaningXamarin.Services
         {
             db = new SQLiteAsyncConnection(dbPath);
             //db.DropTableAsync<User>().Wait();
-            //db.DropTableAsync<Category>().GetAwaiter().GetResult();
+           // db.DropTableAsync<Category>().GetAwaiter().GetResult();
             //db.DropTableAsync<Order>().Wait();
 
             db.CreateTableAsync<Order>().Wait();
@@ -258,7 +258,7 @@ namespace CostPlaningXamarin.Services
             }
             return null;
         }
-        public void SyncVisbility<T>(Dictionary<int, bool> collection,bool isWriteToDb)
+        public void SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb)
         {
             if (typeof(T) == typeof(Category))
             {
