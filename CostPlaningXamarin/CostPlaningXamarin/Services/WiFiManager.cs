@@ -48,10 +48,17 @@ namespace CostPlaningXamarin.Services
         }
         private bool CheckFirstAppUser(User appUser)
         {
-            if ((appUser.Id == 1) && (userService.GetLastUserServerId() == 1))
+            var lastServerId = userService.GetLastUserServerId();
+            if (lastServerId == 0)
             {
-                return false;
+                return true;
             }
+            else if (appUser.Id == 1 && lastServerId == 0)
+            {
+                return true;
+            }
+
+
             if (appUser.Id == 1)
             {
                 return true;
@@ -66,7 +73,8 @@ namespace CostPlaningXamarin.Services
             var appUser = SQLiteService.GetAppUser();
             //TODO: bilo je jedan alli sam stavio sad nula provari sta treba!
             //ne valja jer kad se prvi user instalira on svakako bude 1 na serveru treba drugi uslov
-            if (appUser.Id == 1 )
+            var x = userService.GetLastUserServerId();
+            if (CheckFirstAppUser(appUser))
             {
                 synchronizationService.FirstSyncUserOwner(appUser);
                 SQLiteService.SaveItems(categoryService.GetCategories());
