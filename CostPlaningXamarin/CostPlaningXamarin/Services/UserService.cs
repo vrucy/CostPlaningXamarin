@@ -58,10 +58,10 @@ namespace CostPlaningXamarin.Services
             return JsonConvert.DeserializeObject<int>(ResponseResult("User/GetLastUserServerId"));
         }
 
-        public async Task<List<User>> GetUnsyncUsers(int lastUserId)
+        public List<User> GetUnsyncUsers(int lastUserId)
         {
-            var res = _httpClient.PostAsync(urlLocalHost + "User/GetAllUsersWithoutAppUser", MediaTypeHeaderValue(lastUserId));
-            return JsonConvert.DeserializeObject<List<User>>(await res.Result.Content.ReadAsStringAsync());
+            var x = ResponseResult(string.Format("User/GetUnsyncUsers/{0}" , lastUserId));
+            return JsonConvert.DeserializeObject<List<User>>(x);
         }
 
         public Task PostUsers(List<User> users)

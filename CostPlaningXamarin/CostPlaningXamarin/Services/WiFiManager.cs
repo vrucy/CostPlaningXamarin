@@ -37,14 +37,6 @@ namespace CostPlaningXamarin.Services
             //return false;
             return true;
 
-            if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            {
-                if (GetCurrentSSID().Equals(BSSID))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         private bool CheckFirstAppUser(User appUser)
         {
@@ -58,15 +50,15 @@ namespace CostPlaningXamarin.Services
                 return true;
             }
 
-
-            if (appUser.Id == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return false;
+            //if (appUser.Id == 1)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
         public async void SyncData()
          {

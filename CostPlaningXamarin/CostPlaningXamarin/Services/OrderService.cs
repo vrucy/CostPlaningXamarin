@@ -68,11 +68,12 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsServerAvailable()
         {
-            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable");
-            if (res.Result.IsSuccessStatusCode)
+            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable").GetAwaiter().GetResult();
+            if (res.IsSuccessStatusCode)
             {
                 return true;
             }
+            
             return false;
         }
 
