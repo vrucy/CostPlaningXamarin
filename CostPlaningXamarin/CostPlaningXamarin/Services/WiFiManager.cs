@@ -36,29 +36,21 @@ namespace CostPlaningXamarin.Services
             }
             return false;
             //return true;
-
         }
         private bool CheckFirstAppUser(User appUser)
         {
-            var lastServerId = userService.GetLastUserServerId();
-            if (lastServerId == 0)
+            if ((appUser.Id == 1) && (userService.GetLastUserServerId() == 1))
+            {
+                return false;
+            }
+            if (appUser.Id == 1)
             {
                 return true;
             }
-            else if (appUser.Id == 1 && lastServerId == 0)
+            else
             {
-                return true;
+                return false;
             }
-
-            return false;
-            //if (appUser.Id == 1)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
         public async void SyncData()
          {
