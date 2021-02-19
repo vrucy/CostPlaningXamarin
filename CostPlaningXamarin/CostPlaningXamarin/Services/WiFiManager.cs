@@ -2,8 +2,6 @@
 using Android.Net.Wifi;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Services;
-using System.Linq;
-using System.Collections.Generic;
 using Xamarin.Forms;
 using CostPlaningXamarin.Models;
 using System;
@@ -29,21 +27,46 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            //{
+            //    if (GetCurrentSSID().Equals(BSSID))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
+            return true;
+
+        }
+        private bool CheckFirstAppUser(User appUser)
+        {
+            var lastServerId = userService.GetLastUserServerId();
+            if (lastServerId == 0)
             {
-                if (GetCurrentSSID().Equals(BSSID))
-                {
-                    return true;
-                }
+                return true;
             }
+            else if (appUser.Id == 1 && lastServerId == 0)
+            {
+                return true;
+            }
+
             return false;
-            //return true;
+            //if (appUser.Id == 1)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
         public async void SyncData()
          {
             var appUser = SQLiteService.GetAppUser();
             //TODO: bilo je jedan alli sam stavio sad nula provari sta treba!
-            if (appUser.Id == 0)
+            //ne valja jer kad se prvi user instalira on svakako bude 1 na serveru treba drugi uslov
+            var x = userService.GetLastUserServerId();
+            if (CheckFirstAppUser(appUser))
             {
                 synchronizationService.FirstSyncUserOwner(appUser);
                 SQLiteService.SaveItems(categoryService.GetCategories());

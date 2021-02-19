@@ -11,6 +11,6 @@ namespace CostPlaningXamarin.Interfaces
         Task PostCategory(Category category);
         Task<IList<User>> GetAllUsers();
         int GetLastUserServerId();
-        Task<List<User>> GetUnsyncUsers(int lastUserId);
+        List<User> GetUnsyncUsers(int lastUserId);
     }
 }

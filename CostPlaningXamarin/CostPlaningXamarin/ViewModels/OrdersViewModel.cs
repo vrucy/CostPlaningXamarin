@@ -63,7 +63,6 @@ namespace CostPlaningXamarin.ViewModels
                 _navigationService.NavigateToEditOrderAsync(_order);
             }
         }
-
         private DateTime _selectedDate = DateTime.Now;
 
         public DateTime SelectedDate
@@ -85,7 +84,6 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _users = value;
-                //OnPropertyChanged(nameof())
             }
         }
         private User _selectedUser;
@@ -98,8 +96,6 @@ namespace CostPlaningXamarin.ViewModels
                 _selectedUser = value;
 
                 OnPropertyChanged(nameof(SelectedUser));
-
-
             }
         }
 
@@ -296,32 +292,32 @@ namespace CostPlaningXamarin.ViewModels
         }
         private void ApplyFilters(object x)
         {
-            //ObservableCollection<Order> _copy = new ObservableCollection<Order>();
-            //_copy = _allOrders;
-            //if (SelectedCategory != null)
-            //{
-            //    _copy = _copy.Where(o => o.CategoryId == _selectedCategory.Id).ToList();
-            //}
-            //if (SelectedUser != null)
-            //{
-            //    _copy = _copy.Where(o => o.UserId == _selectedUser.Id).ToList();
-            //}
-            //if (DateFromSelected != null && DateToSelected != null)
-            //{
-            //    _copy = _copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month &&
-            //                                o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
-            //}
-            //else if (DateFromSelected != null)
-            //{
-            //    _copy = _copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month).ToList();
-            //}
-            //else if (DateToSelected != null)
-            //{
-            //    var i = DateToSelected.StringToDateTime().Month;
-            //    _copy = _copy.Where(o => o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
-            //}
-            //_orders = _copy;
-            //OnPropertyChanged(nameof(Orders));
+            List<Order> _copy = new List<Order>();
+            _copy = _allOrders;
+            if (SelectedCategory != null)
+            {
+                _copy = _copy.Where(o => o.CategoryId == _selectedCategory.Id).ToList();
+            }
+            if (SelectedUser != null)
+            {
+                _copy = _copy.Where(o => o.UserId == _selectedUser.Id).ToList();
+            }
+            if (DateFromSelected != null && DateToSelected != null)
+            {
+                _copy = _copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month &&
+                                            o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
+            }
+            else if (DateFromSelected != null)
+            {
+                _copy = _copy.Where(o => o.Date.Month >= DateFromSelected.StringToDateTime().Month).ToList();
+            }
+            else if (DateToSelected != null)
+            {
+                var i = DateToSelected.StringToDateTime().Month;
+                _copy = _copy.Where(o => o.Date.Month <= DateToSelected.StringToDateTime().Month).ToList();
+            }
+            _orders = _copy;
+            OnPropertyChanged(nameof(Orders));
         }
         private ICommand _NavigateEdit;
         public ICommand NavigateToEditCommand

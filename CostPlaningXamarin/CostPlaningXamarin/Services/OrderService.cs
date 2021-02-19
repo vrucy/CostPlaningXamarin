@@ -2,11 +2,9 @@
 using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 //using Xamarin.Forms;
@@ -70,11 +68,12 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsServerAvailable()
         {
-            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable");
-            if (res.Result.IsSuccessStatusCode)
+            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable").GetAwaiter().GetResult();
+            if (res.IsSuccessStatusCode)
             {
                 return true;
             }
+            
             return false;
         }
 

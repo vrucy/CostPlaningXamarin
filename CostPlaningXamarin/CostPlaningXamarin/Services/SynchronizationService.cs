@@ -37,7 +37,7 @@ namespace CostPlaningXamarin.Services
         public void SyncUsers(int lastUserId)
         {
             var users = userService.GetUnsyncUsers(lastUserId);
-            SQLiteService.PostNewUsers(users.Result);
+            SQLiteService.PostNewUsers(users);
         }
         private void PostOrders(List<Order> orders)
         {
