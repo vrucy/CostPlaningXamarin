@@ -80,7 +80,10 @@ namespace CostPlaningXamarin.Services
         public List<int> AllDisableOrders()
         {
             return JsonConvert.DeserializeObject<List<int>>(ResponseResult("Order/SyncDisable"));
-
+        }
+        public Dictionary<int, bool> GetAllOrdersVisibility(int appUserId)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Order/SyncVisibility/{0}", appUserId)));
         }
     }
 }

@@ -9,7 +9,7 @@ using Xamarin.Forms;
 [assembly: Xamarin.Forms.Dependency(typeof(SynchronizationService))]
 namespace CostPlaningXamarin.Services
 {
-    public class SynchronizationService: ISynchronizationService
+    public class SynchronizationService : ISynchronizationService
     {
         IOrderService orderService = DependencyService.Get<IOrderService>();
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
@@ -60,7 +60,7 @@ namespace CostPlaningXamarin.Services
                 SQLiteService.SaveItems(ordersFromServer);
             }
         }
-        public void SyncCategoies(List<Category> categories,int userId)
+        public void SyncCategoies(List<Category> categories, int userId)
         {
             if (categories.Count != 0)
             {
@@ -75,6 +75,10 @@ namespace CostPlaningXamarin.Services
                 SQLiteService.SaveItems(categoriesFromServer);
             }
         }
+        public void SyncVisible(int appUserId)
+        {
+
+        }
         public void SyncVisible<T>(int appUserId)
         {
             if (typeof(T) == typeof(Category))
@@ -82,20 +86,30 @@ namespace CostPlaningXamarin.Services
                 var categoresForDisable = categoryService.GetAllCategoresVisibility(appUserId);
                 if (categoresForDisable.Count > 0)
                 {
-                    SyncVisiblityOnMobile(categoresForDisable);
+                    SyncVisiblityOnMobile<Category>(categoresForDisable);
                 }
             }
             if (typeof(T) == typeof(Order))
             {
-
-                
+                var ordersForSyncVisibility = orderService.GetAllOrdersVisibility(appUserId);
+                if (ordersForSyncVisibility.Count > 0)
+                {
+                    SyncVisiblityOnMobile<Order>(ordersForSyncVisibility);
+                }
             }
         }
-        private void SyncVisiblityOnMobile(Dictionary<int, bool> collection)
+        private void SyncVisiblityOnMobile<T>(Dictionary<int, bool> collection)
         {
             if (collection.Any())
             {
-                SQLiteService.SyncVisbility<Category>(collection, true);
+                if (typeof(T) == typeof(Category))
+                {
+                    SQLiteService.SyncVisbility<Category>(collection, true);
+                }
+                else if (typeof(T) == typeof(Order))
+                {
+                    SQLiteService.SyncVisbility<Order>(collection, true);
+                }
             }
         }
     }

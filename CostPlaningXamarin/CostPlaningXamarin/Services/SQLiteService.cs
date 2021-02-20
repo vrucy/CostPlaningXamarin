@@ -258,6 +258,7 @@ namespace CostPlaningXamarin.Services
             }
             return null;
         }
+        //TODO: Check if need writeToDb
         public void SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb)
         {
             if (typeof(T) == typeof(Category))
