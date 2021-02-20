@@ -14,7 +14,6 @@ namespace CostPlaningXamarin.Models
         public DateTime Date { get; set; }
         public double Cost { get; set; }
         public bool IsWriteToDB { get; set; }
-
         public string Description { get; set; }
         [ForeignKey(typeof(User))]
         public int UserId { get; set; }

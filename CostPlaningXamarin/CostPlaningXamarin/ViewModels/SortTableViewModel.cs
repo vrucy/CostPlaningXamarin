@@ -24,10 +24,10 @@ namespace CostPlaningXamarin.ViewModels
         public SortTableViewModel()
         {
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
-            _allOrders = _sqliteService.GetOrdersAsync().GetAwaiter().GetResult();
+            _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
+            _allOrders = _sqliteService.GetOrdersAsync().Result;
             _orders = _allOrders;
 
-            _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
 
             Date = new List<string>();
             PopulateDateCollection();

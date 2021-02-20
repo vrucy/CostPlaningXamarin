@@ -67,13 +67,13 @@ namespace CostPlaningXamarin.Services
             {
                 synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
             }
-            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
-            {
-                synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
-            }
             if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
             {
                 synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+            }
+            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
+            {
+                synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
             }
             synchronizationService.SyncVisible<Category>(appUser.Id);
 
