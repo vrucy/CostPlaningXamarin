@@ -21,7 +21,7 @@ namespace CostPlaningXamarin.ViewModels
         public AddNewOrderViewModel()
         {
             _order = new Order();
-            _categories = SQLService.GetAllCategories().Result;
+             _categories = SQLService.GetAllCategories().Result;
         }
 
         private DateTime? _previusDate;

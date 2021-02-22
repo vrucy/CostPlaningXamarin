@@ -24,7 +24,7 @@ namespace CostPlaningXamarin.ViewModels
         public SortTableViewModel()
         {
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
-            _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
+            _categories = _sqliteService.GetAllCategories().Result;
             _allOrders = _sqliteService.GetOrdersAsync().Result;
             _orders = _allOrders;
 

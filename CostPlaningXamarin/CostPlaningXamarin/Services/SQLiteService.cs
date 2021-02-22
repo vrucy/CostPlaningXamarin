@@ -2,7 +2,6 @@
 using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using SQLite;
-using SQLiteNetExtensions.Extensions;
 using System.Collections.Generic;
 using SQLiteNetExtensionsAsync.Extensions;
 using System.Threading.Tasks;
@@ -55,9 +54,10 @@ namespace CostPlaningXamarin.Services
         {
             return db.GetAllWithChildrenAsync<Order>(x => x.UserId == id && x.ServerId == 0);
         }
-        public Task<List<Order>> GetOrdersAsync()
+        public async Task<List<Order>> GetOrdersAsync()
         {
-            return db.GetAllWithChildrenAsync<Order>();
+            var x= await db.GetAllWithChildrenAsync<Order>();
+            return await db.GetAllWithChildrenAsync<Order>();
         }
         public Task<List<Order>> GetOrdersUnsyncAsync()
         {
@@ -70,7 +70,9 @@ namespace CostPlaningXamarin.Services
         }
         public Task<List<Category>> GetAllCategories()
         {
-            return db.Table<Category>().Where(x => x.IsDisable == false).ToListAsync();
+            var x = db.GetAllWithChildrenAsync<Category>();
+            return x;
+            //return db.Table<Category>().Where(x => x.IsDisable == false).ToListAsync().;
         }
         public void CreateAppUser(User user)
         {
@@ -95,7 +97,15 @@ namespace CostPlaningXamarin.Services
         {
             foreach (var item in users)
             {
-                db.InsertAsync(item).Wait();
+                try
+                {
+                    db.InsertAsync(item).Wait();
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
             }
         }
         public void UpdateDeviceUser(int newId)
