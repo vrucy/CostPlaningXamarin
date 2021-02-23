@@ -27,16 +27,14 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            //{
-            //    if (GetCurrentSSID().Equals(BSSID))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //return false;
-            return true;
-
+            if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            {
+                if (GetCurrentSSID().Equals(BSSID))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         private bool CheckFirstAppUser(User appUser)
         {
@@ -55,7 +53,6 @@ namespace CostPlaningXamarin.Services
         public async void SyncData()
          {
             var appUser = SQLiteService.GetAppUser();
-           // SQLiteService.DropTable<Order>();
             if (CheckFirstAppUser(appUser))
             {
                 await synchronizationService.FirstSyncUserOwner(appUser);
@@ -75,8 +72,6 @@ namespace CostPlaningXamarin.Services
             }
             await synchronizationService.SyncVisible<Category>(appUser.Id);
             await synchronizationService.SyncVisible<Order>(appUser.Id);
-
-            //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
         }
         public bool IsServerAvailable()
         {
