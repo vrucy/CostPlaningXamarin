@@ -9,7 +9,7 @@ namespace CostPlaningXamarin.Interfaces
         Task CreateDBAsync(string path);
         void CreateAppUser(User user);
         void SaveOrderAsync(Order order);
-        void SaveAsync<T>(T item);
+        Task SaveAsync<T>(T item);
         void DeleteAll<T>() where T : class;
         void CreateTable<T>() where T : new();
         void DropTable<T>() where T : new();
@@ -19,18 +19,18 @@ namespace CostPlaningXamarin.Interfaces
         Task<List<User>> GetUsers();
         bool CheckIfExistUser();
         Task<List<Category>> GetAllCategories();
-        void PostNewUsers(IList<User> newUsers);
+        Task PostNewUsers(IList<User> newUsers);
         void UpdateDeviceUser(int newId);
         User GetAppUser();
         Task<List<Order>> OrderForSync();
         Task<List<Category>> CategoriesForSync();
-        void SyncOrders(Dictionary<int, int> ids);
-        void SyncCategories(Dictionary<int, int> ids);
-        void SaveItems<T>(IList<T> collection);
+        Task SyncOrders(Dictionary<int, int> ids);
+        Task SyncCategories(Dictionary<int, int> ids);
+        Task SaveItems<T>(IList<T> collection);
         IList<int> GetAllSyncIds<T>();
         int GetLastServerId<T>() ;
         List<int> AllDisable<T>();
         List<int> AllEnable<T>();
-        void SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
+        Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
     }
 }

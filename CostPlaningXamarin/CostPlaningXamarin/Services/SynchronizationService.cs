@@ -3,7 +3,7 @@ using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(SynchronizationService))]
@@ -15,78 +15,74 @@ namespace CostPlaningXamarin.Services
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IUserService userService = DependencyService.Get<IUserService>();
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
-        public async void FirstSyncUserOwner(User appUser)
+        public async Task FirstSyncUserOwner(User appUser)
         {
-            var serverUser = userService.PostAppUser().GetAwaiter().GetResult();
+            var serverUser = await userService.PostAppUser();
             SQLiteService.DropTable<User>();
             SQLiteService.CreateTable<User>();
-            SyncNewUsers(serverUser.Id);
+            await SyncNewUsers(serverUser.Id);
             var orders = await SQLiteService.GetAllOrdersForUserById(appUser.Id);
             if (orders.Count > 0)
             {
                 //TODO: need some rollback if crash conn?
-                PostOrders(orders);
+                await PostOrders(orders);
             }
         }
-        private void SyncNewUsers(int userId)
+        private async Task SyncNewUsers(int userId)
         {
             var allUsers = userService.GetAllUsers().Result;
-            SQLiteService.PostNewUsers(allUsers);
+            await SQLiteService.PostNewUsers(allUsers);
             SQLiteService.UpdateDeviceUser(userId);
         }
-        public void SyncUsers(int lastUserId)
+        public async Task SyncUsers(int lastUserId)
         {
             var users = userService.GetUnsyncUsers(lastUserId);
-            SQLiteService.PostNewUsers(users);
+            await SQLiteService.PostNewUsers(users);
         }
-        private void PostOrders(List<Order> orders)
+        private async Task PostOrders(List<Order> orders)
         {
-            orderService.PostOrdersSync(orders);
+            await orderService.PostOrdersSync(orders);
         }
-        //TODO: refactor
-        public void SyncOrders(List<Order> orders)
+        //TODO: refactor code repat
+        public async Task SyncOrders(List<Order> orders)
         {
             if (orders.Count != 0)
             {
                 var ids = orderService.UpdateOrder(orders);
-                SQLiteService.SyncOrders(ids);
+                await SQLiteService.SyncOrders(ids);
             }
             var ordersSync = SQLiteService.GetAllSyncIds<Order>().ToList();
 
             var ordersFromServer = orderService.GetOrdersByIds(ordersSync);
 
-            if (ordersFromServer.Count != 0)
+            if (ordersFromServer != null )
             {
-                SQLiteService.SaveItems(ordersFromServer);
+                await SQLiteService.SaveItems(ordersFromServer);
             }
         }
-        public void SyncCategoies(List<Category> categories, int userId)
+        public async Task SyncCategoies(List<Category> categories, int userId)
         {
             if (categories.Count != 0)
             {
                 var ids = categoryService.PostCategories(categories, userId);
-                SQLiteService.SyncCategories(ids);
+                await SQLiteService.SyncCategories(ids);
             }
             var categoriesSync = SQLiteService.GetAllSyncIds<Category>().ToList();
             var categoriesFromServer = categoryService.GetAllCategoriesByIds(categoriesSync);
 
             if (categoriesFromServer.Count != 0)
             {
-                SQLiteService.SaveItems(categoriesFromServer);
+                await SQLiteService.SaveItems(categoriesFromServer);
             }
         }
-        public void SyncVisible(int appUserId)
-        {
-
-        }
-        public void SyncVisible<T>(int appUserId)
+        public async Task SyncVisible<T>(int appUserId)
         {
             if (typeof(T) == typeof(Category))
             {
                 var categoresForDisable = categoryService.GetAllCategoresVisibility(appUserId);
                 if (categoresForDisable.Count > 0)
                 {
-                    SyncVisiblityOnMobile<Category>(categoresForDisable);
+                    await SyncVisiblityOnMobile<Category>(categoresForDisable);
                 }
             }
             if (typeof(T) == typeof(Order))
@@ -94,21 +90,21 @@ namespace CostPlaningXamarin.Services
                 var ordersForSyncVisibility = orderService.GetAllOrdersVisibility(appUserId);
                 if (ordersForSyncVisibility.Count > 0)
                 {
-                    SyncVisiblityOnMobile<Order>(ordersForSyncVisibility);
+                    await SyncVisiblityOnMobile<Order>(ordersForSyncVisibility);
                 }
             }
         }
-        private void SyncVisiblityOnMobile<T>(Dictionary<int, bool> collection)
+        private async Task SyncVisiblityOnMobile<T>(Dictionary<int, bool> collection)
         {
             if (collection.Any())
             {
                 if (typeof(T) == typeof(Category))
                 {
-                    SQLiteService.SyncVisbility<Category>(collection, true);
+                    await SQLiteService.SyncVisbility<Category>(collection, true);
                 }
                 else if (typeof(T) == typeof(Order))
                 {
-                    SQLiteService.SyncVisbility<Order>(collection, true);
+                    await SQLiteService.SyncVisbility<Order>(collection, true);
                 }
             }
         }

@@ -4,6 +4,7 @@ using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -21,7 +22,7 @@ namespace CostPlaningXamarin.ViewModels
         public AddNewOrderViewModel()
         {
             _order = new Order();
-            _categories = SQLService.GetAllCategories().Result;
+            _categories = SQLService.GetAllCategories().GetAwaiter().GetResult().Where(c=>c.IsVisible == false).ToList();
         }
 
         private DateTime? _previusDate;

@@ -45,45 +45,36 @@ namespace CostPlaningXamarin.Services
             {
                 return true;
             }
-            else if (appUser.Id == 1 && lastServerId == 0)
+            else if (appUser.Id == 1 &&  lastServerId != 1)
             {
                 return true;
             }
 
             return false;
-            //if (appUser.Id == 1)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
         public async void SyncData()
          {
             var appUser = SQLiteService.GetAppUser();
-            //TODO: bilo je jedan alli sam stavio sad nula provari sta treba!
-            //ne valja jer kad se prvi user instalira on svakako bude 1 na serveru treba drugi uslov
-            var x = userService.GetLastUserServerId();
+           // SQLiteService.DropTable<Order>();
             if (CheckFirstAppUser(appUser))
             {
-                synchronizationService.FirstSyncUserOwner(appUser);
-                SQLiteService.SaveItems(categoryService.GetCategories());
+                await synchronizationService.FirstSyncUserOwner(appUser);
+                await SQLiteService.SaveItems(categoryService.GetCategories());
             }
             if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
             {
-                synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
+                await synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
             }
             if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
-                synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
+                await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
             }
             if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
             {
-                synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+                await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
             }
-            synchronizationService.SyncVisible<Category>(appUser.Id);
+            await synchronizationService.SyncVisible<Category>(appUser.Id);
+            await synchronizationService.SyncVisible<Order>(appUser.Id);
 
             //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
         }
