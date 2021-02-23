@@ -27,54 +27,54 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            {
-                if (GetCurrentSSID().Equals(BSSID))
-                {
-                    return true;
-                }
-            }
-            return false;
-            //return true;
+            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            //{
+            //    if (GetCurrentSSID().Equals(BSSID))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
+            return true;
+
         }
         private bool CheckFirstAppUser(User appUser)
         {
-            if ((appUser.Id == 1) && (userService.GetLastUserServerId() == 1))
-            {
-                return false;
-            }
-            if (appUser.Id == 1)
+            var lastServerId = userService.GetLastUserServerId();
+            if (lastServerId == 0)
             {
                 return true;
             }
-            else
+            else if (appUser.Id == 1 &&  lastServerId != 1)
             {
-                return false;
+                return true;
             }
+
+            return false;
         }
         public async void SyncData()
          {
             var appUser = SQLiteService.GetAppUser();
-            //TODO: bilo je jedan alli sam stavio sad nula provari sta treba!
-            //ne valja jer kad se prvi user instalira on svakako bude 1 na serveru treba drugi uslov
+           // SQLiteService.DropTable<Order>();
             if (CheckFirstAppUser(appUser))
             {
-                synchronizationService.FirstSyncUserOwner(appUser);
-                SQLiteService.SaveItems(categoryService.GetCategories());
+                await synchronizationService.FirstSyncUserOwner(appUser);
+                await SQLiteService.SaveItems(categoryService.GetCategories());
             }
             if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
             {
-                synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
-            }
-            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
-            {
-                synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+                await synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
             }
             if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
-                synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
+                await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
             }
-            synchronizationService.SyncVisible<Category>(appUser.Id);
+            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
+            {
+                await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+            }
+            await synchronizationService.SyncVisible<Category>(appUser.Id);
+            await synchronizationService.SyncVisible<Order>(appUser.Id);
 
             //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
         }

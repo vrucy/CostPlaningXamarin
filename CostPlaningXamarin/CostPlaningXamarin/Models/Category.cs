@@ -11,8 +11,8 @@ namespace CostPlaningXamarin.Models
         public int Id { get; set; }
         public int ServerId { get; set; }
         public string Name { get; set; }
-        public bool IsDisable { get; set; }
-        public bool IsWriteToDB { get; set; }
+        public bool IsVisible { get; set; }
+        //public bool IsWriteToDB { get; set; }
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<Order> Orders { get; set; }
     }

@@ -5,6 +5,7 @@
              xmlns:sf="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
              xmlns:navigationdrawer="clr-namespace:Syncfusion.SfNavigationDrawer.XForms;assembly=Syncfusion.SfNavigationDrawer.XForms"
              x:Class="CostPlaningXamarin.Views.SortTable">
+ 
     <ContentPage.BindingContext>
         <local:SortTableViewModel x:Name="viewModel"/>
     </ContentPage.BindingContext>

@@ -21,5 +21,6 @@ namespace CostPlaningXamarin.Interfaces
         int GetLastOrderServerId();
         int GetOrdersCountFromServer();
         bool IsServerAvailable();
+        Dictionary<int, bool> GetAllOrdersVisibility(int appUserId);
     }
 }

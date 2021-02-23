@@ -10,10 +10,10 @@ namespace CostPlaningXamarin.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int ServerId { get; set; }
-        public bool IsDisable { get; set; }
+        public bool IsVisible { get; set; }
         public DateTime Date { get; set; }
         public double Cost { get; set; }
-        public bool IsWriteToDB { get; set; }
+        //public bool IsWriteToDB { get; set; }
         public string Description { get; set; }
         [ForeignKey(typeof(User))]
         public int UserId { get; set; }
