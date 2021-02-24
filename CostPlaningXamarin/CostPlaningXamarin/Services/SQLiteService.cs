@@ -27,16 +27,6 @@ namespace CostPlaningXamarin.Services
             db.CreateTableAsync<Category>().Wait();
             db.CreateTableAsync<User>().Wait();
         }
-        private User AppUser()
-        {
-            return db.Table<User>().Where(x => x.DeviceUser == true).FirstAsync().Result;
-        }
-        //Insert and Update new record
-        public void SaveOrderAsync(Order order)
-        {
-            db.InsertAsync(order);
-        }
-
         public void DeleteAll<T>() where T : class
         {
             db.DeleteAllAsync<T>();

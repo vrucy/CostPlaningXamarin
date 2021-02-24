@@ -8,7 +8,6 @@ namespace CostPlaningXamarin.Interfaces
     {
         Task CreateDBAsync(string path);
         void CreateAppUser(User user);
-        void SaveOrderAsync(Order order);
         Task SaveAsync<T>(T item);
         void DeleteAll<T>() where T : class;
         void CreateTable<T>() where T : new();
