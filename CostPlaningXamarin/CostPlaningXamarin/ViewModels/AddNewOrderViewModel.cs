@@ -33,7 +33,6 @@ namespace CostPlaningXamarin.ViewModels
             set
             {
                 _previusDate = value;
-                _order.Date = (DateTime)_previusDate;
                 OnPropertyChanged(nameof(PreviusDate));
             }
         }
@@ -45,12 +44,12 @@ namespace CostPlaningXamarin.ViewModels
             }
             set
             {
-                OnPropertyChanged(nameof(Order));
                 if (_order.Cost > 0.00)
                 {
                     SubmitCommand.RaiseCanExecuteChanged();
                 }
                 _order = value;
+                OnPropertyChanged(nameof(Order));
                
             }
         }
@@ -69,8 +68,7 @@ namespace CostPlaningXamarin.ViewModels
             set 
             {
                 _selectedCategory = value;
-                _order.CategoryId = _selectedCategory.Id;
-                _order.Category = _selectedCategory;
+
                 if (Validate())
                 {
                     SubmitCommand.RaiseCanExecuteChanged();
@@ -151,12 +149,12 @@ namespace CostPlaningXamarin.ViewModels
         {
             try
             {
-                 SQLService.SaveOrderAsync(CreateOrder());
+                 SQLService.SaveAsync<Order>(CreateOrder());
                 ResetField();
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 throw;
@@ -168,8 +166,12 @@ namespace CostPlaningXamarin.ViewModels
             //_selectedCategory = null;
             _order = new Order();
             _cost = 0;
-            //OnPropertyChanged("SelectedCategory");
+            _selectedCategory = null;
+            _previusDate = null;
+            //_order.Date = DateTime.Now;
             OnPropertyChanged("Order");
+            OnPropertyChanged("PreviusDate");
+            OnPropertyChanged("SelectedCategory");
             OnPropertyChanged("Cost");
         }
         private Order CreateOrder()
@@ -180,6 +182,12 @@ namespace CostPlaningXamarin.ViewModels
             }
             _order.UserId = SQLService.GetAppUser().Id;
             _order.User = SQLService.GetAppUser();
+            _order.CategoryId = _selectedCategory.Id;
+            _order.Category = _selectedCategory;
+            if (_previusDate != null)
+            {
+                _order.Date = (DateTime)_previusDate;
+            }
             return _order;
         }
     }
