@@ -45,7 +45,7 @@ namespace CostPlaningXamarin.Services
         }
         public Task<List<Order>> GetOrdersAsync()
         {
-            return db.GetAllWithChildrenAsync<Order>()/*.Result.Select(x=>x.UserId )*/;
+            return db.GetAllWithChildrenAsync<Order>();
         }
         public Task<List<Order>> GetOrdersUnsyncAsync()
         {
@@ -130,8 +130,20 @@ namespace CostPlaningXamarin.Services
                 var x = collection as List<Order>;
                 foreach (var item in x)
                 {
+                    var category = await db.GetAsync<Category>(item.CategoryId);
+                    var user = await db.GetAsync<User>(item.UserId);
+                    //item.Category = category;
+                    //item.User = user;
                     item.ServerId = item.Id;
-                    db.InsertAsync(item).Wait();
+                    try
+                    {
+                        db.InsertAsync(item);
+                    }
+                    catch (System.Exception e)
+                    {
+
+                        throw;
+                    }
                 }
             }
             else if (typeof(T) == typeof(Category))

@@ -32,16 +32,18 @@ namespace CostPlaningXamarin
                 MainPage = new NavigationPage(new MainPage());
 
             }
+
             CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
             {
-                if (CrossConnectivity.Current.ConnectionTypes.Contains(ConnectionType.WiFi))
+                if (CrossConnectivity.Current.ConnectionTypes.Contains(ConnectionType.WiFi) && wiFiManager.IsServerAvailable())
                 {
-                    wiFiManager.SyncData();
+                     wiFiManager.SyncData();
                 }
             };
+
         }
         protected override void OnStart()
-        {
+       {
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
             if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser() && wiFiManager.IsServerAvailable())
             {

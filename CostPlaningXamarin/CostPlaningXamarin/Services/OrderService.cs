@@ -66,17 +66,6 @@ namespace CostPlaningXamarin.Services
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetOrdersCountFromServer"));
         }
-        public bool IsServerAvailable()
-        {
-            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable").GetAwaiter().GetResult();
-            if (res.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            
-            return false;
-        }
-
         public List<int> AllDisableOrders()
         {
             return JsonConvert.DeserializeObject<List<int>>(ResponseResult("Order/SyncDisable"));
