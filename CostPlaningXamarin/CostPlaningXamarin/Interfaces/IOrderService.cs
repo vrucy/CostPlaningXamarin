@@ -18,6 +18,7 @@ namespace CostPlaningXamarin.Interfaces
         Dictionary<int, int> UpdateOrder(List<Order> orders);
         List<Order> GetOrdersByIds(List<int> ids);
         List<int> AllDisableOrders();
+        List<Order> GetAllOrders();
         int GetLastOrderServerId();
         int GetOrdersCountFromServer();
         Dictionary<int, bool> GetAllOrdersVisibility(int appUserId);

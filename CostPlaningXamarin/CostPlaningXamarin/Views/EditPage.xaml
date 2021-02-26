@@ -18,8 +18,7 @@
             
             <StackLayout IsVisible="{Binding IsCategory}">
                 <inputLayout:SfTextInputLayout Hint="Select category" ContainerType="Filled" Margin="10,0,10,0">
-                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" DisplayMemberPath="Name">
-                    </combobox:SfComboBox>
+                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" DisplayMemberPath="Name"/>
                 </inputLayout:SfTextInputLayout>
                 <inputLayout:SfTextInputLayout Hint="Category name" ContainerType="Filled" Margin="10,0,10,0">
                     <Entry Text="{Binding Category.Name}"/> 

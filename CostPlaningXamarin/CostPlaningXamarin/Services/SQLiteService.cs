@@ -60,15 +60,15 @@ namespace CostPlaningXamarin.Services
         public Task<List<Category>> GetAllCategories()
         {
             var allCategores = db.Table<Category>();
-            
+
             return allCategores.ToListAsync();
         }
         public void CreateAppUser(User user)
         {
             user.DeviceUser = true;
 
-            user.Id = 1;
-            db.InsertAsync(user);
+            //user.Id = 1;
+            db.InsertOrReplaceAsync(user);
         }
         public bool CheckIfExistUser()
         {
@@ -130,20 +130,10 @@ namespace CostPlaningXamarin.Services
                 var x = collection as List<Order>;
                 foreach (var item in x)
                 {
-                    var category = await db.GetAsync<Category>(item.CategoryId);
-                    var user = await db.GetAsync<User>(item.UserId);
-                    //item.Category = category;
-                    //item.User = user;
                     item.ServerId = item.Id;
-                    try
-                    {
-                        db.InsertAsync(item);
-                    }
-                    catch (System.Exception e)
-                    {
 
-                        throw;
-                    }
+                    db.InsertAsync(item).Wait();
+
                 }
             }
             else if (typeof(T) == typeof(Category))
@@ -157,13 +147,14 @@ namespace CostPlaningXamarin.Services
             }
             else if (typeof(T) == typeof(User))
             {
-                var x = collection as List<Category>;
+                var x = collection as List<User>;
                 await db.InsertAllAsync(x);
+
             }
         }
         public async Task SaveAsync<T>(T item)
         {
-            await db.InsertAsync(item);
+            db.InsertAsync(item).Wait();
         }
         public IList<int> GetAllSyncOrdersIds()
         {

@@ -114,7 +114,11 @@ namespace CostPlaningXamarin.ViewModels
             {
                 categoryService.EditCategory(_category, user.Id);
             }
-            var o = _order;
+            if (_order != null)
+            {
+                var o = _order;
+
+            }
         }
     }
 }

@@ -41,8 +41,8 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<IList<User>> GetAllUsers()
         {
-            //var res = await _httpClient.GetAsync(urlLocalHost + "Order/GetAllUsers");
-            //string responseBody = res.Content.ReadAsStringAsync().Result;
+            var res = await _httpClient.GetAsync(urlLocalHost + "Order/GetAllUsers");
+            string responseBody = res.Content.ReadAsStringAsync().Result;
 
             return JsonConvert.DeserializeObject<List<User>>(ResponseResult("User/GetAllUsers"));
         }

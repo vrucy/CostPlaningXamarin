@@ -29,7 +29,10 @@ namespace CostPlaningXamarin.ViewModels
 
         public DateTime? PreviusDate
         {
-            get { return _previusDate; }
+            get 
+            {
+                return _previusDate; 
+            }
             set
             {
                 _previusDate = value;
@@ -149,7 +152,7 @@ namespace CostPlaningXamarin.ViewModels
         {
             try
             {
-                 SQLService.SaveAsync<Order>(CreateOrder());
+             //    SQLService.SaveAsync<Order>(CreateOrder());
                 ResetField();
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
@@ -167,10 +170,10 @@ namespace CostPlaningXamarin.ViewModels
             _order = new Order();
             _cost = 0;
             _selectedCategory = null;
-            _previusDate = null;
+            _previusDate = DateTime.Now;
             //_order.Date = DateTime.Now;
             OnPropertyChanged("Order");
-            OnPropertyChanged("PreviusDate");
+            OnPropertyChanged(nameof(PreviusDate));
             OnPropertyChanged("SelectedCategory");
             OnPropertyChanged("Cost");
         }

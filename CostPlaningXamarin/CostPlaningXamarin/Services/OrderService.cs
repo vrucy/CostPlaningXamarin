@@ -57,7 +57,10 @@ namespace CostPlaningXamarin.Services
             var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             return JsonConvert.DeserializeObject<List<Order>>(content);
         }
-
+        public List<Order> GetAllOrders()
+        {
+            return JsonConvert.DeserializeObject<List<Order>>(ResponseResult("Order/GetAllOrders"));
+        }
         public int GetLastOrderServerId()
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetLastOrderServerId"));
