@@ -77,5 +77,15 @@ namespace CostPlaningXamarin.Services
         {
             return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Order/SyncVisibility/{0}", appUserId)));
         }
+        public bool EditOrder(Order order, int userId)
+        {
+            var res = _httpClient.PutAsync(urlLocalHost + string.Format("Order/EditOrder/{0}", userId), MediaTypeHeaderValue(order)).GetAwaiter().GetResult();
+
+            if (res.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

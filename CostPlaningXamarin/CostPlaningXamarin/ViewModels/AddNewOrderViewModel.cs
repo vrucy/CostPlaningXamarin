@@ -22,7 +22,7 @@ namespace CostPlaningXamarin.ViewModels
         public AddNewOrderViewModel()
         {
             _order = new Order();
-            _categories = SQLService.GetAllCategories().GetAwaiter().GetResult().Where(c=>c.IsVisible == false).ToList();
+            _categories = SQLService.GetAllCategories().GetAwaiter().GetResult().Where(c=>c.IsVisible == true).ToList();
         }
 
         private DateTime? _previusDate;
@@ -152,7 +152,7 @@ namespace CostPlaningXamarin.ViewModels
         {
             try
             {
-             //    SQLService.SaveAsync<Order>(CreateOrder());
+                SQLService.SaveAsync<Order>(CreateOrder());
                 ResetField();
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
@@ -163,15 +163,12 @@ namespace CostPlaningXamarin.ViewModels
                 throw;
             }
         }
-        //TODO: need reset selected category problem with nullable object in picer
         private void ResetField()
         {
-            //_selectedCategory = null;
             _order = new Order();
             _cost = 0;
             _selectedCategory = null;
             _previusDate = DateTime.Now;
-            //_order.Date = DateTime.Now;
             OnPropertyChanged("Order");
             OnPropertyChanged(nameof(PreviusDate));
             OnPropertyChanged("SelectedCategory");

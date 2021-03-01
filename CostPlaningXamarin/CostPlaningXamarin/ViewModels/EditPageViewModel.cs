@@ -14,10 +14,10 @@ namespace CostPlaningXamarin.ViewModels
         private Category _category;
         private List<Category> _categories;
         private Order _order;
-        private bool _isDisable;
         private RelayCommand _EditCommand;
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
+        IOrderService orderService = DependencyService.Get<IOrderService>();
 
         //TODO: Generic make editpage.xaml.cs recive T
         public EditPageViewModel()
@@ -108,16 +108,19 @@ namespace CostPlaningXamarin.ViewModels
         }
         private void Edit(object x)
         {
-            var r = _category;
             var user = SQLService.GetAppUser();
+
             if (_category != null)
             {
+                _category.IsVisible = !_category.IsVisible;
                 categoryService.EditCategory(_category, user.Id);
+                SQLService.Disable(_category);
             }
             if (_order != null)
             {
-                var o = _order;
 
+                orderService.EditOrder(_order, user.Id);
+                SQLService.Disable(_order);
             }
         }
     }

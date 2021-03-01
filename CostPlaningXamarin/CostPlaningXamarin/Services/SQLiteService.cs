@@ -47,10 +47,6 @@ namespace CostPlaningXamarin.Services
         {
             return db.GetAllWithChildrenAsync<Order>();
         }
-        public Task<List<Order>> GetOrdersUnsyncAsync()
-        {
-            return db.GetAllWithChildrenAsync<Order>(x => x.ServerId == 0);
-        }
         //TODO: Move to order service this need to be form sql
         public Task<List<User>> GetUsers()
         {
@@ -73,10 +69,6 @@ namespace CostPlaningXamarin.Services
         public bool CheckIfExistUser()
         {
             return db.Table<User>().FirstOrDefaultAsync(x => x.DeviceUser == true).GetAwaiter().GetResult() == null;
-        }
-        public Task<int> CountUserInMobile()
-        {
-            return db.Table<User>().CountAsync();
         }
         public User GetAppUser()
         {
@@ -110,7 +102,8 @@ namespace CostPlaningXamarin.Services
             {
                 var currentItem = db.GetWithChildrenAsync<Order>(item.Key).Result;
                 currentItem.ServerId = item.Value;
-                await db.UpdateWithChildrenAsync(currentItem);
+
+                await db.InsertOrReplaceAsync(currentItem);
             }
         }
         public async Task SyncCategories(Dictionary<int, int> ids)
@@ -119,8 +112,8 @@ namespace CostPlaningXamarin.Services
             {
                 var currentItem = db.GetWithChildrenAsync<Category>(item.Key).Result;
                 currentItem.ServerId = item.Value;
-                await db.UpdateWithChildrenAsync(currentItem);
 
+                await db.InsertOrReplaceAsync(currentItem);
             }
         }
         public async Task SaveItems<T>(IList<T> collection)
@@ -132,8 +125,7 @@ namespace CostPlaningXamarin.Services
                 {
                     item.ServerId = item.Id;
 
-                    db.InsertAsync(item).Wait();
-
+                   await db.InsertAsync(item);
                 }
             }
             else if (typeof(T) == typeof(Category))
@@ -154,12 +146,12 @@ namespace CostPlaningXamarin.Services
         }
         public async Task SaveAsync<T>(T item)
         {
-            db.InsertAsync(item).Wait();
+            await db.InsertAsync(item);
         }
-        public IList<int> GetAllSyncOrdersIds()
-        {
-            return db.GetAllWithChildrenAsync<Order>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
-        }
+        //public IList<int> GetAllSyncOrdersIds()
+        //{
+        //    return db.GetAllWithChildrenAsync<Order>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
+        //}
         public IList<int> GetAllSyncIds<T>()
         {
             if (typeof(T) == typeof(Order))
@@ -177,16 +169,16 @@ namespace CostPlaningXamarin.Services
 
             return null;
         }
-        public int GetLastOrderServerId()
-        {
-            var orders = db.GetAllWithChildrenAsync<Order>().Result;
+        //public int GetLastOrderServerId()
+        //{
+        //    var orders = db.GetAllWithChildrenAsync<Order>().Result;
 
-            if (orders.Count == 0)
-            {
-                return 0;
-            }
-            return orders.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
-        }
+        //    if (orders.Count == 0)
+        //    {
+        //        return 0;
+        //    }
+        //    return orders.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+        //}
 
         public bool IsSyncData<T>()
         {
@@ -235,22 +227,22 @@ namespace CostPlaningXamarin.Services
             return !db.GetAllWithChildrenAsync<Category>().Result.Any();
         }
 
-        public List<int> AllDisable<T>()
-        {
-            if (typeof(T) == typeof(Category))
-            {
-                return db.GetAllWithChildrenAsync<Category>(c => c.IsVisible == true).Result.Select(x => x.ServerId).ToList();
-            }
-            return null;
-        }
-        public List<int> AllEnable<T>()
-        {
-            if (typeof(T) == typeof(Category))
-            {
-                return db.GetAllWithChildrenAsync<Category>(c => c.IsVisible == false).Result.Select(x => x.ServerId).ToList();
-            }
-            return null;
-        }
+        //public List<int> AllDisable<T>()
+        //{
+        //    if (typeof(T) == typeof(Category))
+        //    {
+        //        return db.GetAllWithChildrenAsync<Category>(c => c.IsVisible == false).Result.Select(x => x.ServerId).ToList();
+        //    }
+        //    return null;
+        //}
+        //public List<int> AllEnable<T>()
+        //{
+        //    if (typeof(T) == typeof(Category))
+        //    {
+        //        return db.GetAllWithChildrenAsync<Category>(c => c.IsVisible == true).Result.Select(x => x.ServerId).ToList();
+        //    }
+        //    return null;
+        //}
         //TODO: Check if need writeToDb && code repite
         public async Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb)
         {
@@ -260,21 +252,36 @@ namespace CostPlaningXamarin.Services
                 {
                     var category = db.FindAsync<Category>(x => x.ServerId == item.Key).Result;
                     category.IsVisible = item.Value;
-                    //category.IsWriteToDB = isWriteToDb;
 
-                    await db.UpdateWithChildrenAsync(category);
+                    await db.InsertOrReplaceAsync(category);
                 }
             }
             if (typeof(T) == typeof(Order))
             {
                 foreach (var item in collection)
                 {
-                    var order = db.FindAsync<Order>(x => x.ServerId == item.Key).Result;
+                    var order = await db.Table<Order>().Where(x=>x.ServerId == item.Key).FirstOrDefaultAsync();
                     order.IsVisible = item.Value;
-                    //order.IsWriteToDB = isWriteToDb;
 
-                    await db.UpdateWithChildrenAsync(order);
+                    await db.InsertOrReplaceAsync(order);
                 }
+            }
+        }
+
+        public async Task Disable<T>(T item)
+        {
+            if (typeof(T) == typeof(Category))
+            {
+                var category = item as Category;
+                //promena visiblity
+                category.IsVisible = false;
+                await db.UpdateAsync(category);
+            }
+            if (typeof(T) == typeof(Order))
+            {
+                var order = item as Order;
+                order.IsVisible = false;
+                await db.UpdateAsync(order);
             }
         }
     }

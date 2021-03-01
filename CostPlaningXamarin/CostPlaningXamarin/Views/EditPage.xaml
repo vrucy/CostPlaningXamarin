@@ -11,6 +11,7 @@
         <local:EditPageViewModel x:Name="viewModel"/>
     </ContentPage.BindingContext>
     <ContentPage.Resources>
+        <converter:ReverseBool x:Key="ReverseBoolConverter"/>
         <converter:CategoryToBool x:Key="CategoryConverter"/>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -25,10 +26,17 @@
                 </inputLayout:SfTextInputLayout>
                 <Label Text="Disable category" HorizontalOptions="CenterAndExpand"/>
                 <!--TODO: Change color when checkbox is disable-->
-                <CheckBox IsChecked="{Binding Category.IsDisable,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
+                <!--IsChecked="{Binding Category.IsDisable}"-->
+                <CheckBox  HorizontalOptions="CenterAndExpand">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox">
                             <Style.Triggers>
+                                <DataTrigger TargetType="CheckBox" Binding="{Binding Category, Converter={StaticResource ReverseBoolConverter},Mode=OneWay}" Value="False">
+                                    <Setter Property="IsChecked" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="CheckBox" Binding="{Binding Category, Converter={StaticResource ReverseBoolConverter},Mode=OneWay}" Value="True">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
                                 <DataTrigger TargetType="CheckBox" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="False">
                                     <Setter Property="IsEnabled" Value="False"/>
                                 </DataTrigger>
@@ -71,7 +79,8 @@
                 <inputLayout:SfTextInputLayout Hint="Description" ContainerType="Filled " Margin="10,0,10,0">
                     <Editor AutoSize="TextChanges" Text="{Binding Order.Description}"/>
                 </inputLayout:SfTextInputLayout>
-                <CheckBox IsChecked="{Binding Order.IsDisable,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
+                <Label Text="Disable order" HorizontalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding Order.IsVisible,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
                     
                 </CheckBox>
                 <Button Command="{Binding EditCommand}" Text="Edit" VerticalOptions="EndAndExpand" Margin="10"/>

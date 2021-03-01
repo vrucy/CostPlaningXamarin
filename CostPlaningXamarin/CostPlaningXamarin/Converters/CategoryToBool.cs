@@ -1,5 +1,4 @@
-﻿using CostPlaningXamarin.Models;
-using System;
+﻿using System;
 using Xamarin.Forms;
 
 namespace CostPlaningXamarin.Converters

@@ -54,7 +54,7 @@ namespace CostPlaningXamarin.Services
             return false;
         }
         public async void SyncData()
-        {
+         {
             var appUser = SQLiteService.GetAppUser();
 
             //if (CheckFirstAppUser(appUser))
