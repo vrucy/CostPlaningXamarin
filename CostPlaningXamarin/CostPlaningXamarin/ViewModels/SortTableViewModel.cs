@@ -224,7 +224,7 @@ namespace CostPlaningXamarin.ViewModels
         public List<string> PopulateDateCollection()
         {
 
-            foreach (var item in _orders)
+            foreach (var item in _allOrders)
             {
                 Date.Add(string.Format("{0}/{1}", item.Date.ToString("MMM"), item.Date.ToString("yyyy")));
             }

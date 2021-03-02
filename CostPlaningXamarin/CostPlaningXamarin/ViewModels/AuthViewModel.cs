@@ -69,13 +69,6 @@ namespace CostPlaningXamarin.ViewModels
                 {
                     _navigateService.NavigateToMainPage();
                 });
-                //Task.Run(() =>
-                //{
-                //    Activity.
-                //    _sqliteService.CreateAppUser(_selectedUser);
-                //    _navigateService.NavigateToMainPage();
-
-                //})
             }
             else
             {

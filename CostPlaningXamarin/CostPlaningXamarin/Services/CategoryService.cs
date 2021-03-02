@@ -1,4 +1,5 @@
-﻿using CostPlaningXamarin.Interfaces;
+﻿using CostPlaningXamarin.Helper;
+using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using Newtonsoft.Json;
@@ -13,9 +14,8 @@ namespace CostPlaningXamarin.Services
     {
         //TODO: DI
         private static readonly HttpClient _httpClient = new HttpClient();
-        //private const string urlLocalHost = "http://10.0.2.2:54481/";
-        private const string urlLocalHost = "http://192.168.1.88:80/";
-        //private const string urlLocalHost = "http://192.168.1.88:54481/";
+
+        private const string urlLocalHost = Constants.urlLocalHost;
         private HttpContent MediaTypeHeaderValue(object o)
         {
 
@@ -74,12 +74,12 @@ namespace CostPlaningXamarin.Services
 
         public Dictionary<int, bool> GetAllCategoresVisibility(int appUserId)
         {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncVisbility/{0}", appUserId)));
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncDisable/{0}",appUserId)));
         }
 
-        //public void SyncDisable(List<int> ids)
-        //{
-        //    _httpClient.PutAsync(urlLocalHost + "Category/SyncDisableOnServer", MediaTypeHeaderValue(ids)).Wait();
-        //}
+        public void SyncDisable(List<int> ids)
+        {
+            _httpClient.PutAsync(urlLocalHost + "Category/SyncDisableOnServer", MediaTypeHeaderValue(ids)).Wait();
+        }
     }
 }
