@@ -19,6 +19,6 @@ namespace CostPlaningXamarin.Interfaces
         /// Send ids to server, who need to disable
         /// </summary>
         /// <param name="ids"></param>
-        void SyncDisable(List<int> ids);
+        //void SyncDisable(List<int> ids);
     }
 }

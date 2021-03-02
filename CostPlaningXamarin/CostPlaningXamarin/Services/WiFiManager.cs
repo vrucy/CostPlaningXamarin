@@ -5,6 +5,8 @@ using CostPlaningXamarin.Services;
 using Xamarin.Forms;
 using CostPlaningXamarin.Models;
 using System;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 [assembly: Xamarin.Forms.Dependency(typeof(WiFiManager))]
 namespace CostPlaningXamarin.Services
@@ -27,25 +29,24 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            //{
-            //    if (GetCurrentSSID().Equals(BSSID))
-            //    {
-            //        return true;
-            //    }
-            //}
-            //return false;
-            return true;
-
+            if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            {
+                if (GetCurrentSSID().Equals(BSSID))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         private bool CheckFirstAppUser(User appUser)
         {
             var lastServerId = userService.GetLastUserServerId();
+
             if (lastServerId == 0)
             {
                 return true;
             }
-            else if (appUser.Id == 1 &&  lastServerId != 1)
+            else if (appUser.Id == 1 && lastServerId != 1)
             {
                 return true;
             }
@@ -55,33 +56,62 @@ namespace CostPlaningXamarin.Services
         public async void SyncData()
          {
             var appUser = SQLiteService.GetAppUser();
-           // SQLiteService.DropTable<Order>();
-            if (CheckFirstAppUser(appUser))
-            {
-                await synchronizationService.FirstSyncUserOwner(appUser);
-                await SQLiteService.SaveItems(categoryService.GetCategories());
-            }
-            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
+
+            //if (CheckFirstAppUser(appUser))
+            //{
+            //    await synchronizationService.FirstSyncUserOwner(appUser);
+            //    await SQLiteService.SaveItems(categoryService.GetCategories());
+            //}
+            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId() )
             {
                 await synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
             }
-            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
-            {
-                await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
-            }
-            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
+            if ( SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
             {
                 await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
             }
+            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>() || appUser == null)
+            {
+                await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
+            }
             await synchronizationService.SyncVisible<Category>(appUser.Id);
             await synchronizationService.SyncVisible<Order>(appUser.Id);
+        }
+        public void FristSyncData()
+        {
+            try
+            {
+                Task.Run(async () =>
+                {
+                    var users = userService.GetAllUsers().GetAwaiter().GetResult();
+                    await SQLiteService.SaveItems(users);
+                    await SQLiteService.SaveItems(categoryService.GetCategories());
+                    var x = orderService.GetAllOrders();
 
-            //TODO: Da li treba da se proveri ukoliko nema ordera na serveru da se o5 pozeove FirstSyncUserOwner ili sta vec?
+                    await SQLiteService.SaveItems(orderService.GetAllOrders());
+                }).Wait();
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
         }
         public bool IsServerAvailable()
         {
-            return orderService.IsServerAvailable();
+
+            TcpClient tcpClient = new TcpClient();
+            if (!tcpClient.ConnectAsync("192.168.1.88", 80).Wait(3000))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
-        
+
     }
 }

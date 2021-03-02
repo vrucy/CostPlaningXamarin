@@ -5,5 +5,6 @@
         bool IsHomeWifiConnected();
         bool IsServerAvailable();
         void SyncData();
+        void FristSyncData();
     }
 }

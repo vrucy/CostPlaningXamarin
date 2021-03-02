@@ -1,4 +1,5 @@
-﻿using CostPlaningXamarin.Interfaces;
+﻿using CostPlaningXamarin.Helper;
+using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using Newtonsoft.Json;
@@ -16,9 +17,8 @@ namespace CostPlaningXamarin.Services
     {
         //TODO: DI
         private static readonly HttpClient _httpClient = new HttpClient();
-        //private const string urlLocalHost = "http://10.0.2.2:54481/";
-        //private const string urlLocalHost = "http://192.168.1.88:80/";
-        private const string urlLocalHost = "http://192.168.1.88:54481/";
+
+        private const string urlLocalHost = Constants.urlLocalHost;
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
 
         private HttpContent MediaTypeHeaderValue(object o)
@@ -57,7 +57,10 @@ namespace CostPlaningXamarin.Services
             var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             return JsonConvert.DeserializeObject<List<Order>>(content);
         }
-
+        public List<Order> GetAllOrders()
+        {
+            return JsonConvert.DeserializeObject<List<Order>>(ResponseResult("Order/GetAllOrders"));
+        }
         public int GetLastOrderServerId()
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetLastOrderServerId"));
@@ -66,17 +69,6 @@ namespace CostPlaningXamarin.Services
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetOrdersCountFromServer"));
         }
-        public bool IsServerAvailable()
-        {
-            var res = _httpClient.GetAsync(urlLocalHost + "Order/IsServerAvailable").GetAwaiter().GetResult();
-            if (res.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            
-            return false;
-        }
-
         public List<int> AllDisableOrders()
         {
             return JsonConvert.DeserializeObject<List<int>>(ResponseResult("Order/SyncDisable"));
@@ -84,6 +76,16 @@ namespace CostPlaningXamarin.Services
         public Dictionary<int, bool> GetAllOrdersVisibility(int appUserId)
         {
             return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Order/SyncVisibility/{0}", appUserId)));
+        }
+        public bool EditOrder(Order order, int userId)
+        {
+            var res = _httpClient.PutAsync(urlLocalHost + string.Format("Order/EditOrder/{0}", userId), MediaTypeHeaderValue(order)).GetAwaiter().GetResult();
+
+            if (res.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

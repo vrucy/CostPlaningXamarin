@@ -17,11 +17,11 @@ namespace CostPlaningXamarin.Models
         public string Description { get; set; }
         [ForeignKey(typeof(User))]
         public int UserId { get; set; }
-        [ManyToOne(CascadeOperations = CascadeOperation.All)]
+        [ManyToOne(CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
         public User User { get; set; }
         [ForeignKey(typeof(Category))]
         public int CategoryId { get; set; }
-        [ManyToOne(CascadeOperations = CascadeOperation.All)]
+        [ManyToOne(CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
         public Category Category{ get; set; }
     }
 }

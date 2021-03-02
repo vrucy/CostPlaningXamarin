@@ -8,7 +8,6 @@ namespace CostPlaningXamarin.Interfaces
     {
         Task CreateDBAsync(string path);
         void CreateAppUser(User user);
-        Task SaveAsync<T>(T item);
         void DeleteAll<T>() where T : class;
         void CreateTable<T>() where T : new();
         void DropTable<T>() where T : new();
@@ -25,11 +24,13 @@ namespace CostPlaningXamarin.Interfaces
         Task<List<Category>> CategoriesForSync();
         Task SyncOrders(Dictionary<int, int> ids);
         Task SyncCategories(Dictionary<int, int> ids);
+        Task SaveAsync<T>(T item);
         Task SaveItems<T>(IList<T> collection);
         IList<int> GetAllSyncIds<T>();
         int GetLastServerId<T>() ;
-        List<int> AllDisable<T>();
-        List<int> AllEnable<T>();
+        //List<int> AllDisable<T>();
+        //List<int> AllEnable<T>();
+        Task Disable<T>(T item);
         Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
     }
 }

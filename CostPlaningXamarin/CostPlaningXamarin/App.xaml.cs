@@ -22,26 +22,27 @@ namespace CostPlaningXamarin
             Device.SetFlags(new string[] { "Expander_Experimental" });
             InitializeComponent();
             SQLiteService.CreateDBAsync(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XamarinSQLite.db3")).Wait();
-            // SQLiteService.DeleteAllUsers();
             if (SQLiteService.CheckIfExistUser())
             {
+                wiFiManager.FristSyncData();
                 MainPage = new NavigationPage(new AuthPage());
             }
             else
             {
                 MainPage = new NavigationPage(new MainPage());
-
             }
+
             CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
             {
-                if (CrossConnectivity.Current.ConnectionTypes.Contains(ConnectionType.WiFi))
+                if (CrossConnectivity.Current.ConnectionTypes.Contains(ConnectionType.WiFi) && wiFiManager.IsServerAvailable())
                 {
-                    wiFiManager.SyncData();
+                     wiFiManager.SyncData();
                 }
             };
+
         }
         protected override void OnStart()
-        {
+       {
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
             if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser() && wiFiManager.IsServerAvailable())
             {

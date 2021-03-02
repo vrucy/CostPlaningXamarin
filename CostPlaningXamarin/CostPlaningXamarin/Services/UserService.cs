@@ -1,4 +1,5 @@
-﻿using CostPlaningXamarin.Interfaces;
+﻿using CostPlaningXamarin.Helper;
+using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using Newtonsoft.Json;
@@ -6,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+
 [assembly: Xamarin.Forms.Dependency(typeof(UserService))]
 namespace CostPlaningXamarin.Services
 {
@@ -17,9 +18,7 @@ namespace CostPlaningXamarin.Services
         //TODO: DI
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        private const string urlLocalHost = "http://192.168.1.88:54481/";
-        //private const string urlLocalHost = "http://10.0.2.2:54481/";
-        //private const string urlLocalHost = "http://192.168.1.88:80/";
+        private const string urlLocalHost = Constants.urlLocalHost;
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
 
         private HttpContent MediaTypeHeaderValue(object o)
@@ -41,8 +40,8 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<IList<User>> GetAllUsers()
         {
-            //var res = await _httpClient.GetAsync(urlLocalHost + "Order/GetAllUsers");
-            //string responseBody = res.Content.ReadAsStringAsync().Result;
+            var res = await _httpClient.GetAsync(urlLocalHost + "Order/GetAllUsers");
+            string responseBody = res.Content.ReadAsStringAsync().Result;
 
             return JsonConvert.DeserializeObject<List<User>>(ResponseResult("User/GetAllUsers"));
         }
