@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
-             xmlns:sf="clr-namespace:Syncfusion.XForms.Pickers;assembly=Syncfusion.SfPicker.XForms"
+             xmlns:busyindicator="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
              x:Class="CostPlaningXamarin.Views.AddItemPage">
@@ -10,6 +10,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout >
+            <busyindicator:SfBusyIndicator Title="Please wait..." AnimationType="Cupertino" BackgroundColor="LightGray" TextColor="Teal" IsBusy="{Binding IsBusy, Mode=TwoWay}"/>
             <inputLayout:SfTextInputLayout Hint="Enter order price" ContainerType="Filled" Margin="10,0,10,0">
                 <Entry Placeholder="Price:" ClearButtonVisibility="WhileEditing" Text ="{Binding Cost}" Keyboard="Numeric"/>
             </inputLayout:SfTextInputLayout>

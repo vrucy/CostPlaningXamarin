@@ -13,16 +13,25 @@
     <ContentPage.Resources>
         <converter:ReverseBool x:Key="ReverseBoolConverter"/>
         <converter:CategoryToBool x:Key="CategoryConverter"/>
+        <converter:CategoryIsVisibleToString x:Key="CategoryIsVisibleToString"/>
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid>
-            
             <StackLayout IsVisible="{Binding IsCategory}">
                 <inputLayout:SfTextInputLayout Hint="Select category" ContainerType="Filled" Margin="10,0,10,0">
-                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" DisplayMemberPath="Name"/>
+                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" >
+                        <combobox:SfComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Orientation="Horizontal" Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">
+                                    <Label Text="{Binding Name}"/>
+                                    <Label Text="{Binding IsVisible, Converter={StaticResource CategoryIsVisibleToString}}" HorizontalOptions="EndAndExpand"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </combobox:SfComboBox.ItemTemplate>
+                    </combobox:SfComboBox>
                 </inputLayout:SfTextInputLayout>
                 <inputLayout:SfTextInputLayout Hint="Category name" ContainerType="Filled" Margin="10,0,10,0">
-                    <Entry Text="{Binding Category.Name}"/> 
+                    <Entry Text="{Binding Category.Name}"/>
                 </inputLayout:SfTextInputLayout>
                 <Label Text="Disable category" HorizontalOptions="CenterAndExpand"/>
                 <!--TODO: Change color when checkbox is disable-->
@@ -50,21 +59,21 @@
                 <Button Command="{Binding EditCommand}" Text="Submit" VerticalOptions="EndAndExpand" Margin="10" >
                     <Button.Style>
                         <Style TargetType="Button">
-                        <Style.Triggers>
+                            <Style.Triggers>
                                 <DataTrigger TargetType="Button" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="False">
                                     <Setter Property="IsEnabled" Value="False"/>
-                         </DataTrigger>
-                        <DataTrigger TargetType="Button" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="True">
+                                </DataTrigger>
+                                <DataTrigger TargetType="Button" Binding="{Binding Category.Id, Converter={StaticResource CategoryConverter}}" Value="True">
                                     <Setter Property="IsEnabled" Value="True"/>
-                         </DataTrigger>
-                         
+                                </DataTrigger>
+
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
                 </Button>
             </StackLayout>
-            
-            
+
+
             <StackLayout IsVisible="{Binding IsOrder}" >
                 <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="15">
                     <Label Text="{Binding Order.User.FirstName, StringFormat='Ordered: {0}' }"/>
@@ -80,8 +89,19 @@
                     <Editor AutoSize="TextChanges" Text="{Binding Order.Description}"/>
                 </inputLayout:SfTextInputLayout>
                 <Label Text="Disable order" HorizontalOptions="CenterAndExpand"/>
-                <CheckBox IsChecked="{Binding Order.IsVisible,Mode=TwoWay}" HorizontalOptions="CenterAndExpand">
-                    
+                <CheckBox HorizontalOptions="CenterAndExpand">
+                    <CheckBox.Style>
+                        <Style TargetType="CheckBox">
+                            <Style.Triggers>
+                                <DataTrigger TargetType="CheckBox" Binding="{Binding Order, Converter={StaticResource ReverseBoolConverter},Mode=OneWay}" Value="False">
+                                    <Setter Property="IsChecked" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="CheckBox" Binding="{Binding Order, Converter={StaticResource ReverseBoolConverter},Mode=OneWay}" Value="True">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </CheckBox.Style>
                 </CheckBox>
                 <Button Command="{Binding EditCommand}" Text="Edit" VerticalOptions="EndAndExpand" Margin="10"/>
             </StackLayout>

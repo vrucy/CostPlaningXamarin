@@ -114,13 +114,13 @@ namespace CostPlaningXamarin.ViewModels
             {
                 _category.IsVisible = !_category.IsVisible;
                 categoryService.EditCategory(_category, user.Id);
-                SQLService.Disable(_category);
+                SQLService.Visibility(_category, _category.IsVisible);
             }
             if (_order != null)
             {
-
+                _order.IsVisible = !_order.IsVisible;
                 orderService.EditOrder(_order, user.Id);
-                SQLService.Disable(_order);
+                SQLService.Visibility(_order, _order.IsVisible);
             }
         }
     }

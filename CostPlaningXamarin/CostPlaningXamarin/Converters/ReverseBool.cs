@@ -19,6 +19,15 @@ namespace CostPlaningXamarin.Converters
                 }
                 return !(bool)x.IsVisible;
             }
+            if (value is Order)
+            {
+                var x = (Order)value;
+                if (x.Id == 0)
+                {
+                    return null;
+                }
+                return !(bool)x.IsVisible;
+            }
             return null;
         }
 

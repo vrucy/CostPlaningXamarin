@@ -30,7 +30,7 @@ namespace CostPlaningXamarin.Interfaces
         int GetLastServerId<T>() ;
         //List<int> AllDisable<T>();
         //List<int> AllEnable<T>();
-        Task Disable<T>(T item);
+        Task Visibility<T>(T item,bool visibliity);
         Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
     }
 }

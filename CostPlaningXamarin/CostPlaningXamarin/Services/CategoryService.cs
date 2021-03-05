@@ -74,12 +74,7 @@ namespace CostPlaningXamarin.Services
 
         public Dictionary<int, bool> GetAllCategoresVisibility(int appUserId)
         {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncDisable/{0}",appUserId)));
-        }
-
-        public void SyncDisable(List<int> ids)
-        {
-            _httpClient.PutAsync(urlLocalHost + "Category/SyncDisableOnServer", MediaTypeHeaderValue(ids)).Wait();
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncVisbility/{0}", appUserId)));
         }
     }
 }

@@ -226,23 +226,6 @@ namespace CostPlaningXamarin.Services
         {
             return !db.GetAllWithChildrenAsync<Category>().Result.Any();
         }
-
-        //public List<int> AllDisable<T>()
-        //{
-        //    if (typeof(T) == typeof(Category))
-        //    {
-        //        return db.GetAllWithChildrenAsync<Category>(c => c.IsVisible == false).Result.Select(x => x.ServerId).ToList();
-        //    }
-        //    return null;
-        //}
-        //public List<int> AllEnable<T>()
-        //{
-        //    if (typeof(T) == typeof(Category))
-        //    {
-        //        return db.GetAllWithChildrenAsync<Category>(c => c.IsVisible == true).Result.Select(x => x.ServerId).ToList();
-        //    }
-        //    return null;
-        //}
         //TODO: Check if need writeToDb && code repite
         public async Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb)
         {
@@ -268,19 +251,19 @@ namespace CostPlaningXamarin.Services
             }
         }
 
-        public async Task Disable<T>(T item)
+        public async Task Visibility<T>(T item,bool visibility)
         {
             if (typeof(T) == typeof(Category))
             {
                 var category = item as Category;
                 //promena visiblity
-                category.IsVisible = false;
+                category.IsVisible = visibility;
                 await db.UpdateAsync(category);
             }
             if (typeof(T) == typeof(Order))
             {
                 var order = item as Order;
-                order.IsVisible = false;
+                order.IsVisible = visibility;
                 await db.UpdateAsync(order);
             }
         }

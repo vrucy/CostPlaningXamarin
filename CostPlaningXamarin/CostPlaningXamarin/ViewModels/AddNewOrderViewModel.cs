@@ -21,12 +21,28 @@ namespace CostPlaningXamarin.ViewModels
 
         public AddNewOrderViewModel()
         {
-            _order = new Order();
-            _categories = SQLService.GetAllCategories().GetAwaiter().GetResult().Where(c=>c.IsVisible == true).ToList();
+            GenerateItems();
+        }
+        private bool isBusy;
+
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set 
+            {
+                isBusy = value;
+                OnPropertyChanged(nameof(IsBusy));
+            }
         }
 
+        private void GenerateItems()
+        {
+            IsBusy = true;
+            _order = new Order();
+            _categories = SQLService.GetAllCategories().GetAwaiter().GetResult().Where(c => c.IsVisible == true).ToList();
+            IsBusy = false;
+        }
         private DateTime? _previusDate;
-
         public DateTime? PreviusDate
         {
             get 
@@ -184,6 +200,7 @@ namespace CostPlaningXamarin.ViewModels
             _order.User = SQLService.GetAppUser();
             _order.CategoryId = _selectedCategory.Id;
             _order.Category = _selectedCategory;
+            _order.IsVisible = true;
             if (_previusDate != null)
             {
                 _order.Date = (DateTime)_previusDate;

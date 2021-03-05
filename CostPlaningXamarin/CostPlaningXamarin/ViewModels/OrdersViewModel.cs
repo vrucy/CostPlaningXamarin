@@ -12,7 +12,7 @@ using Xamarin.Forms;
 
 namespace CostPlaningXamarin.ViewModels
 {
-    public class OrdersViewModel: BaseViewModel
+    public class OrdersViewModel : BaseViewModel
     {
         private List<Order> _orders;
         private List<Order> _allOrders;
@@ -28,7 +28,7 @@ namespace CostPlaningXamarin.ViewModels
         public OrdersViewModel()
         {
             _allOrders = _sqliteService.GetOrdersAsync().GetAwaiter().GetResult();
-            _orders = _allOrders;
+           // _orders = _allOrders;
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
 
             _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
@@ -39,11 +39,12 @@ namespace CostPlaningXamarin.ViewModels
         {
             get
             {
-                return _orders.Select(i => { i.Date.ToShortDateString(); return i; }).Where(o => o.Date.Month == DateTime.Now.Month).ToList();
+                return _orders;
             }
             set
             {
                 _orders = value;
+
                 OnPropertyChanged(nameof(Orders));
                 OnPropertyChanged("Cost");
 
@@ -53,11 +54,11 @@ namespace CostPlaningXamarin.ViewModels
 
         public Order Order
         {
-            get 
+            get
             {
-                return _order; 
+                return _order;
             }
-            set 
+            set
             {
                 _order = value;
                 _navigationService.NavigateToEditOrderAsync(_order);
@@ -236,8 +237,12 @@ namespace CostPlaningXamarin.ViewModels
 
         public List<string> PopulateDateCollection()
         {
-
-            foreach (var item in _orders)
+            if (_orders == null)
+            {
+                _orders = _allOrders.Select(i => { i.Date.ToShortDateString(); return i; }).Where(o => o.Date.Month == DateTime.Now.Month).ToList();
+                OnPropertyChanged(nameof(Orders));
+            }
+            foreach (var item in _allOrders)
             {
                 Date.Add(string.Format("{0}/{1}", item.Date.ToString("MMM"), item.Date.ToString("yyyy")));
             }
@@ -262,18 +267,14 @@ namespace CostPlaningXamarin.ViewModels
             //TODO clear every piceer per one and refresh list
 
             _orders = _allOrders;
-            //OnPropertyChanged(nameof(Orders));
             _selectedUser = null;
             _selectedCategory = null;
-            //_DateTo = null;
-            //_DateFrom = null;
             _DateFromSelected = null;
             _DateToSelected = null;
             OnPropertyChanged(nameof(SelectedUser));
             OnPropertyChanged(nameof(DateToSelected));
             OnPropertyChanged(nameof(DateFromSelected));
             OnPropertyChanged(nameof(SelectedCategory));
-            //_orders = _allOrders;
             OnPropertyChanged(nameof(Orders));
 
         }

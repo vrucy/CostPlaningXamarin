@@ -1,4 +1,5 @@
 ﻿using CostPlaningXamarin.Command;
+using CostPlaningXamarin.Extensions;
 using CostPlaningXamarin.Helper;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
@@ -24,8 +25,8 @@ namespace CostPlaningXamarin.ViewModels
         public SortTableViewModel()
         {
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
-            _allOrders = _sqliteService.GetOrdersAsync().Result;
-            _orders = _allOrders.Where(x=>x.Date.Month == DateTime.Now.Month).ToList();
+            _allOrders = _sqliteService.GetOrdersAsync().Result.VisibleOrders();
+            //_orders = _allOrders.Where(x=>x.Date.Month == DateTime.Now.Month).ToList();
 
             _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
 
@@ -37,7 +38,7 @@ namespace CostPlaningXamarin.ViewModels
         {
             get
             {
-                return _orders.Select(i => { i.Date.ToShortDateString(); return i; }).ToList();
+                return _orders/*.Select(i => { i.Date.ToShortDateString(); return i; }).ToList()*/;
 
             }
             set
@@ -223,7 +224,11 @@ namespace CostPlaningXamarin.ViewModels
 
         public List<string> PopulateDateCollection()
         {
-
+            if (_orders == null)
+            {
+                _orders = _allOrders.Select(i => { i.Date.ToShortDateString(); return i; }).Where(o => o.Date.Month == DateTime.Now.Month).ToList();
+                OnPropertyChanged(nameof(Orders));
+            }
             foreach (var item in _allOrders)
             {
                 Date.Add(string.Format("{0}/{1}", item.Date.ToString("MMM"), item.Date.ToString("yyyy")));
