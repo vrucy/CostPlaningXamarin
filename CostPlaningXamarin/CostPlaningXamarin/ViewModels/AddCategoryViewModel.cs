@@ -46,7 +46,8 @@ namespace CostPlaningXamarin.ViewModels
         {
             try
             {
-                SQLService.SaveAsync(Category);
+                _category.IsVisible = !_category.IsVisible;
+                SQLService.SaveAsync(_category);
                 Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
 
                 _navigationService.NavigateToMainPage();

@@ -4,9 +4,7 @@ using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -120,8 +118,6 @@ namespace CostPlaningXamarin.ViewModels
 
             }
         }
-
-
         public List<string> DateFrom
         {
             get
@@ -142,6 +138,21 @@ namespace CostPlaningXamarin.ViewModels
                 OnPropertyChanged(nameof(DateFrom));
             }
         }
+        private string _visibility;
+
+        public string Visibility
+        {
+            get 
+            {
+                if (_visibility == null)
+                {
+                    return "Enable";
+                }
+                return _visibility; 
+            }
+            set { _visibility = value; }
+        }
+
         private string _DateFromSelected;
 
         public string DateFromSelected
@@ -239,7 +250,7 @@ namespace CostPlaningXamarin.ViewModels
         {
             if (_orders == null)
             {
-                _orders = _allOrders.Select(i => { i.Date.ToShortDateString(); return i; }).Where(o => o.Date.Month == DateTime.Now.Month).ToList();
+                _orders = _allOrders.Select(i => { i.Date.ToShortDateString(); return i; }).Where(o => o.Date.Month == DateTime.Now.Month && o.IsVisible == true).ToList();
                 OnPropertyChanged(nameof(Orders));
             }
             foreach (var item in _allOrders)
@@ -291,10 +302,25 @@ namespace CostPlaningXamarin.ViewModels
                 return _ApplyFilters;
             }
         }
+        private List<Order> VisibleFilter(List<Order> orders)
+        {
+            if (_visibility.Equals( "Enable"))
+            {
+                return orders.Where(o=>o.IsVisible == true).ToList();
+            }
+            else if (_visibility.Equals("Disable"))
+            {
+                return orders.Where(o => o.IsVisible == false).ToList();
+            }
+            else
+            {
+                return orders;
+            }
+        }
         private void ApplyFilters(object x)
         {
             List<Order> _copy = new List<Order>();
-            _copy = _allOrders;
+            _copy = VisibleFilter(_allOrders);
             if (SelectedCategory != null)
             {
                 _copy = _copy.Where(o => o.CategoryId == _selectedCategory.Id).ToList();

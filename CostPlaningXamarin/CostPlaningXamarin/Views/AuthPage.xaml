@@ -27,7 +27,6 @@
                        VerticalOptions="EndAndExpand" HorizontalOptions="Center" />
             </StackLayout>
 
-
             <StackLayout Padding="10" IsVisible="{Binding IsVisible}">
                 <inputLayout:SfTextInputLayout Hint="First name" >
                     <Entry Text="{Binding User.FirstName}"/>

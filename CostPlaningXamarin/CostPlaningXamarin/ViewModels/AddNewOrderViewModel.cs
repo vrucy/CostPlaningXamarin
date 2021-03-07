@@ -173,7 +173,7 @@ namespace CostPlaningXamarin.ViewModels
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 throw;
@@ -205,6 +205,7 @@ namespace CostPlaningXamarin.ViewModels
             {
                 _order.Date = (DateTime)_previusDate;
             }
+            OnPropertyChanged(nameof(Order));
             return _order;
         }
     }

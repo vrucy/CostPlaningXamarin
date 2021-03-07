@@ -19,7 +19,7 @@
         <Grid>
             <StackLayout IsVisible="{Binding IsCategory}">
                 <inputLayout:SfTextInputLayout Hint="Select category" ContainerType="Filled" Margin="10,0,10,0">
-                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" >
+                    <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Categories}" SelectedItem="{Binding Category}" DisplayMemberPath="Name">
                         <combobox:SfComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackLayout Orientation="Horizontal" Spacing="5" VerticalOptions="Center" HorizontalOptions="Center">

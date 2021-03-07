@@ -31,7 +31,7 @@ namespace CostPlaningXamarin.Services
         public async Task<User> PostAppUser()
         {
             var appUser = SQLiteService.GetAppUser();
-            var res = _httpClient.PostAsync(urlLocalHost + "User/PostAppUser", MediaTypeHeaderValue(appUser)).GetAwaiter().GetResult();
+            var res = await _httpClient.PostAsync(urlLocalHost + "User/PostAppUser", MediaTypeHeaderValue(appUser));
             return JsonConvert.DeserializeObject<User>(res.Content.ReadAsStringAsync().Result);
         }
         public Task PostCategory(Category category)
@@ -40,9 +40,6 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<IList<User>> GetAllUsers()
         {
-            var res = await _httpClient.GetAsync(urlLocalHost + "Order/GetAllUsers");
-            string responseBody = res.Content.ReadAsStringAsync().Result;
-
             return JsonConvert.DeserializeObject<List<User>>(ResponseResult("User/GetAllUsers"));
         }
         private string ResponseResult(string route)

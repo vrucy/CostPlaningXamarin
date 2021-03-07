@@ -7,6 +7,7 @@ using CostPlaningXamarin.Models;
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Threading;
 
 [assembly: Xamarin.Forms.Dependency(typeof(WiFiManager))]
 namespace CostPlaningXamarin.Services
@@ -38,65 +39,43 @@ namespace CostPlaningXamarin.Services
             }
             return false;
         }
-        private bool CheckFirstAppUser(User appUser)
-        {
-            var lastServerId = userService.GetLastUserServerId();
-
-            if (lastServerId == 0)
-            {
-                return true;
-            }
-            else if (appUser.Id == 1 && lastServerId != 1)
-            {
-                return true;
-            }
-
-            return false;
-        }
         public async void SyncData()
-         {
+        {
+            SemaphoreSlim ss = new SemaphoreSlim(1);
             var appUser = SQLiteService.GetAppUser();
 
-            //if (CheckFirstAppUser(appUser))
-            //{
-            //    await synchronizationService.FirstSyncUserOwner(appUser);
-            //    await SQLiteService.SaveItems(categoryService.GetCategories());
-            //}
-            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId() )
+            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
             {
+                await ss.WaitAsync();
                 await synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
+                ss.Release();
             }
-            if ( SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
+            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
             {
+                await ss.WaitAsync();
                 await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+                ss.Release();
             }
-            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>() || appUser == null)
+            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
+                await ss.WaitAsync();
                 await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
+                ss.Release();
             }
             await synchronizationService.SyncVisible<Category>(appUser.Id);
             await synchronizationService.SyncVisible<Order>(appUser.Id);
         }
         public void FristSyncData()
-        {
-            try
+        { 
+            Task.Run(async () =>
             {
-                Task.Run(async () =>
-                {
-                    var users = userService.GetAllUsers().GetAwaiter().GetResult();
-                    await SQLiteService.SaveItems(users);
-                    await SQLiteService.SaveItems(categoryService.GetCategories());
-                    var x = orderService.GetAllOrders();
+                var users = userService.GetAllUsers().GetAwaiter().GetResult();
+                await SQLiteService.SaveItems(users);
+                await SQLiteService.SaveItems(categoryService.GetCategories());
+                var x = orderService.GetAllOrders();
 
-                    await SQLiteService.SaveItems(orderService.GetAllOrders());
-                }).Wait();
-
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+                await SQLiteService.SaveItems(orderService.GetAllOrders());
+            }).Wait();
         }
         public bool IsServerAvailable()
         {

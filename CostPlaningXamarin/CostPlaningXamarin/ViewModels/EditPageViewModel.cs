@@ -1,4 +1,5 @@
-﻿using CostPlaningXamarin.Command;
+﻿using Android.Widget;
+using CostPlaningXamarin.Command;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System;
@@ -113,14 +114,32 @@ namespace CostPlaningXamarin.ViewModels
             if (_category != null)
             {
                 _category.IsVisible = !_category.IsVisible;
-                categoryService.EditCategory(_category, user.Id);
-                SQLService.Visibility(_category, _category.IsVisible);
+                if (categoryService.EditCategory(_category, user.Id))
+                {
+                    SQLService.Visibility(_category, _category.IsVisible);
+                    Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
+                }
+                else
+                {
+                    _category.IsVisible = !_category.IsVisible;
+                    Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
+                }
             }
             if (_order != null)
             {
                 _order.IsVisible = !_order.IsVisible;
-                orderService.EditOrder(_order, user.Id);
-                SQLService.Visibility(_order, _order.IsVisible);
+                if (orderService.EditOrder(_order, user.Id))
+                {
+                    SQLService.Visibility(_order, _order.IsVisible);
+                    Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
+
+                }
+                else
+                {
+                    _order.IsVisible = !_order.IsVisible;
+                    Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
+                }
+
             }
         }
     }

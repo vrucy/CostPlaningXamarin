@@ -23,9 +23,9 @@ namespace CostPlaningXamarin.Services
             // db.DropTableAsync<Category>().GetAwaiter().GetResult();
             //db.DropTableAsync<Order>().Wait();
 
+            db.CreateTableAsync<User>().Wait();
             db.CreateTableAsync<Order>().Wait();
             db.CreateTableAsync<Category>().Wait();
-            db.CreateTableAsync<User>().Wait();
         }
         public void DeleteAll<T>() where T : class
         {
