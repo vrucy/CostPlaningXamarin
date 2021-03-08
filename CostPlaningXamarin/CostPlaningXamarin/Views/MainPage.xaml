@@ -5,10 +5,14 @@
              xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
              xmlns:navigationdrawer="clr-namespace:Syncfusion.SfNavigationDrawer.XForms;assembly=Syncfusion.SfNavigationDrawer.XForms"
              xmlns:sfPopup="clr-namespace:Syncfusion.XForms.PopupLayout;assembly=Syncfusion.SfPopupLayout.XForms"
+             xmlns:converter="clr-namespace:CostPlaningXamarin.Converters"
              x:Class="CostPlaningXamarin.Views.MainPage">
     <ContentPage.BindingContext>
         <local:UserViewModel x:Name="viewModel"/>
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <converter:ReverseBool x:Key="ReverseBool"/>
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Clicked="settingButton_Clicked" IconImageSource="MenuIcon.ong" ></ToolbarItem>
     </ContentPage.ToolbarItems>
@@ -61,24 +65,19 @@
                                             TextColor="White" WidthRequest="80" HeightRequest="80"
                                             BackgroundColor="Teal" />
                                     </FlexLayout>
-                                    <!--<StackLayout>
-                                        <Button Text="Add" />
-                                        <Button Text="Edit" Command="{Binding NavigateToCategoriesOptionsCommand }"/>
-                                    </StackLayout>-->
                                 </DataTemplate>
                             </sfPopup:PopupView.ContentTemplate>
                         </sfPopup:PopupView>
-                        <!--<StackLayout x:Name="mainLayout">
-                            <Button x:Name="clickToShowPopup" Text="Category options" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
-                        </StackLayout>-->
                     </sfPopup:SfPopupLayout.PopupView>
                 </sfPopup:SfPopupLayout>
-                <Button  Text="Category options" Clicked="ClickToShowPopUp"/>
-                <Button  Text="Orders options" Command="{Binding NavigateToOrdersOptionsCommand }"/>
-                <!--Button to end page-->
+                <Button  Text="Category options" Clicked="ClickToShowPopUp" IsEnabled="{Binding IsOnHomeWiFi}"/>
+                <Button  Text="Orders options" Command="{Binding NavigateToOrdersOptionsCommand }" IsEnabled="{Binding IsOnHomeWiFi}"/>
+                <StackLayout Orientation="Horizontal">
+                    <Image Source="iconWarning.png" IsVisible="{Binding IsOnHomeWiFi,Converter={StaticResource ReverseBool}}" WidthRequest="30" HeightRequest="30"/>
+                    <Label Text="Must be on home wifi to manage options." IsVisible="{Binding IsOnHomeWiFi,Converter={StaticResource ReverseBool}}" Padding="15"/>
+                </StackLayout>
             </StackLayout>
 
         </navigationdrawer:SfNavigationDrawer.DrawerContentView>
     </navigationdrawer:SfNavigationDrawer>
-    <!--</ContentPage.Content>-->
 </ContentPage>

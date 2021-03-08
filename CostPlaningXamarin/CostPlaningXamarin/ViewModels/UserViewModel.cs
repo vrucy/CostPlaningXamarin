@@ -14,7 +14,31 @@ namespace CostPlaningXamarin.ViewModels
         private ICommand _NavigateToEditCategory;
         private ICommand _NavigateToOrdersOptions;
         INavigationServices _navigationService = DependencyService.Get<INavigationServices>();
-     
+        IWiFiManager _wiFiManager = DependencyService.Get<IWiFiManager>();
+
+        private bool _isOnHomeWiFi;
+
+        public bool IsOnHomeWiFi
+        {
+            get 
+            {
+                if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
+                {
+                    return true; 
+                }
+                return _isOnHomeWiFi;
+            }
+            set 
+            {
+                _isOnHomeWiFi = value;
+                if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
+                {
+                    _isOnHomeWiFi = true ;
+                }
+                OnPropertyChanged(nameof(IsOnHomeWiFi));
+            }
+        }
+
         public ICommand NavigateToAddOrderCommand
         {
             get
