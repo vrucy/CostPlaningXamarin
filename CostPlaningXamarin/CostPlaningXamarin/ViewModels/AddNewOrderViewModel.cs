@@ -168,7 +168,7 @@ namespace CostPlaningXamarin.ViewModels
         {
             try
             {
-                SQLService.SaveAsync<Order>(CreateOrder());
+                SQLService.SaveAsync(CreateOrder());
                 ResetField();
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 

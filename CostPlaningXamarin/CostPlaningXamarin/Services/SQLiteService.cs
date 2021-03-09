@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using SQLiteNetExtensionsAsync.Extensions;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 [assembly: Xamarin.Forms.Dependency(typeof(SQLiteService))]
 namespace CostPlaningXamarin.Services
