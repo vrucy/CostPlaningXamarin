@@ -25,18 +25,26 @@ namespace CostPlaningXamarin.ViewModels
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
 
-        private bool _isDiconnected;
+        private bool _isOnHomeWiFi;
 
-        public bool IsDiconnected
+        public bool IsOnHomeWiFi
         {
-            get { return _isDiconnected; }
+            get 
+            {
+                if (_WiFiManager.IsHomeWifiConnected() && _WiFiManager.IsServerAvailable())
+                {
+                    return true;
+                }
+
+                return _isOnHomeWiFi; 
+            }
             set 
             {
-                _isDiconnected = value;
-                if (!_WiFiManager.IsHomeWifiConnected() || !_WiFiManager.IsServerAvailable())
-                {
-                    _isDiconnected = false;
-                }
+                _isOnHomeWiFi = value;
+                //if (!_WiFiManager.IsHomeWifiConnected() || !_WiFiManager.IsServerAvailable())
+                //{
+                //    _isOnHomeWiFi = false;
+                //}
                 OnPropertyChanged("IsConnected");
             }
         }
