@@ -17,7 +17,6 @@ namespace CostPlaningXamarin.Interfaces
         Task<List<User>> GetUsers();
         bool CheckIfExistUser();
         Task<List<Category>> GetAllCategories();
-        Task PostNewUsers(IList<User> newUsers);
         void UpdateDeviceUser(int newId);
         User GetAppUser();
         Task<List<Order>> OrderForSync();
@@ -30,6 +29,7 @@ namespace CostPlaningXamarin.Interfaces
         int GetLastServerId<T>() ;
         //List<int> AllDisable<T>();
         //List<int> AllEnable<T>();
+        bool IsFirstSyncNeed();
         Task Visibility<T>(T item,bool visibliity);
         Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
     }

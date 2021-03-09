@@ -24,7 +24,6 @@ namespace CostPlaningXamarin
             SQLiteService.CreateDBAsync(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "XamarinSQLite.db3")).Wait();
             if (SQLiteService.CheckIfExistUser())
             {
-                wiFiManager.FristSyncData();
                 MainPage = new NavigationPage(new AuthPage());
             }
             else

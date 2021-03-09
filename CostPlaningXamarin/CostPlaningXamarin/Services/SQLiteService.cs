@@ -52,6 +52,10 @@ namespace CostPlaningXamarin.Services
         {
             return db.Table<User>().ToListAsync();
         }
+        public bool IsFirstSyncNeed()
+        {
+            return !db.GetAllWithChildrenAsync<User>().Result.Any() && !db.GetAllWithChildrenAsync<Category>().Result.Any();
+        }
         //TODO: Here filter categores who not visible
         public Task<List<Category>> GetAllCategories()
         {
@@ -73,13 +77,6 @@ namespace CostPlaningXamarin.Services
         public User GetAppUser()
         {
             return db.Table<User>().FirstOrDefaultAsync(x => x.DeviceUser == true).Result;
-        }
-        public async Task PostNewUsers(IList<User> users)
-        {
-            foreach (var item in users)
-            {
-                await db.InsertAsync(item);
-            }
         }
         public void UpdateDeviceUser(int newId)
         {

@@ -21,6 +21,7 @@ namespace CostPlaningXamarin.ViewModels
 
         public AuthViewModel()
         {
+            _WiFiManager.FristSyncData();
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
 

@@ -185,6 +185,7 @@ namespace CostPlaningXamarin.ViewModels
             _cost = 0;
             _selectedCategory = null;
             _previusDate = DateTime.Now;
+            SubmitCommand.RaiseCanExecuteChanged();
             OnPropertyChanged("Order");
             OnPropertyChanged(nameof(PreviusDate));
             OnPropertyChanged("SelectedCategory");
