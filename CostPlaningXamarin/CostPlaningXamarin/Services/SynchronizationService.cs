@@ -15,29 +15,29 @@ namespace CostPlaningXamarin.Services
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IUserService userService = DependencyService.Get<IUserService>();
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
-        public async Task FirstSyncUserOwner(User appUser)
-        {
-            var serverUser = await userService.PostAppUser();
-            SQLiteService.DropTable<User>();
-            SQLiteService.CreateTable<User>();
-            await SyncNewUsers(serverUser.Id);
-            var orders = await SQLiteService.GetAllOrdersForUserById(appUser.Id);
-            if (orders.Count > 0)
-            {
-                //TODO: need some rollback if crash conn?
-                await PostOrders(orders);
-            }
-        }
-        private async Task SyncNewUsers(int userId)
-        {
-            var allUsers = userService.GetAllUsers().Result;
-            await SQLiteService.PostNewUsers(allUsers);
-            SQLiteService.UpdateDeviceUser(userId);
-        }
+        //public async Task FirstSyncUserOwner(User appUser)
+        //{
+        //    var serverUser = await userService.PostAppUser();
+        //    SQLiteService.DropTable<User>();
+        //    SQLiteService.CreateTable<User>();
+        //    await SyncNewUsers(serverUser.Id);
+        //    var orders = await SQLiteService.GetAllOrdersForUserById(appUser.Id);
+        //    if (orders.Count > 0)
+        //    {
+        //        //TODO: need some rollback if crash conn?
+        //        await PostOrders(orders);
+        //    }
+        //}
+        //private async Task SyncNewUsers(int userId)
+        //{
+        //    var allUsers = userService.GetAllUsers().Result;
+        //    await SQLiteService.SaveItems(allUsers);
+        //    SQLiteService.UpdateDeviceUser(userId);
+        //}
         public async Task SyncUsers(int lastUserId)
         {
             var users = userService.GetUnsyncUsers(lastUserId);
-            await SQLiteService.PostNewUsers(users);
+            await SQLiteService.SaveItems(users);
         }
         private async Task PostOrders(List<Order> orders)
         {

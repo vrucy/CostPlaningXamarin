@@ -8,6 +8,7 @@ using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
 
 [assembly: Xamarin.Forms.Dependency(typeof(WiFiManager))]
 namespace CostPlaningXamarin.Services
@@ -66,16 +67,18 @@ namespace CostPlaningXamarin.Services
             await synchronizationService.SyncVisible<Order>(appUser.Id);
         }
         public void FristSyncData()
-        { 
-            Task.Run(async () =>
+        {
+            if (SQLiteService.IsFirstSyncNeed())
             {
-                var users = userService.GetAllUsers().GetAwaiter().GetResult();
-                await SQLiteService.SaveItems(users);
-                await SQLiteService.SaveItems(categoryService.GetCategories());
-                var x = orderService.GetAllOrders();
+                Task.Run(async () =>
+                {
+                    var users = userService.GetAllUsers().GetAwaiter().GetResult();
 
-                await SQLiteService.SaveItems(orderService.GetAllOrders());
-            }).Wait();
+                    await SQLiteService.SaveItems(users);
+                    await SQLiteService.SaveItems(categoryService.GetCategories());
+                    await SQLiteService.SaveItems(orderService.GetAllOrders());
+                }).Wait();
+            }
         }
         public bool IsServerAvailable()
         {
