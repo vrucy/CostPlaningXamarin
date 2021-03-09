@@ -22,8 +22,7 @@
                     
                     <combobox:SfComboBox x:Name="ComboCategory" DataSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="FirstName" />
                 </inputLayout:SfTextInputLayout>
-                <!-- TODO:button not want to be disable-->
-                <button:SfButton Text="New user" IsEnabled="False" Command="{Binding IsVisibleCommand }"
+                <button:SfButton Text="New user" Command="{Binding IsVisibleCommand }"
                              TextColor="White" WidthRequest="100" HeightRequest="50" Margin="10,50,10,0"
                              BackgroundColor="Teal" 
                              FontSize="20" />

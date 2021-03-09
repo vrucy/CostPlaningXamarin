@@ -41,10 +41,6 @@ namespace CostPlaningXamarin.ViewModels
             set 
             {
                 _isOnHomeWiFi = value;
-                //if (!_WiFiManager.IsHomeWifiConnected() || !_WiFiManager.IsServerAvailable())
-                //{
-                //    _isOnHomeWiFi = false;
-                //}
                 OnPropertyChanged("IsConnected");
             }
         }
@@ -140,10 +136,14 @@ namespace CostPlaningXamarin.ViewModels
             {
                 if (_IsVisible == null)
                 {
-                    _IsVisible = new RelayCommand(IsVisibleAction);
+                    _IsVisible = new RelayCommand(IsVisibleAction, IsOnHomeWiFiPredicate);
                 }
                 return _IsVisible;
             }
+        }
+        private bool IsOnHomeWiFiPredicate(object x)
+        {
+            return IsOnHomeWiFi;
         }
         private void IsVisibleAction(object x)
         {
