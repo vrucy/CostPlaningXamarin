@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-//using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(OrderService))]
 namespace CostPlaningXamarin.Services
@@ -19,7 +17,6 @@ namespace CostPlaningXamarin.Services
         private static readonly HttpClient _httpClient = new HttpClient();
 
         private const string urlLocalHost = Constants.urlLocalHost;
-        ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
 
         private HttpContent MediaTypeHeaderValue(object o)
         {
@@ -27,11 +24,6 @@ namespace CostPlaningXamarin.Services
             var content = new StringContent(data);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             return content;
-        }
-
-        public Task PostOrdersSync(List<Order> orders)
-        {
-            return _httpClient.PostAsync(urlLocalHost + "Order/PostOrders", MediaTypeHeaderValue(orders));
         }
         private string ResponseResult(string route)
         {
@@ -65,14 +57,6 @@ namespace CostPlaningXamarin.Services
         {
             return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetLastOrderServerId"));
         }
-        public int GetOrdersCountFromServer()
-        {
-            return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetOrdersCountFromServer"));
-        }
-        public List<int> AllDisableOrders()
-        {
-            return JsonConvert.DeserializeObject<List<int>>(ResponseResult("Order/SyncDisable"));
-        }
         public Dictionary<int, bool> GetAllOrdersVisibility(int appUserId)
         {
             return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Order/SyncVisibility/{0}", appUserId)));
@@ -89,6 +73,11 @@ namespace CostPlaningXamarin.Services
             {
                 return false;
             }
+        }
+
+        public async Task PostOrder(Order order)
+        {
+            await _httpClient.PostAsync(urlLocalHost + "Order/PostOrder", MediaTypeHeaderValue(order));
         }
     }
 }

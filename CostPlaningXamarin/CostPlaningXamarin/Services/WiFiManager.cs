@@ -39,6 +39,7 @@ namespace CostPlaningXamarin.Services
                 }
             }
             return false;
+            //return true;
         }
         public async void SyncData()
         {

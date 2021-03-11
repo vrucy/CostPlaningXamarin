@@ -32,5 +32,6 @@ namespace CostPlaningXamarin.Interfaces
         bool IsFirstSyncNeed();
         Task Visibility<T>(T item,bool visibliity);
         Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
+        Models.Device GetCurrentDeviceInfo();
     }
 }

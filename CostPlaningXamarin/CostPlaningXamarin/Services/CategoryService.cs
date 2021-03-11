@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 [assembly: Xamarin.Forms.Dependency(typeof(CategoryService))]
 namespace CostPlaningXamarin.Services
@@ -71,10 +72,13 @@ namespace CostPlaningXamarin.Services
             }
             return false;
         }
-
         public Dictionary<int, bool> GetAllCategoresVisibility(int appUserId)
         {
             return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncVisbility/{0}", appUserId)));
+        }
+        public async Task PostCategory(Category category)
+        {
+            await _httpClient.PostAsync(urlLocalHost + "Category/PostCategory", MediaTypeHeaderValue(category));
         }
     }
 }

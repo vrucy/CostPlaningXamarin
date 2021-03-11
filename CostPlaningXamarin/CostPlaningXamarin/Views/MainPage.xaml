@@ -11,7 +11,7 @@
         <local:UserViewModel x:Name="viewModel"/>
     </ContentPage.BindingContext>
     <ContentPage.Resources>
-        <converter:ReverseBool x:Key="ReverseBool"/>
+        <converter:NegationBoolConverter x:Key="ReverseBool"/>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Clicked="settingButton_Clicked" IconImageSource="MenuIcon.ong" ></ToolbarItem>

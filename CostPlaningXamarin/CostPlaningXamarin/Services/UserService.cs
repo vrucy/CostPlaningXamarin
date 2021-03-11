@@ -28,16 +28,6 @@ namespace CostPlaningXamarin.Services
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             return content;
         }
-        public async Task<User> PostAppUser()
-        {
-            var appUser = SQLiteService.GetAppUser();
-            var res = await _httpClient.PostAsync(urlLocalHost + "User/PostAppUser", MediaTypeHeaderValue(appUser));
-            return JsonConvert.DeserializeObject<User>(res.Content.ReadAsStringAsync().Result);
-        }
-        public Task PostCategory(Category category)
-        {
-            return _httpClient.PostAsync(urlLocalHost + "User/PostCategory", MediaTypeHeaderValue(category));
-        }
         public async Task<IList<User>> GetAllUsers()
         {
             return JsonConvert.DeserializeObject<List<User>>(ResponseResult("User/GetAllUsers"));
@@ -50,7 +40,6 @@ namespace CostPlaningXamarin.Services
 
         public int GetLastUserServerId()
         {
-           
             return JsonConvert.DeserializeObject<int>(ResponseResult("User/GetLastUserServerId"));
         }
 
@@ -59,10 +48,9 @@ namespace CostPlaningXamarin.Services
             var x = ResponseResult(string.Format("User/GetUnsyncUsers/{0}" , lastUserId));
             return JsonConvert.DeserializeObject<List<User>>(x);
         }
-
-        public Task PostUsers(List<User> users)
+        public void PostDevice(Models.Device device)
         {
-            throw new NotImplementedException();
+            _httpClient.PostAsync(urlLocalHost + "User/PostDevice", MediaTypeHeaderValue(device));
         }
     }
 }

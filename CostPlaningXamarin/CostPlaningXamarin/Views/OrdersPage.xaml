@@ -42,8 +42,8 @@
                                         <ColumnDefinition Width="0.8*"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Text="{Binding Cost , StringFormat='Item cost = {0:N}'}"  Grid.Row="0" Grid.Column="0" HorizontalOptions="Start" />
-                                    <Label Text="{Binding Category.Name, StringFormat='Category item = {0:N}'}"  Grid.Row="0" Grid.Column="1" HorizontalOptions="Start"/>
-                                    <Label Text="{Binding Description,StringFormat='Description = {0:N}',Converter={StaticResource StringEmptyConverter},ConverterParameter='Description is empty'}" Grid.Row="1" 
+                                    <Label Text="{Binding Category.Name, StringFormat='Category = {0:N}'}"  Grid.Row="0" Grid.Column="1" HorizontalOptions="Start"/>
+                                    <Label Text="{Binding Description,StringFormat='Description = {0:N}',Converter={StaticResource StringEmptyConverter},ConverterParameter='Empty'}" Grid.Row="1" 
                                            Grid.Column="0" HorizontalOptions="StartAndExpand"/>
                                 </Grid>
                                 <Frame Grid.Row="1" OutlineColor="#E5E4E5" HasShadow="True" HeightRequest="3"/>

@@ -1,5 +1,6 @@
 ﻿using CostPlaningXamarin.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CostPlaningXamarin.Interfaces
 {
@@ -15,10 +16,6 @@ namespace CostPlaningXamarin.Interfaces
         /// </summary>
         /// <returns></returns>
         Dictionary<int, bool> GetAllCategoresVisibility(int appUserId);
-        /// <summary>
-        /// Send ids to server, who need to disable
-        /// </summary>
-        /// <param name="ids"></param>
-        //void SyncDisable(List<int> ids);
+        Task PostCategory(Category category);
     }
 }

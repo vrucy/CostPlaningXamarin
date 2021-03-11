@@ -12,6 +12,8 @@ namespace CostPlaningXamarin.ViewModels
     {
         ISQLiteService _sqliteService = DependencyService.Get<ISQLiteService>();
         IWiFiManager _WiFiManager = DependencyService.Get<IWiFiManager>();
+        IDeviceService _deviceService = DependencyService.Get<IDeviceService>();
+        IUserService _userService = DependencyService.Get<IUserService>();
         INavigationServices _navigateService = DependencyService.Get<INavigationServices>();
         private ICommand _ApplyUser;
         private ICommand _IsVisible;
@@ -70,7 +72,10 @@ namespace CostPlaningXamarin.ViewModels
             if (confirmation)
             {
                 _sqliteService.CreateAppUser(_selectedUser);
-                Device.BeginInvokeOnMainThread(() =>
+                _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(_sqliteService.GetAppUser().Id));
+
+                _userService.PostDevice(_sqliteService.GetCurrentDeviceInfo());
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                 {
                     _navigateService.NavigateToMainPage();
                 });
@@ -82,7 +87,6 @@ namespace CostPlaningXamarin.ViewModels
             }
 
         }
-
         public List<User> Users
         {
             get { return _users; }

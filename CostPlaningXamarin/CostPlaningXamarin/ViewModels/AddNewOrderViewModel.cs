@@ -18,6 +18,8 @@ namespace CostPlaningXamarin.ViewModels
         private List<Category> _categories;
         private RelayCommand _SubmitCommand;
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
+        IWiFiManager _wiFiManager = DependencyService.Get<IWiFiManager>();
+        IOrderService _orderService = DependencyService.Get<IOrderService>();
 
         public AddNewOrderViewModel()
         {
@@ -164,11 +166,18 @@ namespace CostPlaningXamarin.ViewModels
         {
             return Validate();
         }
-        private void Submit(object x)
+        private async void Submit(object x)
         {
             try
             {
-                SQLService.SaveAsync(CreateOrder());
+                var order = CreateOrder();
+
+                if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
+                {
+                    await _orderService.PostOrder(order);
+                    await SQLService.Visibility(order, true);
+                }
+                await SQLService.SaveAsync(order);
                 ResetField();
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 

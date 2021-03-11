@@ -23,10 +23,10 @@ namespace CostPlaningXamarin.Services
             //db.DropTableAsync<User>().Wait();
             // db.DropTableAsync<Category>().GetAwaiter().GetResult();
             //db.DropTableAsync<Order>().Wait();
-
             db.CreateTableAsync<User>().Wait();
             db.CreateTableAsync<Order>().Wait();
             db.CreateTableAsync<Category>().Wait();
+            db.CreateTableAsync<Device>().Wait();
         }
         public void DeleteAll<T>() where T : class
         {
@@ -146,10 +146,6 @@ namespace CostPlaningXamarin.Services
         {
             await db.InsertAsync(item);
         }
-        //public IList<int> GetAllSyncOrdersIds()
-        //{
-        //    return db.GetAllWithChildrenAsync<Order>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
-        //}
         public IList<int> GetAllSyncIds<T>()
         {
             if (typeof(T) == typeof(Order))
@@ -167,17 +163,7 @@ namespace CostPlaningXamarin.Services
 
             return null;
         }
-        //public int GetLastOrderServerId()
-        //{
-        //    var orders = db.GetAllWithChildrenAsync<Order>().Result;
-
-        //    if (orders.Count == 0)
-        //    {
-        //        return 0;
-        //    }
-        //    return orders.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
-        //}
-
+        
         public bool IsSyncData<T>()
         {
             if (typeof(T) == typeof(Order))
@@ -249,12 +235,11 @@ namespace CostPlaningXamarin.Services
             }
         }
 
-        public async Task Visibility<T>(T item,bool visibility)
+        public async Task Visibility<T>(T item ,bool visibility)
         {
             if (typeof(T) == typeof(Category))
             {
                 var category = item as Category;
-                //promena visiblity
                 category.IsVisible = visibility;
                 await db.UpdateAsync(category);
             }
@@ -264,6 +249,11 @@ namespace CostPlaningXamarin.Services
                 order.IsVisible = visibility;
                 await db.UpdateAsync(order);
             }
+        }
+
+        public Models.Device GetCurrentDeviceInfo()
+        {
+            return db.Table<Device>().FirstOrDefaultAsync().Result;
         }
     }
 }

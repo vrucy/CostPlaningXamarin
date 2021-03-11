@@ -15,6 +15,8 @@ namespace CostPlaningXamarin.ViewModels
         private RelayCommand _SubmitCommand;
         INavigationServices _navigationService = DependencyService.Get<INavigationServices>();
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
+        IWiFiManager _wiFiManager = DependencyService.Get<IWiFiManager>();
+        ICategoryService _categoryService = DependencyService.Get<ICategoryService>();
 
         public AddCategoryViewModel()
         {
@@ -42,12 +44,17 @@ namespace CostPlaningXamarin.ViewModels
                 return _SubmitCommand;
             }
         }
-        private void Submit(object x)
+        private async void Submit(object x)
         {
             try
             {
-                _category.IsVisible = !_category.IsVisible;
-                SQLService.SaveAsync(_category);
+                var category = CreateCategory();
+                if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
+                {
+                    await _categoryService.PostCategory(category);
+                    await SQLService.Visibility(_category, true);
+                }
+                await SQLService.SaveAsync(category);
                 Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
 
                 _navigationService.NavigateToMainPage();
@@ -57,6 +64,11 @@ namespace CostPlaningXamarin.ViewModels
                 Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 throw;
             }
+        }
+        private Category CreateCategory()
+        {
+            _category.IsVisible = !_category.IsVisible;
+            return _category;
         }
     }
 }
