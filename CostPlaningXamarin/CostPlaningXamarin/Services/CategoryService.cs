@@ -36,9 +36,9 @@ namespace CostPlaningXamarin.Services
             var res = _httpClient.GetAsync(urlLocalHost + route).GetAwaiter().GetResult();
             return res.Content.ReadAsStringAsync().Result;
         }
-        public Dictionary<int, int> PostCategories(List<Category> categories,int userId)
+        public Dictionary<int, int> PostCategories(List<Category> categories, string deviceId)
         {
-            var res = _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategories/{0}", userId), MediaTypeHeaderValue(categories)).GetAwaiter().GetResult();
+            var res = _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategories/{0}", deviceId), MediaTypeHeaderValue(categories)).GetAwaiter().GetResult();
 
             var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
@@ -62,9 +62,9 @@ namespace CostPlaningXamarin.Services
             return JsonConvert.DeserializeObject<int>(ResponseResult("Category/GetLastCategoryServerId"));
         }
 
-        public bool EditCategory(Category category,int userId)
+        public bool EditCategory(Category category,string deviceId)
         {
-            var res = _httpClient.PutAsync(urlLocalHost + string.Format("Category/EditCategory/{0}",userId), MediaTypeHeaderValue(category)).GetAwaiter().GetResult();
+            var res = _httpClient.PutAsync(urlLocalHost + string.Format("Category/EditCategory/{0}", deviceId), MediaTypeHeaderValue(category)).GetAwaiter().GetResult();
 
             if (res.IsSuccessStatusCode)
             {
@@ -72,13 +72,13 @@ namespace CostPlaningXamarin.Services
             }
             return false;
         }
-        public Dictionary<int, bool> GetAllCategoresVisibility(int appUserId)
+        public Dictionary<int, bool> GetAllCategoresVisibility(string deviceId)
         {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncVisbility/{0}", appUserId)));
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Category/SyncVisbility/{0}", deviceId)));
         }
-        public async Task PostCategory(Category category)
+        public async Task PostCategory(Category category, string deviceId)
         {
-            await _httpClient.PostAsync(urlLocalHost + "Category/PostCategory", MediaTypeHeaderValue(category));
+            await _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategory/{0}", deviceId), MediaTypeHeaderValue(category));
         }
     }
 }

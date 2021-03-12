@@ -174,7 +174,7 @@ namespace CostPlaningXamarin.ViewModels
 
                 if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
                 {
-                    await _orderService.PostOrder(order);
+                    await _orderService.PostOrder(order, SQLService.GetCurrentDeviceInfo().DeviceId);
                     await SQLService.Visibility(order, true);
                 }
                 await SQLService.SaveAsync(order);

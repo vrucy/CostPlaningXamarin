@@ -26,7 +26,6 @@ namespace CostPlaningXamarin.ViewModels
             _WiFiManager.FristSyncData();
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
-
         private bool _isOnHomeWiFi;
 
         public bool IsOnHomeWiFi
@@ -72,9 +71,10 @@ namespace CostPlaningXamarin.ViewModels
             if (confirmation)
             {
                 _sqliteService.CreateAppUser(_selectedUser);
-                _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(_sqliteService.GetAppUser().Id));
+                _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(_selectedUser.Id));
 
                 _userService.PostDevice(_sqliteService.GetCurrentDeviceInfo());
+                _WiFiManager.FirstSyncOrders();
                 Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                 {
                     _navigateService.NavigateToMainPage();

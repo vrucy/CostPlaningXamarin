@@ -6,5 +6,6 @@
         bool IsServerAvailable();
         void SyncData();
         void FristSyncData();
+        void FirstSyncOrders();
     }
 }

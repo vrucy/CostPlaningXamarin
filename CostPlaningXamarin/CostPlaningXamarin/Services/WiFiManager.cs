@@ -31,20 +31,20 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            {
-                if (GetCurrentSSID().Equals(BSSID))
-                {
-                    return true;
-                }
-            }
-            return false;
-            //return true;
+            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            //{
+            //    if (GetCurrentSSID().Equals(BSSID))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
+            return true;
         }
         public async void SyncData()
         {
             SemaphoreSlim ss = new SemaphoreSlim(1);
-            var appUser = SQLiteService.GetAppUser();
+            var deviceId = SQLiteService.GetCurrentDeviceInfo().DeviceId;
 
             if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
             {
@@ -55,31 +55,32 @@ namespace CostPlaningXamarin.Services
             if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
             {
                 await ss.WaitAsync();
-                await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, appUser.Id);
+                await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, deviceId);
                 ss.Release();
             }
             if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
                 await ss.WaitAsync();
-                await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result);
+                await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result, deviceId);
                 ss.Release();
             }
-            await synchronizationService.SyncVisible<Category>(appUser.Id);
-            await synchronizationService.SyncVisible<Order>(appUser.Id);
+            await synchronizationService.SyncVisible<Category>(deviceId);
+            await synchronizationService.SyncVisible<Order>(deviceId);
         }
+        //TODO: make async problem save orders, becaouse getdeviceInfo
         public void FristSyncData()
         {
             if (SQLiteService.IsFirstSyncNeed())
             {
-                Task.Run(async () =>
-                {
-                    var users = userService.GetAllUsers().GetAwaiter().GetResult();
+                var users = userService.GetAllUsers().GetAwaiter().GetResult();
 
-                    await SQLiteService.SaveItems(users);
-                    await SQLiteService.SaveItems(categoryService.GetCategories());
-                    await SQLiteService.SaveItems(orderService.GetAllOrders());
-                }).Wait();
+                SQLiteService.SaveItems(users);
+                SQLiteService.SaveItems(categoryService.GetCategories());
             }
+        }
+        public void FirstSyncOrders()
+        {
+            SQLiteService.SaveItems(orderService.GetAllOrders(SQLiteService.GetCurrentDeviceInfo().DeviceId));
         }
         public bool IsServerAvailable()
         {

@@ -19,6 +19,7 @@ namespace CostPlaningXamarin.ViewModels
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IOrderService orderService = DependencyService.Get<IOrderService>();
+        IDeviceService deviceService = DependencyService.Get<IDeviceService>();
 
         //TODO: Generic make editpage.xaml.cs recive T
         public EditPageViewModel()
@@ -110,11 +111,12 @@ namespace CostPlaningXamarin.ViewModels
         private void Edit(object x)
         {
             var user = SQLService.GetAppUser();
+            var device = SQLService.GetCurrentDeviceInfo().DeviceId;
 
             if (_category != null)
             {
                 _category.IsVisible = !_category.IsVisible;
-                if (categoryService.EditCategory(_category, user.Id))
+                if (categoryService.EditCategory(_category, device))
                 {
                     SQLService.Visibility(_category, _category.IsVisible);
                     Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
@@ -128,7 +130,7 @@ namespace CostPlaningXamarin.ViewModels
             if (_order != null)
             {
                 _order.IsVisible = !_order.IsVisible;
-                if (orderService.EditOrder(_order, user.Id))
+                if (orderService.EditOrder(_order, device))
                 {
                     SQLService.Visibility(_order, _order.IsVisible);
                     Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();

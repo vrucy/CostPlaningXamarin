@@ -21,7 +21,7 @@ namespace CostPlaningXamarin.Models
         public User User { get; set; }
         [ForeignKey(typeof(Category))]
         public int CategoryId { get; set; }
-        [ManyToOne(CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
+        [ManyToOne("ServerId", CascadeOperations = CascadeOperation.CascadeRead | CascadeOperation.CascadeInsert)]
         public Category Category{ get; set; }
     }
 }

@@ -6,16 +6,16 @@ namespace CostPlaningXamarin.Interfaces
 {
     public interface ICategoryService
     {
-        Dictionary<int, int> PostCategories(List<Category> orders, int userId);
+        Dictionary<int, int> PostCategories(List<Category> orders, string deviceId);
         List<Category> GetAllCategoriesByIds(List<int> ids);
         List<Category> GetCategories();
         int GetLastCategoryServerId();
-        bool EditCategory(Category category, int userId);
+        bool EditCategory(Category category, string deviceId);
         /// <summary>
         /// Returns ids of Categores with are disable
         /// </summary>
         /// <returns></returns>
-        Dictionary<int, bool> GetAllCategoresVisibility(int appUserId);
-        Task PostCategory(Category category);
+        Dictionary<int, bool> GetAllCategoresVisibility(string deviceId);
+        Task PostCategory(Category category,string deviceId);
     }
 }

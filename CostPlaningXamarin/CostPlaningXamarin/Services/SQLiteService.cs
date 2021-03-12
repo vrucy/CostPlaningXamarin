@@ -118,6 +118,7 @@ namespace CostPlaningXamarin.Services
         {
             if (typeof(T) == typeof(Order))
             {
+                var cat = db.GetAllWithChildrenAsync<Category>().Result;
                 var x = collection as List<Order>;
                 foreach (var item in x)
                 {

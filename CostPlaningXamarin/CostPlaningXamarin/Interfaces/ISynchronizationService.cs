@@ -8,8 +8,8 @@ namespace CostPlaningXamarin.Interfaces
     {
         //Task FirstSyncUserOwner(User appUser);
         Task SyncUsers(int Id);
-        Task SyncOrders(List<Order> orders);
-        Task SyncCategoies(List<Category> categories, int userId);
-        Task SyncVisible<T>(int appUserId);
+        Task SyncOrders(List<Order> orders, string deviceId);
+        Task SyncCategoies(List<Category> categories, string deviceId);
+        Task SyncVisible<T>(string deviceId);
     }
 }

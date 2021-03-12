@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace CostPlaningXamarin.ViewModels
 {
-    public class AddCategoryViewModel: BaseViewModel
+    public class AddCategoryViewModel : BaseViewModel
     {
         private Category _category;
         private RelayCommand _SubmitCommand;
@@ -26,7 +26,7 @@ namespace CostPlaningXamarin.ViewModels
         public Category Category
         {
             get { return _category; }
-            set 
+            set
             {
                 _category = value;
                 OnPropertyChanged("Category");
@@ -49,11 +49,10 @@ namespace CostPlaningXamarin.ViewModels
             try
             {
                 var category = CreateCategory();
-                if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
-                {
-                    await _categoryService.PostCategory(category);
-                    await SQLService.Visibility(_category, true);
-                }
+                var deviceId = SQLService.GetCurrentDeviceInfo().DeviceId;
+                await _categoryService.PostCategory(category, deviceId);
+                await SQLService.Visibility(_category, true);
+
                 await SQLService.SaveAsync(category);
                 Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
 
