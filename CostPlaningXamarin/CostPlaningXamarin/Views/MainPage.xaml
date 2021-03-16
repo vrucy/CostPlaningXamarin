@@ -73,8 +73,8 @@
                 <Button  Text="Category options" Clicked="ClickToShowPopUp" IsEnabled="{Binding IsOnHomeWiFi}"/>
                 <Button  Text="Orders options" Command="{Binding NavigateToOrdersOptionsCommand }" IsEnabled="{Binding IsOnHomeWiFi}"/>
                 <StackLayout Orientation="Horizontal">
-                    <Image Source="iconWarning.png" IsVisible="{Binding IsOnHomeWiFi,Converter={StaticResource ReverseBool}}" WidthRequest="30" HeightRequest="30"/>
-                    <Label Text="Must be on home wifi to manage options." IsVisible="{Binding IsOnHomeWiFi,Converter={StaticResource ReverseBool}}" Padding="15"/>
+                    <Image Source="iconWarning.png" IsVisible="{Binding IsOnHomeWiFi,Converter={StaticResource ReverseBool}}" WidthRequest="30" HeightRequest="20"/>
+                    <Label Text="Must be on home wifi to manage options." IsVisible="{Binding IsOnHomeWiFi,Converter={StaticResource ReverseBool}}" Padding="5"/>
                 </StackLayout>
             </StackLayout>
 
