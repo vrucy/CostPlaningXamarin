@@ -1,4 +1,6 @@
-﻿namespace CostPlaningXamarin.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace CostPlaningXamarin.Interfaces
 {
     public interface IWiFiManager
     {
@@ -6,6 +8,6 @@
         bool IsServerAvailable();
         void SyncData();
         void FristSyncData();
-        void FirstSyncOrders();
+        Task FirstSyncOrders();
     }
 }

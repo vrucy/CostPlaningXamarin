@@ -52,5 +52,12 @@ namespace CostPlaningXamarin.Services
         {
             _httpClient.PostAsync(urlLocalHost + "User/PostDevice", MediaTypeHeaderValue(device));
         }
+
+        public async Task<User> PostUser(User user)
+        {
+                var res = await _httpClient.PostAsync(urlLocalHost + "User/PostUser", MediaTypeHeaderValue(user))/*.GetAwaiter().GetResult()*/;
+                var u = JsonConvert.DeserializeObject<User>(await res.Content.ReadAsStringAsync()/*.Result*/);
+                return u;           
+        }
     }
 }

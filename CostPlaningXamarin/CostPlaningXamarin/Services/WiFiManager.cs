@@ -55,7 +55,7 @@ namespace CostPlaningXamarin.Services
             if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
             {
                 await ss.WaitAsync();
-                await synchronizationService.SyncCategoies(SQLiteService.CategoriesForSync().Result, deviceId);
+                await synchronizationService.SyncCategoies(SQLiteService.GetLastServerId<Category>());
                 ss.Release();
             }
             if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
@@ -78,9 +78,9 @@ namespace CostPlaningXamarin.Services
                 SQLiteService.SaveItems(categoryService.GetCategories());
             }
         }
-        public void FirstSyncOrders()
-        {
-            SQLiteService.SaveItems(orderService.GetAllOrders(SQLiteService.GetCurrentDeviceInfo().DeviceId));
+        public async Task FirstSyncOrders()
+        { 
+            await SQLiteService.SaveItems(orderService.GetAllOrders(SQLiteService.GetCurrentDeviceInfo().DeviceId));
         }
         public bool IsServerAvailable()
         {

@@ -2,6 +2,7 @@
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -129,9 +130,16 @@ namespace CostPlaningXamarin.ViewModels
                 return _ApplyUser;
             }
         }
-        private void ApplyUser(object x)
+        //TODO: Nije jasno kako ovo radi sihrono? da li se moze desiti da createAppUser dobije ne dovrsenog serivceUser??
+        private async void ApplyUser(object x)
         {
-            _sqliteService.CreateAppUser(_user);
+            var serviceUser =await _userService.PostUser(_user);
+
+            await _sqliteService.CreateAppUser(serviceUser);
+            await _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(serviceUser.Id));
+
+            await _WiFiManager.FirstSyncOrders();
+
             _navigateService.NavigateToMainPage();
         }
         public ICommand IsVisibleCommand

@@ -7,28 +7,21 @@ namespace CostPlaningXamarin.Interfaces
     public interface ISQLiteService
     {
         Task CreateDBAsync(string path);
-        void CreateAppUser(User user);
+        Task CreateAppUser(User user);
         void DeleteAll<T>() where T : class;
-        void CreateTable<T>() where T : new();
         void DropTable<T>() where T : new();
         Task<List<Order>> GetOrdersAsync();
         bool IsSyncData<T>();
-        Task<List<Order>> GetAllOrdersForUserById(int userId);
         Task<List<User>> GetUsers();
         bool CheckIfExistUser();
         Task<List<Category>> GetAllCategories();
-        void UpdateDeviceUser(int newId);
         User GetAppUser();
         Task<List<Order>> OrderForSync();
-        Task<List<Category>> CategoriesForSync();
         Task SyncOrders(Dictionary<int, int> ids);
-        Task SyncCategories(Dictionary<int, int> ids);
         Task SaveAsync<T>(T item);
         Task SaveItems<T>(IList<T> collection);
         IList<int> GetAllSyncIds<T>();
         int GetLastServerId<T>() ;
-        //List<int> AllDisable<T>();
-        //List<int> AllEnable<T>();
         bool IsFirstSyncNeed();
         Task Visibility<T>(T item,bool visibliity);
         Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);

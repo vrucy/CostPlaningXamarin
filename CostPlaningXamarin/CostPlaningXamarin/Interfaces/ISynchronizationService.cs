@@ -9,7 +9,7 @@ namespace CostPlaningXamarin.Interfaces
         //Task FirstSyncUserOwner(User appUser);
         Task SyncUsers(int Id);
         Task SyncOrders(List<Order> orders, string deviceId);
-        Task SyncCategoies(List<Category> categories, string deviceId);
+        Task SyncCategoies(int lastCategoryId);
         Task SyncVisible<T>(string deviceId);
     }
 }

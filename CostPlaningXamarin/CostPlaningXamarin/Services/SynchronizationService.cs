@@ -16,11 +16,6 @@ namespace CostPlaningXamarin.Services
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IUserService userService = DependencyService.Get<IUserService>();
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
-        public async Task SyncUsers(int lastUserId)
-        {
-            var users = userService.GetUnsyncUsers(lastUserId);
-            await SQLiteService.SaveItems(users);
-        }
         //TODO: refactor code repat
         public async Task SyncOrders(List<Order> orders, string deviceId)
         {
@@ -42,21 +37,15 @@ namespace CostPlaningXamarin.Services
                 await SQLiteService.SaveItems(ordersFromServer);
             }
         }
-        public async Task SyncCategoies(List<Category> categories,string deviceId)
+        public async Task SyncUsers(int lastUserId)
         {
-            if (categories.Count != 0)
-            {
-                //TODO: isto uraditi i ovde kao sa roderom
-                var ids = categoryService.PostCategories(categories, deviceId);
-                await SQLiteService.SyncCategories(ids);
-            }
-            var categoriesSync = SQLiteService.GetAllSyncIds<Category>().ToList();
-            var categoriesFromServer = categoryService.GetAllCategoriesByIds(categoriesSync);
-
-            if (categoriesFromServer.Count != 0)
-            {
-                await SQLiteService.SaveItems(categoriesFromServer);
-            }
+            var users = userService.GetUnsyncUsers(lastUserId);
+            await SQLiteService.SaveItems(users);
+        }
+        public async Task SyncCategoies(int lastCategoryId)
+        {
+            var categories = categoryService.GetUnsyncCategories(lastCategoryId);
+            await SQLiteService.SaveItems(categories);
         }
         public async Task SyncVisible<T>(string deviceId)
         {

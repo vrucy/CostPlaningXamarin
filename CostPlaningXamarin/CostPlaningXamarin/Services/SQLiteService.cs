@@ -36,10 +36,6 @@ namespace CostPlaningXamarin.Services
         {
             db.DropTableAsync<T>().Wait();
         }
-        public void CreateTable<T>() where T : new()
-        {
-            db.CreateTableAsync<T>().Wait();
-        }
         public Task<List<Order>> GetAllOrdersForUserById(int id)
         {
             return db.GetAllWithChildrenAsync<Order>(x => x.UserId == id && x.ServerId == 0);
@@ -64,12 +60,11 @@ namespace CostPlaningXamarin.Services
 
             return allCategores.ToListAsync();
         }
-        public void CreateAppUser(User user)
+        public async Task CreateAppUser(User user)
         {
             user.DeviceUser = true;
 
-            //user.Id = 1;
-            db.InsertOrReplaceAsync(user);
+            await db.InsertOrReplaceAsync(user);
         }
         public bool CheckIfExistUser()
         {
@@ -90,10 +85,6 @@ namespace CostPlaningXamarin.Services
         {
             return db.GetAllWithChildrenAsync<Order>(x => x.ServerId == 0);
         }
-        public Task<List<Category>> CategoriesForSync()
-        {
-            return db.GetAllWithChildrenAsync<Category>(x => x.ServerId == 0);
-        }
         public async Task SyncOrders(Dictionary<int, int> ids)
         {
             foreach (var item in ids)
@@ -104,21 +95,10 @@ namespace CostPlaningXamarin.Services
                 await db.InsertOrReplaceAsync(currentItem);
             }
         }
-        public async Task SyncCategories(Dictionary<int, int> ids)
-        {
-            foreach (var item in ids)
-            {
-                var currentItem = db.GetWithChildrenAsync<Category>(item.Key).Result;
-                currentItem.ServerId = item.Value;
-
-                await db.InsertOrReplaceAsync(currentItem);
-            }
-        }
         public async Task SaveItems<T>(IList<T> collection)
         {
             if (typeof(T) == typeof(Order))
             {
-                var cat = db.GetAllWithChildrenAsync<Category>().Result;
                 var x = collection as List<Order>;
                 foreach (var item in x)
                 {
@@ -132,7 +112,6 @@ namespace CostPlaningXamarin.Services
                 var x = collection as List<Category>;
                 foreach (var item in x)
                 {
-                    item.ServerId = item.Id;
                     await db.InsertAsync(item);
                 }
             }
@@ -155,7 +134,7 @@ namespace CostPlaningXamarin.Services
             }
             else if (typeof(T) == typeof(Category))
             {
-                return db.GetAllWithChildrenAsync<Category>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
+                return db.GetAllWithChildrenAsync<Category>(x => x.Id != 0).Result.Select(o => o.Id).ToList();
             }
             else if (typeof(T) == typeof(User))
             {
@@ -170,10 +149,6 @@ namespace CostPlaningXamarin.Services
             if (typeof(T) == typeof(Order))
             {
                 return db.GetAllWithChildrenAsync<Order>(x => x.ServerId == 0).Result.Any();
-            }
-            else if (typeof(T) == typeof(Category))
-            {
-                return db.GetAllWithChildrenAsync<Category>(x => x.ServerId == 0).Result.Any();
             }
             return false;
         }
@@ -199,7 +174,7 @@ namespace CostPlaningXamarin.Services
                 {
                     return 0;
                 }
-                return db.GetAllWithChildrenAsync<Category>().Result.OrderByDescending(x => x.ServerId).FirstOrDefault().ServerId;
+                return db.GetAllWithChildrenAsync<Category>().Result.OrderByDescending(x => x.Id).FirstOrDefault().Id;
             }
             return -1;
         }
@@ -218,7 +193,7 @@ namespace CostPlaningXamarin.Services
             {
                 foreach (var item in collection)
                 {
-                    var category = db.FindAsync<Category>(x => x.ServerId == item.Key).Result;
+                    var category = db.FindAsync<Category>(x => x.Id == item.Key).Result;
                     category.IsVisible = item.Value;
 
                     await db.InsertOrReplaceAsync(category);

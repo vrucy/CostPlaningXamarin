@@ -26,7 +26,6 @@ namespace CostPlaningXamarin.ViewModels
         {
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
             _allOrders = _sqliteService.GetOrdersAsync().Result.VisibleOrders();
-            //_orders = _allOrders.Where(x=>x.Date.Month == DateTime.Now.Month).ToList();
 
             _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
 
@@ -38,7 +37,7 @@ namespace CostPlaningXamarin.ViewModels
         {
             get
             {
-                return _orders/*.Select(i => { i.Date.ToShortDateString(); return i; }).ToList()*/;
+                return _orders;
 
             }
             set

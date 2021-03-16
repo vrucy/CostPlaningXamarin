@@ -36,21 +36,6 @@ namespace CostPlaningXamarin.Services
             var res = _httpClient.GetAsync(urlLocalHost + route).GetAwaiter().GetResult();
             return res.Content.ReadAsStringAsync().Result;
         }
-        public Dictionary<int, int> PostCategories(List<Category> categories, string deviceId)
-        {
-            var res = _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategories/{0}", deviceId), MediaTypeHeaderValue(categories)).GetAwaiter().GetResult();
-
-            var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            return JsonConvert.DeserializeObject<Dictionary<int, int>>(content);
-        }
-
-        public List<Category> GetAllCategoriesByIds(List<int> ids)
-        {
-            var res = _httpClient.PostAsync(urlLocalHost + "Category/GetAllCategoriesByIds", MediaTypeHeaderValue(ids)).GetAwaiter().GetResult();
-
-            var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            return JsonConvert.DeserializeObject<List<Category>>(content);
-        }
 
         public List<Category> GetCategories()
         {
@@ -79,6 +64,11 @@ namespace CostPlaningXamarin.Services
         public async Task PostCategory(Category category, string deviceId)
         {
             await _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategory/{0}", deviceId), MediaTypeHeaderValue(category));
+        }
+        public List<Category> GetUnsyncCategories(int lastCategoryId)
+        {
+            var x = ResponseResult(string.Format("Category/GetUnsyncCategories/{0}", lastCategoryId));
+            return JsonConvert.DeserializeObject<List<Category>>(x);
         }
     }
 }
