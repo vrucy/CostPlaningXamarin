@@ -1,4 +1,4 @@
-﻿using Android.Content;
+﻿ using Android.Content;
 using Android.Net.Wifi;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Services;
@@ -31,34 +31,34 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            {
-                if (GetCurrentSSID().Equals(BSSID))
-                {
-                    return true;
-                }
-            }
-            return false;
-            //return true;
+            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            //{
+            //    if (GetCurrentSSID().Equals(BSSID))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
+            return true;
         }
         public async void SyncData()
         {
             SemaphoreSlim ss = new SemaphoreSlim(1);
             var deviceId = SQLiteService.GetCurrentDeviceInfo().DeviceId;
 
-            if (SQLiteService.GetLastServerId<User>() != userService.GetLastUserServerId())
+            if (SQLiteService.GetLastServerId<User>() != await userService.GetLastUserServerId())
             {
                 await ss.WaitAsync();
                 await synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
                 ss.Release();
             }
-            if (SQLiteService.GetLastServerId<Category>() != categoryService.GetLastCategoryServerId() || SQLiteService.IsSyncData<Category>())
+            if (SQLiteService.GetLastServerId<Category>() != await categoryService.GetLastCategoryServerId() )
             {
                 await ss.WaitAsync();
                 await synchronizationService.SyncCategoies(SQLiteService.GetLastServerId<Category>());
                 ss.Release();
             }
-            if (SQLiteService.GetLastServerId<Order>() != orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
+            if (SQLiteService.GetLastServerId<Order>() != await orderService.GetLastOrderServerId() || SQLiteService.IsSyncData<Order>())
             {
                 await ss.WaitAsync();
                 await synchronizationService.SyncOrders(SQLiteService.OrderForSync().Result, deviceId);
@@ -67,20 +67,23 @@ namespace CostPlaningXamarin.Services
             await synchronizationService.SyncVisible<Category>(deviceId);
             await synchronizationService.SyncVisible<Order>(deviceId);
         }
-        //TODO: make async problem save orders, becaouse getdeviceInfo
-        public void FristSyncData()
+        public async Task FristSyncData()
         {
             if (SQLiteService.IsFirstSyncNeed())
             {
-                var users = userService.GetAllUsers().GetAwaiter().GetResult();
+                var users = await userService.GetAllUsers();
 
-                SQLiteService.SaveItems(users);
-                SQLiteService.SaveItems(categoryService.GetCategories());
+                await SQLiteService.SaveItems(users);
             }
         }
         public async Task FirstSyncOrders()
         { 
-            await SQLiteService.SaveItems(orderService.GetAllOrders(SQLiteService.GetCurrentDeviceInfo().DeviceId));
+            await SQLiteService.SaveItems(await orderService.GetAllOrders(SQLiteService.GetCurrentDeviceInfo().DeviceId));
+        }
+        public async Task FirstSyncCategories()
+        {
+            await SQLiteService.SaveItems(await categoryService.GetCategories(SQLiteService.GetCurrentDeviceInfo().DeviceId));
+            
         }
         public bool IsServerAvailable()
         {

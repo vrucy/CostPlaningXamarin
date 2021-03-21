@@ -24,7 +24,13 @@ namespace CostPlaningXamarin.ViewModels
 
         public AuthViewModel()
         {
-            _WiFiManager.FristSyncData();
+            Init();
+            
+        }
+        private void Init()
+        {
+            Task.Run(() => _WiFiManager.FristSyncData()).Wait();
+            
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
         private bool _isOnHomeWiFi;
@@ -76,6 +82,7 @@ namespace CostPlaningXamarin.ViewModels
 
                 _userService.PostDevice(_sqliteService.GetCurrentDeviceInfo());
                 _WiFiManager.FirstSyncOrders();
+                _WiFiManager.FirstSyncCategories();
                 Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                 {
                     _navigateService.NavigateToMainPage();
@@ -133,12 +140,15 @@ namespace CostPlaningXamarin.ViewModels
         //TODO: Nije jasno kako ovo radi sihrono? da li se moze desiti da createAppUser dobije ne dovrsenog serivceUser??
         private async void ApplyUser(object x)
         {
+
             var serviceUser =await _userService.PostUser(_user);
 
             await _sqliteService.CreateAppUser(serviceUser);
             await _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(serviceUser.Id));
 
+            _userService.PostDevice(_sqliteService.GetCurrentDeviceInfo());
             await _WiFiManager.FirstSyncOrders();
+            await _WiFiManager.FirstSyncCategories();
 
             _navigateService.NavigateToMainPage();
         }

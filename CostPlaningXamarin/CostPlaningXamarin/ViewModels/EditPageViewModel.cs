@@ -108,17 +108,16 @@ namespace CostPlaningXamarin.ViewModels
                 return _EditCommand;
             }
         }
-        private void Edit(object x)
+        private async void Edit(object x)
         {
-            var user = SQLService.GetAppUser();
             var device = SQLService.GetCurrentDeviceInfo().DeviceId;
 
             if (_category != null)
             {
                 _category.IsVisible = !_category.IsVisible;
-                if (categoryService.EditCategory(_category, device))
+                if (await categoryService.EditCategory(_category, device))
                 {
-                    SQLService.Visibility(_category, _category.IsVisible);
+                    await SQLService.Visibility(_category, _category.IsVisible);
                     Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
                 }
                 else
@@ -130,9 +129,9 @@ namespace CostPlaningXamarin.ViewModels
             if (_order != null)
             {
                 _order.IsVisible = !_order.IsVisible;
-                if (orderService.EditOrder(_order, device))
+                if (await orderService.EditOrder(_order, device))
                 {
-                    SQLService.Visibility(_order, _order.IsVisible);
+                    await SQLService.Visibility(_order, _order.IsVisible);
                     Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
 
                 }

@@ -3,7 +3,6 @@ using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using CostPlaningXamarin.Services;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -30,33 +29,34 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<IList<User>> GetAllUsers()
         {
-            return JsonConvert.DeserializeObject<List<User>>(ResponseResult("User/GetAllUsers"));
+            return JsonConvert.DeserializeObject<List<User>>(await ResponseResult("User/GetAllUsers"));
         }
-        private string ResponseResult(string route)
+        private async Task<string> ResponseResult(string route)
         {
-            var res = _httpClient.GetAsync(urlLocalHost + route).GetAwaiter().GetResult();
-            return res.Content.ReadAsStringAsync().Result;
-        }
-
-        public int GetLastUserServerId()
-        {
-            return JsonConvert.DeserializeObject<int>(ResponseResult("User/GetLastUserServerId"));
+            var res = await _httpClient.GetAsync(urlLocalHost + route);
+            return await res.Content.ReadAsStringAsync();
         }
 
-        public List<User> GetUnsyncUsers(int lastUserId)
+        public async Task<int> GetLastUserServerId()
         {
-            var x = ResponseResult(string.Format("User/GetUnsyncUsers/{0}" , lastUserId));
+            return JsonConvert.DeserializeObject<int>(await ResponseResult("User/GetLastUserServerId"));
+        }
+
+        public async Task<List<User>> GetUnsyncUsers(int lastUserId)
+        {
+            var x = await ResponseResult(string.Format("User/GetUnsyncUsers/{0}" , lastUserId));
             return JsonConvert.DeserializeObject<List<User>>(x);
         }
-        public void PostDevice(Models.Device device)
+        public async Task PostDevice(Models.Device device)
         {
-            _httpClient.PostAsync(urlLocalHost + "User/PostDevice", MediaTypeHeaderValue(device));
+            await _httpClient.PostAsync(urlLocalHost + "User/PostDevice", MediaTypeHeaderValue(device));
         }
 
         public async Task<User> PostUser(User user)
         {
-                var res = await _httpClient.PostAsync(urlLocalHost + "User/PostUser", MediaTypeHeaderValue(user))/*.GetAwaiter().GetResult()*/;
-                var u = JsonConvert.DeserializeObject<User>(await res.Content.ReadAsStringAsync()/*.Result*/);
+            var res = await _httpClient.PostAsync(urlLocalHost + "User/PostUser", MediaTypeHeaderValue(user));
+
+                var u = JsonConvert.DeserializeObject<User>(await res.Content.ReadAsStringAsync());
                 return u;           
         }
     }

@@ -171,7 +171,7 @@ namespace CostPlaningXamarin.ViewModels
             try
             {
                 var order = CreateOrder();
-
+                //TODO: U poseban helper izdvojiti jer se ponavlja u addNewOrder,AddCat..
                 if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
                 {
                     await _orderService.PostOrder(order, SQLService.GetCurrentDeviceInfo().DeviceId);
@@ -207,9 +207,7 @@ namespace CostPlaningXamarin.ViewModels
                 _order.Date = DateTime.Now;
             }
             _order.UserId = SQLService.GetAppUser().Id;
-            _order.User = SQLService.GetAppUser();
             _order.CategoryId = _selectedCategory.Id;
-            _order.Category = _selectedCategory;
             _order.IsVisible = true;
             if (_previusDate != null)
             {

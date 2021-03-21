@@ -24,7 +24,7 @@ namespace CostPlaningXamarin.Interfaces
         int GetLastServerId<T>() ;
         bool IsFirstSyncNeed();
         Task Visibility<T>(T item,bool visibliity);
-        Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb);
+        Task SyncVisbility<T>(Dictionary<int, bool> collection);
         Models.Device GetCurrentDeviceInfo();
     }
 }

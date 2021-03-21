@@ -25,11 +25,10 @@ namespace CostPlaningXamarin.Services
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             return content;
         }
-        private string ResponseResult(string route)
+        private async Task<string> ResponseResult(string route)
         {
-            //TODO: make async??
-            var res = _httpClient.GetAsync(urlLocalHost + route).GetAwaiter().GetResult();
-            return res.Content.ReadAsStringAsync().Result;
+            var res = await _httpClient.GetAsync(urlLocalHost + route);
+            return await res.Content.ReadAsStringAsync();
         }
 
         public async Task<Dictionary<int, int>> UpdateOrder(List<Order> orders, string deviceId)
@@ -42,30 +41,29 @@ namespace CostPlaningXamarin.Services
 
         }
         //TODO: need to be GetAsync!!
-        public List<Order> GetOrdersByIds(List<int> ids)
+        public async Task<List<Order>> GetOrdersByIds(List<int> ids)
         {
+            var res =await _httpClient.PostAsync(urlLocalHost + "Order/GetAllOrdersByIds", MediaTypeHeaderValue(ids));
 
-            var res = _httpClient.PostAsync(urlLocalHost + "Order/GetAllOrdersByIds", MediaTypeHeaderValue(ids)).GetAwaiter().GetResult();
-
-            var content = res.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var content =await res.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<Order>>(content);
         }
-        public List<Order> GetAllOrders(string deviceId)
+        public async Task<List<Order>> GetAllOrders(string deviceId)
         {
-            return JsonConvert.DeserializeObject<List<Order>>(ResponseResult(string.Format("Order/GetAllOrders/{0}", deviceId)));
+            return JsonConvert.DeserializeObject<List<Order>>(await ResponseResult(string.Format("Order/GetAllOrders/{0}", deviceId)));
         }
-        public int GetLastOrderServerId()
+        public async Task<int> GetLastOrderServerId()
         {
-            return JsonConvert.DeserializeObject<int>(ResponseResult("Order/GetLastOrderServerId"));
+            return JsonConvert.DeserializeObject<int>(await ResponseResult("Order/GetLastOrderServerId"));
         }
-        public Dictionary<int, bool> GetAllOrdersVisibility(string deviceId)
+        public async Task<Dictionary<int, bool>> GetAllOrdersVisibility(string deviceId)
         {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(ResponseResult(string.Format("Order/SyncVisibility/{0}", deviceId)));
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await ResponseResult(string.Format("Order/SyncVisibility/{0}", deviceId)));
         }
-        public bool EditOrder(Order order, string deviceId)
+        public async Task<bool> EditOrder(Order order, string deviceId)
         {
             //TODO: every id must encrypt
-            var res = _httpClient.PutAsync(urlLocalHost + string.Format("Order/EditOrder/{0}", deviceId), MediaTypeHeaderValue(order)).GetAwaiter().GetResult();
+            var res = await _httpClient.PutAsync(urlLocalHost + string.Format("Order/EditOrder/{0}", deviceId), MediaTypeHeaderValue(order));
             
             if (res.IsSuccessStatusCode)
             {

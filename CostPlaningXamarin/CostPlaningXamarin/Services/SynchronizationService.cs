@@ -30,40 +30,44 @@ namespace CostPlaningXamarin.Services
             }
             var ordersSync = SQLiteService.GetAllSyncIds<Order>().ToList();
 
-            var ordersFromServer = orderService.GetOrdersByIds(ordersSync);
+            var ordersFromServer = await orderService.GetOrdersByIds(ordersSync);
 
-            if (ordersFromServer != null )
+            if (ordersFromServer.Count > 0)
             {
                 await SQLiteService.SaveItems(ordersFromServer);
             }
         }
         public async Task SyncUsers(int lastUserId)
         {
-            var users = userService.GetUnsyncUsers(lastUserId);
+            var users = await userService.GetUnsyncUsers(lastUserId);
             await SQLiteService.SaveItems(users);
         }
         public async Task SyncCategoies(int lastCategoryId)
         {
-            var categories = categoryService.GetUnsyncCategories(lastCategoryId);
+            var categories = await categoryService.GetUnsyncCategories(lastCategoryId);
             await SQLiteService.SaveItems(categories);
         }
         public async Task SyncVisible<T>(string deviceId)
         {
             if (typeof(T) == typeof(Category))
             {
-                var categoresForDisable = categoryService.GetAllCategoresVisibility(deviceId);
-                if (categoresForDisable.Count > 0)
+                var categoresForSync = await categoryService.GetAllCategoresVisibility(deviceId);
+
+                if (categoresForSync.Count > 0)
                 {
-                    await SyncVisiblityOnMobile<Category>(categoresForDisable);
+                    await SyncVisiblityOnMobile<Category>(categoresForSync);
                 }
+
             }
             if (typeof(T) == typeof(Order))
             {
-                var ordersForSyncVisibility = orderService.GetAllOrdersVisibility(SQLiteService.GetCurrentDeviceInfo().DeviceId);
+                var ordersForSyncVisibility = await orderService.GetAllOrdersVisibility(SQLiteService.GetCurrentDeviceInfo().DeviceId);
+
                 if (ordersForSyncVisibility.Count > 0)
                 {
                     await SyncVisiblityOnMobile<Order>(ordersForSyncVisibility);
                 }
+
             }
         }
         private async Task SyncVisiblityOnMobile<T>(Dictionary<int, bool> collection)
@@ -72,11 +76,11 @@ namespace CostPlaningXamarin.Services
             {
                 if (typeof(T) == typeof(Category))
                 {
-                    await SQLiteService.SyncVisbility<Category>(collection, true);
+                    await SQLiteService.SyncVisbility<Category>(collection);
                 }
                 else if (typeof(T) == typeof(Order))
                 {
-                    await SQLiteService.SyncVisbility<Order>(collection, true);
+                    await SQLiteService.SyncVisbility<Order>(collection);
                 }
             }
         }

@@ -44,7 +44,6 @@ namespace CostPlaningXamarin.Services
         {
             return db.GetAllWithChildrenAsync<Order>();
         }
-        //TODO: Move to order service this need to be form sql
         public Task<List<User>> GetUsers()
         {
             return db.Table<User>().ToListAsync();
@@ -109,17 +108,11 @@ namespace CostPlaningXamarin.Services
             }
             else if (typeof(T) == typeof(Category))
             {
-                var x = collection as List<Category>;
-                foreach (var item in x)
-                {
-                    await db.InsertAsync(item);
-                }
+                await db.InsertAllAsync(collection);
             }
             else if (typeof(T) == typeof(User))
             {
-                var x = collection as List<User>;
-                await db.InsertAllAsync(x);
-
+                await db.InsertAllAsync(collection);
             }
         }
         public async Task SaveAsync<T>(T item)
@@ -187,13 +180,13 @@ namespace CostPlaningXamarin.Services
             return !db.GetAllWithChildrenAsync<Category>().Result.Any();
         }
         //TODO: Check if need writeToDb && code repite
-        public async Task SyncVisbility<T>(Dictionary<int, bool> collection, bool isWriteToDb)
+        public async Task SyncVisbility<T>(Dictionary<int, bool> collection)
         {
             if (typeof(T) == typeof(Category))
             {
                 foreach (var item in collection)
                 {
-                    var category = db.FindAsync<Category>(x => x.Id == item.Key).Result;
+                    var category = await db.Table<Category>().Where(x => x.Id == item.Key).FirstOrDefaultAsync();
                     category.IsVisible = item.Value;
 
                     await db.InsertOrReplaceAsync(category);
