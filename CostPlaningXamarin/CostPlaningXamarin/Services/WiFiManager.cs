@@ -42,7 +42,7 @@ namespace CostPlaningXamarin.Services
             //return true;
         }
         public async void SyncData()
-        {
+         {
             SemaphoreSlim ss = new SemaphoreSlim(1);
             var deviceId = SQLiteService.GetCurrentDeviceInfo().DeviceId;
 

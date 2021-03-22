@@ -14,7 +14,7 @@ namespace CostPlaningXamarin.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<Dictionary<int, bool>> GetAllCategoresVisibility(string deviceId);
-        Task PostCategory(Category category,string deviceId);
+        Task<Category> PostCategory(Category category,string deviceId);
         Task<List<Category>> GetUnsyncCategories(int lastCategoryId);
     }
 }

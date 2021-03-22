@@ -52,11 +52,14 @@ namespace CostPlaningXamarin.ViewModels
                 var deviceId = SQLService.GetCurrentDeviceInfo().DeviceId;
                 if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
                 { 
-                    await _categoryService.PostCategory(category, deviceId);
-                    await SQLService.Visibility(_category, true);
+                    var categoryServer = await _categoryService.PostCategory(category, deviceId);
+                    await SQLService.SaveAsync(categoryServer);
+                }
+                else
+                {
+                    await SQLService.SaveAsync(category);
                 }
 
-                await SQLService.SaveAsync(category);
                 Toast.MakeText(Android.App.Application.Context, "Success", ToastLength.Long).Show();
 
                 _navigationService.NavigateToMainPage();

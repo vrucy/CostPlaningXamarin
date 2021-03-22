@@ -103,7 +103,7 @@ namespace CostPlaningXamarin.Services
                 {
                     item.ServerId = item.Id;
 
-                   await db.InsertAsync(item);
+                    await db.InsertAsync(item);
                 }
             }
             else if (typeof(T) == typeof(Category))
@@ -136,7 +136,7 @@ namespace CostPlaningXamarin.Services
 
             return null;
         }
-        
+
         public bool IsSyncData<T>()
         {
             if (typeof(T) == typeof(Order))
@@ -196,7 +196,7 @@ namespace CostPlaningXamarin.Services
             {
                 foreach (var item in collection)
                 {
-                    var order = await db.Table<Order>().Where(x=>x.ServerId == item.Key).FirstOrDefaultAsync();
+                    var order = await db.Table<Order>().Where(x => x.ServerId == item.Key).FirstOrDefaultAsync();
                     order.IsVisible = item.Value;
 
                     await db.InsertOrReplaceAsync(order);
@@ -204,19 +204,28 @@ namespace CostPlaningXamarin.Services
             }
         }
 
-        public async Task Visibility<T>(T item ,bool visibility)
+        public async Task Visibility<T>(T item, bool visibility)
         {
             if (typeof(T) == typeof(Category))
             {
                 var category = item as Category;
                 category.IsVisible = visibility;
-                await db.UpdateAsync(category);
+                await db.InsertOrReplaceAsync(category);
             }
             if (typeof(T) == typeof(Order))
             {
                 var order = item as Order;
                 order.IsVisible = visibility;
-                await db.UpdateAsync(order);
+                try
+                {
+
+                await db.InsertOrReplaceAsync(order);
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
             }
         }
 

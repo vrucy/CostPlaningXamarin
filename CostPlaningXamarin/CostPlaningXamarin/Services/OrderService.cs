@@ -45,7 +45,7 @@ namespace CostPlaningXamarin.Services
         {
             var res =await _httpClient.PostAsync(urlLocalHost + "Order/GetAllOrdersByIds", MediaTypeHeaderValue(ids));
 
-            var content =await res.Content.ReadAsStringAsync();
+            var content = await res.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<Order>>(content);
         }
         public async Task<List<Order>> GetAllOrders(string deviceId)
@@ -75,9 +75,11 @@ namespace CostPlaningXamarin.Services
             }
         }
 
-        public async Task PostOrder(Order order,string deviceId)
+        public async Task<Order> PostOrder(Order order,string deviceId)
         {
-            await _httpClient.PostAsync(urlLocalHost + string.Format("Order/PostOrder/{0}", deviceId), MediaTypeHeaderValue(order));
+            var res = await _httpClient.PostAsync(urlLocalHost + string.Format("Order/PostOrder/{0}", deviceId), MediaTypeHeaderValue(order));
+            var content = await res.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Order>(content);
         }
     }
 }

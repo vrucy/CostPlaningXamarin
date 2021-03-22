@@ -17,6 +17,6 @@ namespace CostPlaningXamarin.Interfaces
         Task<int> GetLastOrderServerId();
         Task<Dictionary<int, bool>> GetAllOrdersVisibility(string deviceId);
         Task<bool> EditOrder(Order order, string deviceId);
-        Task PostOrder(Order order, string deviceId);
+        Task<Order> PostOrder(Order order, string deviceId);
     }
 }

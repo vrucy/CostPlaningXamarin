@@ -171,13 +171,21 @@ namespace CostPlaningXamarin.ViewModels
             try
             {
                 var order = CreateOrder();
+
                 //TODO: U poseban helper izdvojiti jer se ponavlja u addNewOrder,AddCat..
                 if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
                 {
-                    await _orderService.PostOrder(order, SQLService.GetCurrentDeviceInfo().DeviceId);
-                    await SQLService.Visibility(order, true);
+                    //TODO:potrebno je vratiti id ordera!!
+                    var serverOrder = await _orderService.PostOrder(order, SQLService.GetCurrentDeviceInfo().DeviceId);
+                    serverOrder.ServerId = serverOrder.Id;
+                    serverOrder.Id = 0;
+                    await SQLService.SaveAsync(serverOrder);
                 }
-                await SQLService.SaveAsync(order);
+                else
+                {
+                    await SQLService.SaveAsync(order);
+                }
+
                 ResetField();
 
                 Toast.MakeText(Android.App.Application.Context,"Success",ToastLength.Long).Show(); 

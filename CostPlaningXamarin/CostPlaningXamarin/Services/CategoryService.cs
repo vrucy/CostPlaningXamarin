@@ -61,9 +61,12 @@ namespace CostPlaningXamarin.Services
         {
             return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await ResponseResult(string.Format("Category/SyncVisbility/{0}", deviceId)));
         }
-        public async Task PostCategory(Category category, string deviceId)
+        public async Task<Category> PostCategory(Category category, string deviceId)
         {
-            await _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategory/{0}", deviceId), MediaTypeHeaderValue(category));
+            var res = await _httpClient.PostAsync(urlLocalHost + string.Format("Category/PostCategory/{0}", deviceId), MediaTypeHeaderValue(category));
+            var content = await res.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Category>(content);
+
         }
         public async Task<List<Category>> GetUnsyncCategories(int lastCategoryId)
         {
