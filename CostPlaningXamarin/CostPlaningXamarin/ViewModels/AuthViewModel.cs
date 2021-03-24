@@ -2,7 +2,6 @@
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -25,28 +24,28 @@ namespace CostPlaningXamarin.ViewModels
         public AuthViewModel()
         {
             Init();
-            
         }
+
         private void Init()
         {
             Task.Run(() => _WiFiManager.FristSyncData()).Wait();
-            
             _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
+        
         private bool _isOnHomeWiFi;
 
         public bool IsOnHomeWiFi
         {
-            get 
+            get
             {
                 if (_WiFiManager.IsHomeWifiConnected() && _WiFiManager.IsServerAvailable())
                 {
                     return true;
                 }
 
-                return _isOnHomeWiFi; 
+                return _isOnHomeWiFi;
             }
-            set 
+            set
             {
                 _isOnHomeWiFi = value;
                 OnPropertyChanged("IsConnected");
@@ -141,7 +140,7 @@ namespace CostPlaningXamarin.ViewModels
         private async void ApplyUser(object x)
         {
 
-            var serviceUser =await _userService.PostUser(_user);
+            var serviceUser = await _userService.PostUser(_user);
 
             await _sqliteService.CreateAppUser(serviceUser);
             await _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(serviceUser.Id));

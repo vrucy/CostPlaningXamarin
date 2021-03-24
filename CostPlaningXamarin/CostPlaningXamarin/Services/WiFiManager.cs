@@ -1,4 +1,4 @@
-﻿ using Android.Content;
+﻿using Android.Content;
 using Android.Net.Wifi;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Services;
@@ -31,18 +31,18 @@ namespace CostPlaningXamarin.Services
         }
         public bool IsHomeWifiConnected()
         {
-            if (!String.IsNullOrEmpty(GetCurrentSSID()))
-            {
-                if (GetCurrentSSID().Equals(BSSID))
-                {
-                    return true;
-                }
-            }
-            return false;
-            //return true;
+            //if (!String.IsNullOrEmpty(GetCurrentSSID()))
+            //{
+            //    if (GetCurrentSSID().Equals(BSSID))
+            //    {
+            //        return true;
+            //    }
+            //}
+            //return false;
+            return true;
         }
         public async void SyncData()
-         {
+        {
             SemaphoreSlim ss = new SemaphoreSlim(1);
             var deviceId = SQLiteService.GetCurrentDeviceInfo().DeviceId;
 
@@ -52,7 +52,7 @@ namespace CostPlaningXamarin.Services
                 await synchronizationService.SyncUsers(SQLiteService.GetLastServerId<User>());
                 ss.Release();
             }
-            if (SQLiteService.GetLastServerId<Category>() != await categoryService.GetLastCategoryServerId() )
+            if (SQLiteService.GetLastServerId<Category>() != await categoryService.GetLastCategoryServerId())
             {
                 await ss.WaitAsync();
                 await synchronizationService.SyncCategoies(SQLiteService.GetLastServerId<Category>());
@@ -77,25 +77,33 @@ namespace CostPlaningXamarin.Services
             }
         }
         public async Task FirstSyncOrders()
-        { 
+        {
             await SQLiteService.SaveItems(await orderService.GetAllOrders(SQLiteService.GetCurrentDeviceInfo().DeviceId));
         }
         public async Task FirstSyncCategories()
         {
             await SQLiteService.SaveItems(await categoryService.GetCategories(SQLiteService.GetCurrentDeviceInfo().DeviceId));
-            
+
         }
         public bool IsServerAvailable()
         {
+            try
+            {
+                TcpClient tcpClient = new TcpClient();
+                if (tcpClient.ConnectAsync("192.168.1.88", 80).Wait(2000))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
 
-            TcpClient tcpClient = new TcpClient();
-            if (!tcpClient.ConnectAsync("192.168.1.88", 80).Wait(3000))
-            {
-                return false;
             }
-            else
+            catch (Exception e)
             {
-                return true;
+
+                throw;
             }
 
         }

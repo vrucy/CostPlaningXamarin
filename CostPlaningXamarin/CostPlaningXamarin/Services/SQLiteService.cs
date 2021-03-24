@@ -17,6 +17,7 @@ namespace CostPlaningXamarin.Services
         public SQLiteService()
         {
         }
+        //TODO: await and test
         public async Task CreateDBAsync(string dbPath)
         {
             db = new SQLiteAsyncConnection(dbPath);
@@ -36,10 +37,6 @@ namespace CostPlaningXamarin.Services
         {
             db.DropTableAsync<T>().Wait();
         }
-        public Task<List<Order>> GetAllOrdersForUserById(int id)
-        {
-            return db.GetAllWithChildrenAsync<Order>(x => x.UserId == id && x.ServerId == 0);
-        }
         public Task<List<Order>> GetOrdersAsync()
         {
             return db.GetAllWithChildrenAsync<Order>();
@@ -52,7 +49,6 @@ namespace CostPlaningXamarin.Services
         {
             return !db.GetAllWithChildrenAsync<User>().Result.Any() && !db.GetAllWithChildrenAsync<Category>().Result.Any();
         }
-        //TODO: Here filter categores who not visible
         public Task<List<Category>> GetAllCategories()
         {
             var allCategores = db.Table<Category>();
@@ -72,13 +68,6 @@ namespace CostPlaningXamarin.Services
         public User GetAppUser()
         {
             return db.Table<User>().FirstOrDefaultAsync(x => x.DeviceUser == true).Result;
-        }
-        public void UpdateDeviceUser(int newId)
-        {
-            var appUser = db.GetAllWithChildrenAsync<User>().Result.FirstOrDefault(x => x.Id == newId);
-
-            appUser.DeviceUser = true;
-            db.UpdateWithChildrenAsync(appUser).Wait();
         }
         public Task<List<Order>> OrderForSync()
         {
@@ -179,7 +168,7 @@ namespace CostPlaningXamarin.Services
         {
             return !db.GetAllWithChildrenAsync<Category>().Result.Any();
         }
-        //TODO: Check if need writeToDb && code repite
+        //TODO:code repite
         public async Task SyncVisbility<T>(Dictionary<int, bool> collection)
         {
             if (typeof(T) == typeof(Category))

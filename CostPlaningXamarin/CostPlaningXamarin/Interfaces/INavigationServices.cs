@@ -6,11 +6,9 @@ namespace CostPlaningXamarin.Interfaces
     {
         void NavigateToMainPage();
         void NavigateToAddItem();
-        void NavigateBack();
         void NavigateToTableOrders();
         void NavigateToEditCategory();
         void NavigateToOrdersOptions();
-        void NavigateToAddUser();
         void NavigateToEditOrderAsync(Order order);
         void NavigateToAddCategoryAsync();
     }

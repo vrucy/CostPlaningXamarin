@@ -2,7 +2,6 @@
 using CostPlaningXamarin.Command;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
-using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 
@@ -19,7 +18,6 @@ namespace CostPlaningXamarin.ViewModels
         ISQLiteService SQLService = DependencyService.Get<ISQLiteService>();
         ICategoryService categoryService = DependencyService.Get<ICategoryService>();
         IOrderService orderService = DependencyService.Get<IOrderService>();
-        IDeviceService deviceService = DependencyService.Get<IDeviceService>();
 
         //TODO: Generic make editpage.xaml.cs recive T
         public EditPageViewModel()
@@ -125,6 +123,7 @@ namespace CostPlaningXamarin.ViewModels
                     _category.IsVisible = !_category.IsVisible;
                     Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 }
+                _category = null;
             }
             if (_order != null)
             {
@@ -140,7 +139,7 @@ namespace CostPlaningXamarin.ViewModels
                     _order.IsVisible = !_order.IsVisible;
                     Toast.MakeText(Android.App.Application.Context, "Error", ToastLength.Long).Show();
                 }
-
+                _order = null;
             }
         }
     }

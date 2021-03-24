@@ -175,7 +175,6 @@ namespace CostPlaningXamarin.ViewModels
                 //TODO: U poseban helper izdvojiti jer se ponavlja u addNewOrder,AddCat..
                 if (_wiFiManager.IsHomeWifiConnected() && _wiFiManager.IsServerAvailable())
                 {
-                    //TODO:potrebno je vratiti id ordera!!
                     var serverOrder = await _orderService.PostOrder(order, SQLService.GetCurrentDeviceInfo().DeviceId);
                     serverOrder.ServerId = serverOrder.Id;
                     serverOrder.Id = 0;

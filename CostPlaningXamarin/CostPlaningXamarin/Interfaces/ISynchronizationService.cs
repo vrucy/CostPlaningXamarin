@@ -6,7 +6,6 @@ namespace CostPlaningXamarin.Interfaces
 {
     interface ISynchronizationService
     {
-        //Task FirstSyncUserOwner(User appUser);
         Task SyncUsers(int Id);
         Task SyncOrders(List<Order> orders, string deviceId);
         Task SyncCategoies(int lastCategoryId);
