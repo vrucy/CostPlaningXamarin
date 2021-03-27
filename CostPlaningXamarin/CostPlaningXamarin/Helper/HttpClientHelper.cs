@@ -30,8 +30,8 @@ namespace CostPlaningXamarin.Helper
             try
             {
                 var res = await _httpClient.GetAsync(urlLocalHost + route);
-                return await res.Content.ReadAsStringAsync();
                 _logger.Info("Send get request to: " + route);
+                return await res.Content.ReadAsStringAsync();
             }
             catch (System.Exception e)
             {

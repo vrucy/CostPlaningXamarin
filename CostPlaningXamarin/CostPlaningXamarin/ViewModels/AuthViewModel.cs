@@ -39,8 +39,15 @@ namespace CostPlaningXamarin.ViewModels
             _logger.Info("GetUser");
             return _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
-        
 
+        public List<User> Users
+        {
+            get
+            {
+                return _users.Value;
+            }
+            //set { _users = value; OnPropertyChanged("Users"); }
+        }
         private bool _isOnHomeWiFi;
 
         public bool IsOnHomeWiFi
@@ -104,14 +111,7 @@ namespace CostPlaningXamarin.ViewModels
 
         }
         
-        public List<User> Users
-        {
-            get 
-            {
-                return _users.Value; 
-            }
-            //set { _users = value; OnPropertyChanged("Users"); }
-        }
+        
 
 
         public bool IsVisible

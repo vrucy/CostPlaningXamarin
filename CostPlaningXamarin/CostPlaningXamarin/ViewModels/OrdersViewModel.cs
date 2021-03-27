@@ -14,8 +14,8 @@ namespace CostPlaningXamarin.ViewModels
     {
         private List<Order> _orders;
         private List<Order> _allOrders;
-        private List<User> _users;
-        private List<Category> _categories;
+        private Lazy<List<User>> _users;
+        private Lazy<List<Category>> _categories;
         private ICommand _ClearAllFilters;
         private List<string> _DateFrom;
         private List<string> _DateTo;
@@ -27,11 +27,19 @@ namespace CostPlaningXamarin.ViewModels
         {
             _allOrders = _sqliteService.GetOrdersAsync().GetAwaiter().GetResult();
            // _orders = _allOrders;
-            _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
+            _users = new Lazy<List<User>>(GetUsers);
 
-            _categories = _sqliteService.GetAllCategories().GetAwaiter().GetResult();
+            _categories = new Lazy<List<Category>>(GetCategories);
             Date = new List<string>();
             PopulateDateCollection();
+        }
+        private List<User> GetUsers()
+        {
+            return _sqliteService.GetUsers().GetAwaiter().GetResult();
+        }
+        private List<Category> GetCategories()
+        {
+            return _sqliteService.GetAllCategories().GetAwaiter().GetResult();
         }
         public List<Order> Orders
         {
@@ -79,11 +87,7 @@ namespace CostPlaningXamarin.ViewModels
 
         public List<User> Users
         {
-            get { return _users; }
-            set
-            {
-                _users = value;
-            }
+            get { return _users.Value; }
         }
         private User _selectedUser;
 
@@ -100,11 +104,7 @@ namespace CostPlaningXamarin.ViewModels
 
         public List<Category> Categories
         {
-            get { return _categories; }
-            set
-            {
-                _categories = value;
-            }
+            get { return _categories.Value; }
         }
         private Category _selectedCategory;
 
