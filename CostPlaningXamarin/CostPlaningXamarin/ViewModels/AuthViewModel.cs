@@ -1,6 +1,7 @@
 ﻿using CostPlaningXamarin.Command;
 using CostPlaningXamarin.Interfaces;
 using CostPlaningXamarin.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,20 +19,28 @@ namespace CostPlaningXamarin.ViewModels
         private ICommand _ApplyUser;
         private ICommand _IsVisible;
         private bool _isVisible;
-        private List<User> _users;
         private User _selectedUser;
-
+        private Lazy<List<User>> _users;
+        //https://blog.stephencleary.com/2013/01/async-oop-2-constructors.html
+        private readonly NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         public AuthViewModel()
         {
-            Init();
+            //Initialization = InitializeAsync();
+            //Init();
+            Task.Run(() =>
+            {
+                _logger.Info("first sync");
+                _WiFiManager.FristSyncData();
+            }).Wait();
+            _users = new Lazy<List<User>>(GetUsers);
         }
-
-        private void Init()
+        private List<User> GetUsers()
         {
-            Task.Run(() => _WiFiManager.FristSyncData()).Wait();
-            _users = _sqliteService.GetUsers().GetAwaiter().GetResult();
+            _logger.Info("GetUser");
+            return _sqliteService.GetUsers().GetAwaiter().GetResult();
         }
         
+
         private bool _isOnHomeWiFi;
 
         public bool IsOnHomeWiFi
@@ -94,10 +103,14 @@ namespace CostPlaningXamarin.ViewModels
             }
 
         }
+        
         public List<User> Users
         {
-            get { return _users; }
-            set { _users = value; OnPropertyChanged("Users"); }
+            get 
+            {
+                return _users.Value; 
+            }
+            //set { _users = value; OnPropertyChanged("Users"); }
         }
 
 
@@ -145,7 +158,7 @@ namespace CostPlaningXamarin.ViewModels
             await _sqliteService.CreateAppUser(serviceUser);
             await _sqliteService.SaveAsync(_deviceService.PostCurrentDevice(serviceUser.Id));
 
-            _userService.PostDevice(_sqliteService.GetCurrentDeviceInfo());
+            await _userService.PostDevice(_sqliteService.GetCurrentDeviceInfo());
             await _WiFiManager.FirstSyncOrders();
             await _WiFiManager.FirstSyncCategories();
 
@@ -162,6 +175,8 @@ namespace CostPlaningXamarin.ViewModels
                 return _IsVisible;
             }
         }
+
+
         private bool IsOnHomeWiFiPredicate(object x)
         {
             return IsOnHomeWiFi;

@@ -17,12 +17,12 @@ namespace CostPlaningXamarin.Services
         private const string urlLocalHost = Constants.urlLocalHost;
         public async Task<List<Category>> GetCategories(string deviceId)
         {
-            return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResult(string.Format("Category/GetGategories/{0}", deviceId)));
+            return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResultAsync(string.Format("Category/GetGategories/{0}", deviceId)));
         }
 
         public async Task<int> GetLastCategoryServerId()
         {
-            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResult("Category/GetLastCategoryServerId"));
+            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResultAsync("Category/GetLastCategoryServerId"));
         }
 
         public async Task<bool> EditCategory(Category category, string deviceId)
@@ -37,7 +37,7 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<Dictionary<int, bool>> GetAllCategoresVisibility(string deviceId)
         {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await _httpClient.ResponseResult(string.Format("Category/SyncVisbility/{0}", deviceId)));
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await _httpClient.ResponseResultAsync(string.Format("Category/SyncVisbility/{0}", deviceId)));
         }
         public async Task<Category> PostCategory(Category category, string deviceId)
         {
@@ -45,7 +45,7 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<List<Category>> GetUnsyncCategories(int lastCategoryId)
         {
-            return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResult(string.Format("Category/GetUnsyncCategories/{0}", lastCategoryId)));
+            return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResultAsync(string.Format("Category/GetUnsyncCategories/{0}", lastCategoryId)));
         }
     }
 }

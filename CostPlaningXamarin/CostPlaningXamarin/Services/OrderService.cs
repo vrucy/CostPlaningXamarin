@@ -25,15 +25,15 @@ namespace CostPlaningXamarin.Services
         }
         public async Task<List<Order>> GetAllOrders(string deviceId)
         {
-            return JsonConvert.DeserializeObject<List<Order>>(await _httpClient.ResponseResult(string.Format("Order/GetAllOrders/{0}", deviceId)));
+            return JsonConvert.DeserializeObject<List<Order>>(await _httpClient.ResponseResultAsync(string.Format("Order/GetAllOrders/{0}", deviceId)));
         }
         public async Task<int> GetLastOrderServerId()
         {
-            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResult("Order/GetLastOrderServerId"));
+            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResultAsync("Order/GetLastOrderServerId"));
         }
         public async Task<Dictionary<int, bool>> GetAllOrdersVisibility(string deviceId)
         {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await _httpClient.ResponseResult(string.Format("Order/SyncVisibility/{0}", deviceId)));
+            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await _httpClient.ResponseResultAsync(string.Format("Order/SyncVisibility/{0}", deviceId)));
         }
         public async Task<bool> EditOrder(Order order, string deviceId)
         {

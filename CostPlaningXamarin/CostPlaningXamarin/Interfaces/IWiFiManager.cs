@@ -7,7 +7,7 @@ namespace CostPlaningXamarin.Interfaces
         bool IsHomeWifiConnected();
         bool IsServerAvailable();
         void SyncData();
-        Task FristSyncData();
+        void FristSyncData();
         Task FirstSyncOrders();
         Task FirstSyncCategories();
     }

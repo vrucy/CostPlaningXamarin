@@ -21,6 +21,7 @@ namespace CostPlaningXamarin.Services
         IUserService userService = DependencyService.Get<IUserService>();
         ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
         ISynchronizationService synchronizationService = DependencyService.Get<ISynchronizationService>();
+        private readonly NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         public string GetCurrentSSID()
         {
@@ -67,11 +68,11 @@ namespace CostPlaningXamarin.Services
             await synchronizationService.SyncVisible<Category>(deviceId);
             await synchronizationService.SyncVisible<Order>(deviceId);
         }
-        public async Task FristSyncData()
+        public async void FristSyncData()
         {
             if (SQLiteService.IsFirstSyncNeed())
             {
-                var users = await userService.GetAllUsers();
+                var users = userService.GetAllUsers().GetAwaiter().GetResult();
 
                 await SQLiteService.SaveItems(users);
             }
@@ -102,7 +103,7 @@ namespace CostPlaningXamarin.Services
             }
             catch (Exception e)
             {
-
+                _logger.Error("IsServerAvailable error: " + e.Message + "Inner: " + e.InnerException);
                 throw;
             }
 

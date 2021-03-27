@@ -10,6 +10,7 @@ using Android;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace CostPlaningXamarin
 {
@@ -29,7 +30,6 @@ namespace CostPlaningXamarin
             {
 
                 MainPage = new NavigationPage(new AuthPage());
-
             }
             else
             {
@@ -40,14 +40,14 @@ namespace CostPlaningXamarin
             {
                 if (CrossConnectivity.Current.ConnectionTypes.Contains(ConnectionType.WiFi) && wiFiManager.IsServerAvailable())
                 {
-                     wiFiManager.SyncData();
+                    wiFiManager.SyncData();
                 }
             };
 
         }
-       
+
         protected override void OnStart()
-       {
+        {
             ISQLiteService SQLiteService = DependencyService.Get<ISQLiteService>();
             if (wiFiManager.IsHomeWifiConnected() && !SQLiteService.CheckIfExistUser() && wiFiManager.IsServerAvailable())
             {
@@ -67,7 +67,7 @@ namespace CostPlaningXamarin
             {
                 wiFiManager.SyncData();
             }
-       }
+        }
 
     }
 }

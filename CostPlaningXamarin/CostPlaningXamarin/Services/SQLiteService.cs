@@ -14,6 +14,8 @@ namespace CostPlaningXamarin.Services
     public class SQLiteService : ISQLiteService
     {
         SQLiteAsyncConnection db;
+        private readonly NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public SQLiteService()
         {
         }
@@ -85,23 +87,31 @@ namespace CostPlaningXamarin.Services
         }
         public async Task SaveItems<T>(IList<T> collection)
         {
-            if (typeof(T) == typeof(Order))
+            try
             {
-                var x = collection as List<Order>;
-                foreach (var item in x)
+                if (typeof(T) == typeof(Order))
                 {
-                    item.ServerId = item.Id;
+                    var x = collection as List<Order>;
+                    foreach (var item in x)
+                    {
+                        item.ServerId = item.Id;
 
-                    await db.InsertAsync(item);
+                        await db.InsertAsync(item);
+                    }
+                }
+                else if (typeof(T) == typeof(Category))
+                {
+                    await db.InsertAllAsync(collection);
+                }
+                else if (typeof(T) == typeof(User))
+                {
+                    await db.InsertAllAsync(collection);
                 }
             }
-            else if (typeof(T) == typeof(Category))
+            catch (Exception e)
             {
-                await db.InsertAllAsync(collection);
-            }
-            else if (typeof(T) == typeof(User))
-            {
-                await db.InsertAllAsync(collection);
+                _logger.Warn("Exeption while save into sqlite: " + e.Message + "Inner ex: " + e.InnerException);
+                throw;
             }
         }
         public async Task SaveAsync<T>(T item)

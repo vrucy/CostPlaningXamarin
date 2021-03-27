@@ -16,17 +16,17 @@ namespace CostPlaningXamarin.Services
 
         public async Task<IList<User>> GetAllUsers()
         {
-            return JsonConvert.DeserializeObject<List<User>>(await _httpClient.ResponseResult("User/GetAllUsers"));
+            return JsonConvert.DeserializeObject<List<User>>(await _httpClient.ResponseResultAsync("User/GetAllUsers"));
         }
 
         public async Task<int> GetLastUserServerId()
         {
-            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResult("User/GetLastUserServerId"));
+            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResultAsync("User/GetLastUserServerId"));
         }
 
         public async Task<List<User>> GetUnsyncUsers(int lastUserId)
         {
-            return JsonConvert.DeserializeObject<List<User>>(await _httpClient.ResponseResult(string.Format("User/GetUnsyncUsers/{0}", lastUserId)));
+            return JsonConvert.DeserializeObject<List<User>>(await _httpClient.ResponseResultAsync(string.Format("User/GetUnsyncUsers/{0}", lastUserId)));
         }
         public async Task PostDevice(Models.Device device)
         {
