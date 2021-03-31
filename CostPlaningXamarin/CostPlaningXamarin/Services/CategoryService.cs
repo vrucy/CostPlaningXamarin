@@ -14,15 +14,9 @@ namespace CostPlaningXamarin.Services
         //TODO: DI
         private static readonly HttpClientHelper _httpClient = new HttpClientHelper();
 
-        private const string urlLocalHost = Constants.urlLocalHost;
         public async Task<List<Category>> GetCategories(string deviceId)
         {
             return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResultAsync(string.Format("Category/GetGategories/{0}", deviceId)));
-        }
-
-        public async Task<int> GetLastCategoryServerId()
-        {
-            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResultAsync("Category/GetLastCategoryServerId"));
         }
 
         public async Task<bool> EditCategory(Category category, string deviceId)
@@ -35,17 +29,13 @@ namespace CostPlaningXamarin.Services
             }
             return false;
         }
-        public async Task<Dictionary<int, bool>> GetAllCategoresVisibility(string deviceId)
-        {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await _httpClient.ResponseResultAsync(string.Format("Category/SyncVisbility/{0}", deviceId)));
-        }
         public async Task<Category> PostCategory(Category category, string deviceId)
         {
             return JsonConvert.DeserializeObject<Category>(await _httpClient.PostAsync(category, string.Format("Category/PostCategory/{0}",deviceId)));
         }
-        public async Task<List<Category>> GetUnsyncCategories(int lastCategoryId)
+        public async Task<List<Category>> GetUnsyncCategories(string deviceId)
         {
-            return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResultAsync(string.Format("Category/GetUnsyncCategories/{0}", lastCategoryId)));
+            return JsonConvert.DeserializeObject<List<Category>>(await _httpClient.ResponseResultAsync(string.Format("Category/GetUnsyncCategories/{0}", deviceId)));
         }
     }
 }

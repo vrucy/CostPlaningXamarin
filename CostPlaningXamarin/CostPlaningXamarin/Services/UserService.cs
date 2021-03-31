@@ -19,11 +19,6 @@ namespace CostPlaningXamarin.Services
             return JsonConvert.DeserializeObject<List<User>>(await _httpClient.ResponseResultAsync("User/GetAllUsers"));
         }
 
-        public async Task<int> GetLastUserServerId()
-        {
-            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResultAsync("User/GetLastUserServerId"));
-        }
-
         public async Task<List<User>> GetUnsyncUsers(int lastUserId)
         {
             return JsonConvert.DeserializeObject<List<User>>(await _httpClient.ResponseResultAsync(string.Format("User/GetUnsyncUsers/{0}", lastUserId)));

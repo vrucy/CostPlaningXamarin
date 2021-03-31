@@ -24,7 +24,6 @@ namespace CostPlaningXamarin.Services
                 throw new Exception("Could not initialize Logger: Unknonw Platform");
 
             //var location = $"{assemblyName}.NLog.config";
-                //test();
             string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
             string location = $"{resourcePrefix}.NLog.config";
            
@@ -32,25 +31,6 @@ namespace CostPlaningXamarin.Services
             if (stream == null)
                 throw new Exception($"The resource '{location}' was not loaded properly.");
             LogManager.Configuration = new XmlLoggingConfiguration(System.Xml.XmlReader.Create(stream), null);
-            var x = LogManager.Configuration.AllTargets;
-        }
-        private void test()
-        {
-            Java.IO.File sdCard = Android.OS.Environment.ExternalStorageDirectory;
-            Java.IO.File dir = new Java.IO.File(sdCard.AbsolutePath + "/Log");
-
-                dir.Mkdirs();
-                Java.IO.File file = new Java.IO.File(dir, "log.txt");
-                if (!file.Exists())
-                {
-                    file.CreateNewFile();
-                    file.Mkdir();
-                    FileWriter writer = new FileWriter(file);
-                    // Writes the content to the file
-                    writer.Write("ja");
-                    writer.Flush();
-                    writer.Close();
-                }            
         }
     }
 }

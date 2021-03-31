@@ -118,24 +118,6 @@ namespace CostPlaningXamarin.Services
         {
             await db.InsertAsync(item);
         }
-        public IList<int> GetAllSyncIds<T>()
-        {
-            if (typeof(T) == typeof(Order))
-            {
-                return db.GetAllWithChildrenAsync<Order>(x => x.ServerId != 0).Result.Select(o => o.ServerId).ToList();
-            }
-            else if (typeof(T) == typeof(Category))
-            {
-                return db.GetAllWithChildrenAsync<Category>(x => x.Id != 0).Result.Select(o => o.Id).ToList();
-            }
-            else if (typeof(T) == typeof(User))
-            {
-                return db.GetAllWithChildrenAsync<User>(x => x.Id != 0).Result.Select(o => o.Id).ToList();
-            }
-
-            return null;
-        }
-
         public bool IsSyncData<T>()
         {
             if (typeof(T) == typeof(Order))
@@ -179,26 +161,39 @@ namespace CostPlaningXamarin.Services
             return !db.GetAllWithChildrenAsync<Category>().Result.Any();
         }
         //TODO:code repite
-        public async Task SyncVisbility<T>(Dictionary<int, bool> collection)
+        public async Task SyncVisbility<T>(List<T> collection)
         {
             if (typeof(T) == typeof(Category))
             {
-                foreach (var item in collection)
-                {
-                    var category = await db.Table<Category>().Where(x => x.Id == item.Key).FirstOrDefaultAsync();
-                    category.IsVisible = item.Value;
 
-                    await db.InsertOrReplaceAsync(category);
+                foreach (var item in collection as List<Category>)
+                {
+                    //var category = await db.Table<Category>().Where(x => x.Id == item.Id).FirstOrDefaultAsync();
+                    //category.IsVisible = item.Value;
+                    await db.InsertOrReplaceAsync(item);
                 }
             }
             if (typeof(T) == typeof(Order))
             {
-                foreach (var item in collection)
+                foreach (var item in collection as List<Order>)
                 {
-                    var order = await db.Table<Order>().Where(x => x.ServerId == item.Key).FirstOrDefaultAsync();
-                    order.IsVisible = item.Value;
+                    var order = await db.Table<Order>().Where(x => x.ServerId == item.Id).FirstOrDefaultAsync();
 
-                    await db.InsertOrReplaceAsync(order);
+                    if (order == null)
+                    {
+                        item.ServerId = item.Id;
+
+                        await db.InsertAsync(item);
+                    }
+                    else
+                    {
+
+                        order.IsVisible = item.IsVisible;
+                        order.Cost = item.Cost;
+                        order.Date = item.Date;
+
+                        await db.InsertOrReplaceAsync(order);
+                    }
                 }
             }
         }
@@ -218,7 +213,7 @@ namespace CostPlaningXamarin.Services
                 try
                 {
 
-                await db.InsertOrReplaceAsync(order);
+                    await db.InsertOrReplaceAsync(order);
                 }
                 catch (Exception e)
                 {

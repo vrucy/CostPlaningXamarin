@@ -20,11 +20,10 @@ namespace CostPlaningXamarin.Interfaces
         Task SyncOrders(Dictionary<int, int> ids);
         Task SaveAsync<T>(T item);
         Task SaveItems<T>(IList<T> collection);
-        IList<int> GetAllSyncIds<T>();
         int GetLastServerId<T>() ;
         bool IsFirstSyncNeed();
         Task Visibility<T>(T item,bool visibliity);
-        Task SyncVisbility<T>(Dictionary<int, bool> collection);
+        Task SyncVisbility<T>(List<T> collection);
         Models.Device GetCurrentDeviceInfo();
     }
 }

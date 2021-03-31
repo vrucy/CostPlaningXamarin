@@ -17,24 +17,11 @@ namespace CostPlaningXamarin.Services
         public async Task<Dictionary<int, int>> UpdateOrder(List<Order> orders, string deviceId)
         {
             return JsonConvert.DeserializeObject<Dictionary<int, int>>(await _httpClient.PutOrdersAsync(orders, string.Format("Order/UpdateOrders/{0}", deviceId)));
-        }
-        //TODO: need to be GetAsync!!
-        public async Task<List<Order>> GetOrdersByIds(List<int> ids)
-        {
-            return JsonConvert.DeserializeObject<List<Order>>(await _httpClient.PostAsync(ids, "Order/GetAllOrdersByIds"));
-        }
+        }       
         public async Task<List<Order>> GetAllOrders(string deviceId)
         {
             return JsonConvert.DeserializeObject<List<Order>>(await _httpClient.ResponseResultAsync(string.Format("Order/GetAllOrders/{0}", deviceId)));
-        }
-        public async Task<int> GetLastOrderServerId()
-        {
-            return JsonConvert.DeserializeObject<int>(await _httpClient.ResponseResultAsync("Order/GetLastOrderServerId"));
-        }
-        public async Task<Dictionary<int, bool>> GetAllOrdersVisibility(string deviceId)
-        {
-            return JsonConvert.DeserializeObject<Dictionary<int, bool>>(await _httpClient.ResponseResultAsync(string.Format("Order/SyncVisibility/{0}", deviceId)));
-        }
+        } 
         public async Task<bool> EditOrder(Order order, string deviceId)
         {
             //TODO: every id must encrypt
@@ -52,6 +39,10 @@ namespace CostPlaningXamarin.Services
         public async Task<Order> PostOrder(Order order,string deviceId)
         {
             return JsonConvert.DeserializeObject<Order>(await _httpClient.PostAsync(order, string.Format("Order/PostOrder/{0}", deviceId)));
+        }
+        public async Task<List<Order>> GetUnsyncOrders(string deviceId)
+        {
+            return JsonConvert.DeserializeObject<List<Order>>(await _httpClient.ResponseResultAsync(string.Format("Order/GetUnsyncOrders/{0}", deviceId)));
         }
     }
 }
