@@ -16,12 +16,14 @@
 
         <navigationdrawer:SfNavigationDrawer.ContentView>
             <Grid>
-                <sf:SfDataGrid ItemsSource="{Binding Orders}" AutoGenerateColumns="False"
-                               ColumnSizer="Star" AllowSorting="True" AllowTriStateSorting="True" AutoExpandGroups="True"
-                        AllowGroupExpandCollapse="True" GridTapped="DataGrid_ItemSelected">
+                <sf:SfDataGrid ItemsSource="{Binding Orders}" AutoGenerateColumns="False" AllowSorting="True" AllowTriStateSorting="True"
+                               ColumnSizer="Star"  GridTapped="DataGrid_ItemSelected">
+                    <!--<sf:SfDataGrid.SortColumnDescriptions>
+                        <sf:SortColumnDescription ColumnName="DateSory" SortDirection="Ascending"/>
+                    </sf:SfDataGrid.SortColumnDescriptions>-->
                     <sf:SfDataGrid.Columns>
                         <sf:GridTextColumn HeaderText="User" MappingName="User.FirstName"/>
-                        <sf:GridDateTimeColumn HeaderText="Date"
+                        <sf:GridDateTimeColumn HeaderText="Date" 
                                    MappingName="Date" Format="dd/MM/yyyy"/>
                         <sf:GridTextColumn HeaderText="Category"
                                    MappingName="Category.Name" />

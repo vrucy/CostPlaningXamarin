@@ -21,7 +21,10 @@ namespace CostPlaningXamarin.Views
         private async void DataGrid_ItemSelected(object sender, GridTappedEventsArgs e)
         {
             var order = (Order)e.RowData;
-            await DisplayAlert("Description", order.Description, "Close");
+            if (order != null)
+            {
+                await DisplayAlert("Description", order.Description, "Close");
+            }
         }
         void hamburgerButton_Clicked(object sender, EventArgs e)
         {
