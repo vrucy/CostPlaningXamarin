@@ -251,7 +251,6 @@ namespace CostPlaningXamarin.ViewModels
         //clear all filter
         private void ClearFilter(object x)
         {
-            //TODO clear every piceer per one and refresh list
 
             _orders = _allOrders;
             //OnPropertyChanged(nameof(Orders));

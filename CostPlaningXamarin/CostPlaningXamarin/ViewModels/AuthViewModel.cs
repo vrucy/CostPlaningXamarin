@@ -149,7 +149,6 @@ namespace CostPlaningXamarin.ViewModels
                 return _ApplyUser;
             }
         }
-        //TODO: Nije jasno kako ovo radi sihrono? da li se moze desiti da createAppUser dobije ne dovrsenog serivceUser??
         private async void ApplyUser(object x)
         {
 

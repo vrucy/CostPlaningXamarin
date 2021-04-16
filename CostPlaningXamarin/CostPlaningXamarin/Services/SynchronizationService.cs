@@ -23,7 +23,6 @@ namespace CostPlaningXamarin.Services
             {
                 SemaphoreSlim ss = new SemaphoreSlim(1);
                 await ss.WaitAsync();
-                //TODO: proveriti ovde da ne da ids prazne se sync
                 var ids = await orderService.UpdateOrder(ordersForSync, deviceId);
                 ss.Release();
                 await SQLiteService.SyncOrders(ids);

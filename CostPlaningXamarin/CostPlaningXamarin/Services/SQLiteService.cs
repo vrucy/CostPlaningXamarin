@@ -19,7 +19,6 @@ namespace CostPlaningXamarin.Services
         public SQLiteService()
         {
         }
-        //TODO: await and test
         public async Task CreateDBAsync(string dbPath)
         {
             db = new SQLiteAsyncConnection(dbPath);

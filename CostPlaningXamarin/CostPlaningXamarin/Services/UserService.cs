@@ -11,7 +11,7 @@ namespace CostPlaningXamarin.Services
 {
     public class UserService: IUserService
     {
-        //TODO: DI
+        
         private static readonly HttpClientHelper _httpClient = new HttpClientHelper();
 
         public async Task<IList<User>> GetAllUsers()
