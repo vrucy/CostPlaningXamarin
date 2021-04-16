@@ -18,8 +18,8 @@
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
     <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="18.4.0.47" />
-    <PackageReference Include="Syncfusion.Xamarin.Core" Version="18.4.0.47" />
     <PackageReference Include="Syncfusion.Xamarin.SfBusyIndicator" Version="18.4.0.47" />
+    <PackageReference Include="Syncfusion.Xamarin.SfChart" Version="19.1.0.55" />
     <PackageReference Include="Syncfusion.Xamarin.SfDataGrid" Version="18.4.0.47" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="18.4.0.47" />
     <PackageReference Include="Syncfusion.Xamarin.SfNavigationDrawer" Version="18.4.0.47" />
@@ -61,6 +61,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AuthPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ChartOrdersPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\EditPage.xaml">

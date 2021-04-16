@@ -49,5 +49,10 @@ namespace CostPlaningXamarin.Services
         {
             await GetCurrentPage().Navigation.PushAsync(new AddCategory());
         }
+
+        public async void NavigateToChartOrders()
+        {
+            await GetCurrentPage().Navigation.PushAsync(new ChartOrdersPage());
+        }
     }
 }

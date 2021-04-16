@@ -11,5 +11,6 @@ namespace CostPlaningXamarin.Interfaces
         void NavigateToOrdersOptions();
         void NavigateToEditOrderAsync(Order order);
         void NavigateToAddCategoryAsync();
+        void NavigateToChartOrders();
     }
 }

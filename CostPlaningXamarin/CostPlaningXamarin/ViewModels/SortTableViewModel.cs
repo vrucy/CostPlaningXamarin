@@ -25,7 +25,7 @@ namespace CostPlaningXamarin.ViewModels
         public SortTableViewModel()
         {
             _users = new Lazy<List<User>>(GetUsers);
-            _allOrders = _sqliteService.GetOrdersAsync().Result.VisibleOrders();
+            _allOrders = _sqliteService.GetOrdersAsync().Result.VisibleOrders().OrderBy(o=>o.Date).ToList();
 
             _categories = new Lazy<List<Category>>(GetCategories);
 

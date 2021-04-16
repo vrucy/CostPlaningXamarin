@@ -20,7 +20,7 @@
     <navigationdrawer:SfNavigationDrawer x:Name="navigationDrawer" DrawerWidth="300"  Position="Right" >
         <navigationdrawer:SfNavigationDrawer.ContentView>
 
-            <FlexLayout AlignItems="Center" JustifyContent="SpaceAround" BackgroundColor="White">
+            <FlexLayout AlignItems="Center" JustifyContent="SpaceAround" BackgroundColor="White" Wrap="Wrap" AlignContent="Center">
                 <button:SfButton Text="New Order" Command="{Binding NavigateToAddOrderCommand }"
                              TextColor="White" WidthRequest="170" HeightRequest="170"
                              BackgroundColor="Teal" 
@@ -30,6 +30,10 @@
                              TextColor="White" WidthRequest="170" HeightRequest="170"
                              BackgroundColor="Teal"
                              FontSize="30" Grid.Column="1"/>
+                <button:SfButton Text="Graphic" Command="{Binding NavigateToChartOrdersCommand}"
+                             TextColor="White" WidthRequest="170" HeightRequest="170"
+                             BackgroundColor="Teal" Margin="0,15,0,0"
+                             FontSize="30"/>
             </FlexLayout>
 
         </navigationdrawer:SfNavigationDrawer.ContentView>

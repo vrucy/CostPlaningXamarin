@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CostPlaningXamarin.ViewModels"
+             xmlns:chart="clr-namespace:Syncfusion.SfChart.XForms;assembly=Syncfusion.SfChart.XForms"
+             x:Class="CostPlaningXamarin.Views.ChartOrdersPage">
+    <ContentPage.BindingContext>
+        <local:ChartOrdersViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout>
+            <chart:SfChart VerticalOptions="FillAndExpand"  >
+                <chart:SfChart.Title>
+
+                    <chart:ChartTitle Text="Cost by mounth" TextAlignment="Center" TextColor="#2196F3"/>
+
+                </chart:SfChart.Title>
+                <chart:SfChart.PrimaryAxis>
+
+                    <chart:CategoryAxis >
+                        <chart:CategoryAxis.Title>
+
+                            <chart:ChartAxisTitle Text="Month"></chart:ChartAxisTitle>
+
+                        </chart:CategoryAxis.Title>
+
+                    </chart:CategoryAxis>
+
+
+                </chart:SfChart.PrimaryAxis>
+
+                <chart:SfChart.SecondaryAxis>
+
+                    <chart:NumericalAxis Interval="50" >
+                        <chart:NumericalAxis.Title>
+                            <chart:ChartAxisTitle Text="Cost in Euro"></chart:ChartAxisTitle>
+                        </chart:NumericalAxis.Title>
+                    </chart:NumericalAxis>
+                </chart:SfChart.SecondaryAxis>
+                
+
+                <chart:ColumnSeries ItemsSource="{Binding GraphicData}" YBindingPath="Cost" XBindingPath="Date" EnableTooltip="True">
+            </chart:ColumnSeries>
+
+            </chart:SfChart>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

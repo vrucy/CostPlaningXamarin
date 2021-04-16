@@ -9,6 +9,7 @@ namespace CostPlaningXamarin.ViewModels
     {
         
         private ICommand _NavigateToAddItemCommand;
+        private ICommand _NavigateToChartOrdersCommand;
         private ICommand _NavigateToTableOrders;
         private ICommand _NavigateToAddCategory;
         private ICommand _NavigateToEditCategory;
@@ -48,6 +49,17 @@ namespace CostPlaningXamarin.ViewModels
                     _NavigateToAddItemCommand = new RelayCommand(NavigateToAddItemCommand);
                 }
                 return _NavigateToAddItemCommand;
+            }
+        }
+        public ICommand NavigateToChartOrdersCommand
+        {
+            get
+            {
+                if (_NavigateToChartOrdersCommand == null)
+                {
+                    _NavigateToChartOrdersCommand = new RelayCommand(NavigateToChartOrders);
+                }
+                return _NavigateToChartOrdersCommand;
             }
         }
         public ICommand NavigateToTableOrders
@@ -98,6 +110,10 @@ namespace CostPlaningXamarin.ViewModels
         public void NavigateToAddCategory(object x)
         {
             _navigationService.NavigateToAddCategoryAsync();
+        }
+        public void NavigateToChartOrders(object x)
+        {
+            _navigationService.NavigateToChartOrders();
         }
         public void NavigateToAddItemCommand(object x)
         {
