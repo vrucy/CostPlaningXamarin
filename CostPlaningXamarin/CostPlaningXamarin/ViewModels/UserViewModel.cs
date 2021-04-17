@@ -18,7 +18,7 @@ namespace CostPlaningXamarin.ViewModels
         IWiFiManager _wiFiManager = DependencyService.Get<IWiFiManager>();
 
         private bool _isOnHomeWiFi;
-
+        //TODO: add notification if recive order which is change, and when recive new order. where put in view
         public bool IsOnHomeWiFi
         {
             get 
