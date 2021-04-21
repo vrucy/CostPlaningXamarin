@@ -133,8 +133,6 @@ namespace CostPlaningXamarin.ViewModels
         {
             var device = SQLService.GetCurrentDeviceInfo().DeviceId;
 
-            //TODO: check edit not work propertly, when change a price on server send aslo disable order.
-            //TODO: Edit category select is empty, bind name
             if (_category != null)
             {
                 if (await categoryService.EditCategory(_category, device))

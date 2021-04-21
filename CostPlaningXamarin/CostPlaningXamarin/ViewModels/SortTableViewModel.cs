@@ -39,7 +39,7 @@ namespace CostPlaningXamarin.ViewModels
         }
         private List<Category> GetCategories()
         {
-            return _sqliteService.GetAllCategories().GetAwaiter().GetResult();
+            return _sqliteService.GetAllCategories().GetAwaiter().GetResult().Where(c=>c.IsVisible == true).ToList();
         }
         public List<User> Users
         {
