@@ -93,6 +93,29 @@ namespace CostPlaningXamarin.ViewModels
 
             }
         }
+        private bool isChaked;
+
+        public bool IsChaked
+        {
+            get { return isChaked; }
+            set 
+            {
+                _order.IsVisible = !value;
+                OnPropertyChanged(nameof(Order));
+            }
+        }
+        private bool isChakedCat;
+
+        public bool IsChakedCat
+        {
+            get { return isChakedCat; }
+            set
+            {
+                _category.IsVisible = !value;
+                OnPropertyChanged(nameof(Category));
+            }
+        }
+
 
         public RelayCommand EditCommand
         {
@@ -110,9 +133,10 @@ namespace CostPlaningXamarin.ViewModels
         {
             var device = SQLService.GetCurrentDeviceInfo().DeviceId;
 
+            //TODO: check edit not work propertly, when change a price on server send aslo disable order.
+            //TODO: Edit category select is empty, bind name
             if (_category != null)
             {
-                _category.IsVisible = !_category.IsVisible;
                 if (await categoryService.EditCategory(_category, device))
                 {
                     await SQLService.Visibility(_category, _category.IsVisible);
@@ -127,7 +151,6 @@ namespace CostPlaningXamarin.ViewModels
             }
             if (_order != null)
             {
-                _order.IsVisible = !_order.IsVisible;
                 if (await orderService.EditOrder(_order, device))
                 {
                     await SQLService.Visibility(_order, _order.IsVisible);
